@@ -17,10 +17,18 @@ interface IWord {
   textExampleTranslate: string;
 }
 
+const app = document.querySelector('body') as HTMLElement;
+
+let timerCount: number = 10;
+
 let words: Array<IWord>;
 let points = 0;
 let countPoints = 10;
 let progress = 0;
+
+let answers = 0;
+let rightAnswers = 0;
+let mistakes = 0;
 
 let word: string;
 let translate: string;
@@ -29,14 +37,37 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function renderResults() {
+  app.insertAdjacentHTML(
+    'beforeend',
+    `
+    <div class="results">
+      <p class="accurancy">${Math.round((rightAnswers / answers) * 100)}%</p>
+      <p class="right-answ">Правильный ответов: ${rightAnswers}</p>
+      <p class="mistakes">Ошибок: ${mistakes}</p>
+      <p class="repeated">Всего слов: ${answers}</p>
+    </div>
+  `
+  );
+}
+
+function stopGame() {
+  const gameArea = document.querySelector('.game-area') as HTMLElement;
+
+  gameArea.style.display = 'none';
+  renderResults();
+}
+
 function timer() {
   const timerContainer = document.querySelector('.timer') as HTMLElement;
-  let timerCount: number = 60;
 
   const timerId = setInterval(() => {
     timerCount -= 1;
     timerContainer.innerHTML = String(timerCount);
-    if (timerCount === 0) clearInterval(timerId);
+    if (timerCount === 0) {
+      clearInterval(timerId);
+      stopGame();
+    }
   }, 1000);
 }
 
@@ -61,11 +92,10 @@ function round() {
 
   word = wordContainer.innerText;
   translate = translateContainer.innerText;
-
-  console.log(points, countPoints, progress, random);
 }
 
 function updatePointsInfo(state: boolean) {
+  answers += 1;
   const pointsContainer = document.querySelector('.points') as HTMLElement;
   const countPointsContainer = document.querySelector(
     '.count-points'
@@ -76,6 +106,7 @@ function updatePointsInfo(state: boolean) {
   if (state) {
     points += countPoints;
     progress += 1;
+    rightAnswers += 1;
     if (progress === 4) {
       progress = 0;
       countPoints *= 2;
@@ -92,6 +123,7 @@ function updatePointsInfo(state: boolean) {
   } else {
     progress = 0;
     countPoints = 10;
+    mistakes += 1;
     countPointsContainer.innerHTML = `+${countPoints} points`;
     progressItems.forEach((el) => {
       el.classList.remove('complete');
@@ -99,7 +131,36 @@ function updatePointsInfo(state: boolean) {
   }
 }
 
+function renderGame() {
+  app.insertAdjacentHTML(
+    'beforeend',
+    `
+    <div class="game-area">
+      <span class="points">0</span>
+      <span class="count-points">+10 points</span>
+      <div class="progress">
+        <div class="progress-item"></div>
+        <div class="progress-item"></div>
+        <div class="progress-item"></div>
+      </div>
+
+      <div class="main-window">
+        <span class="word"></span>
+        <span class="translate-word"></span>
+        <div class="main-buttons">
+          <button class="right">right</button>
+          <button class="wrong">wrong</button>
+        </div>
+      </div>
+
+      <span class="timer">${timerCount}</span>
+    </div>
+  `
+  );
+}
+
 function game() {
+  renderGame();
   const right = document.querySelector('.right') as HTMLElement;
   const wrong = document.querySelector('.wrong') as HTMLElement;
 
