@@ -73,6 +73,13 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
+  async GET_USER_TOKENS<T>(id: string): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/tokens`,
+      method: 'GET'
+    }
+    return await this.sendRequest(data)
+  }
   //------------------------- Users/Words -----------------------------------------
 
   //------------------------- Users/AggregatedWords -------------------------------
