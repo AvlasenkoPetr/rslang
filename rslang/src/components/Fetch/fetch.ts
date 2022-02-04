@@ -4,8 +4,8 @@ interface IData {
   body?: null | string
 }
 
-interface IBODY_POST_USER {
-  name: string,
+interface IUSER_BODY {
+  name?: string,
   email: string,
   password: string
 }
@@ -40,12 +40,24 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async POST_USER<T>(body: IBODY_POST_USER): Promise<T> {
+  async POST_USER<T>(body: IUSER_BODY): Promise<T> {
     const data: IData = {
       url: `users`,
       method: 'POST',
       body: JSON.stringify({
         name: body.name,
+        email: body.email,
+        password: body.password
+      })
+    }
+    return await this.sendRequest(data)
+  }
+
+  async UPDATE_USER<T>(id: string, body: IUSER_BODY): Promise<T> {
+    const data: IData = {
+      url: `users/${id}`,
+      method: 'UPDATE',
+      body: JSON.stringify({
         email: body.email,
         password: body.password
       })
@@ -64,14 +76,19 @@ class Fetch {
   //------------------------- Sign In ---------------------------------------------
 
   async sendRequest<T>(data: IData): Promise<T> {
-    const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
-      method: data.method,
-      headers: {
-        'Content-Type': 'text/plain;charset=UTF-8'
-      },
-      body: data.body
-    })
-    return await response.json()
+    try {
+      const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
+        method: data.method,
+        headers: {
+          'Content-Type': 'text/plain;charset=UTF-8'
+        },
+        body: data.body
+      })
+      return await response.json()
+    }
+    catch {
+      throw new Error('')
+    }
   }
 }
 
