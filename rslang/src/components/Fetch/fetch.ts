@@ -1,10 +1,18 @@
 interface IData {
   url: string,
   method: string,
-  body?: null
+  body?: null | string
+}
+
+interface IBODY_POST_USER {
+  name: string,
+  email: string,
+  password: string
 }
 
 class Fetch {
+
+  //-------------------------- WORDS ---------------------------------------------
 
   async GET_WORDS<T>(group: string, page: string): Promise<T> {
     const data: IData = {
@@ -14,7 +22,7 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async GET_WORDS_BY_ID<T>(id: string): Promise<T> {
+  async GET_WORD_BY_ID<T>(id: string): Promise<T> {
     const data: IData = {
       url: `words/${id}`,
       method: 'GET'
@@ -22,13 +30,38 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async GET_USER_BY_ID<T>(id: string): Promise<T> {
+  //-------------------------- USERS ----------------------------------------------
+
+  async GET_USER<T>(id: string): Promise<T> {
     const data: IData = {
       url: `users/${id}`,
       method: 'GET'
     }
     return await this.sendRequest(data)
   }
+
+  async POST_USER<T>(body: IBODY_POST_USER): Promise<T> {
+    const data: IData = {
+      url: `users`,
+      method: 'POST',
+      body: JSON.stringify({
+        name: body.name,
+        email: body.email,
+        password: body.password
+      })
+    }
+    return await this.sendRequest(data)
+  }
+
+  //------------------------- Users/Words -----------------------------------------
+
+  //------------------------- Users/AggregatedWords -------------------------------
+
+  //------------------------- Users/Statistic -------------------------------------
+
+  //------------------------- Users/Setting ---------------------------------------
+
+  //------------------------- Sign In ---------------------------------------------
 
   async sendRequest<T>(data: IData): Promise<T> {
     const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
