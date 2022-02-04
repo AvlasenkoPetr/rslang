@@ -65,6 +65,14 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
+  async DELETE_USER<T>(id: string): Promise<T> {
+    const data: IData = {
+      url: `users/${id}`,
+      method: 'DELETE'
+    }
+    return await this.sendRequest(data)
+  }
+
   //------------------------- Users/Words -----------------------------------------
 
   //------------------------- Users/AggregatedWords -------------------------------
