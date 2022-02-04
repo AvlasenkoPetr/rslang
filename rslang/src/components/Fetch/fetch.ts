@@ -76,18 +76,22 @@ class Fetch {
   //------------------------- Sign In ---------------------------------------------
 
   async sendRequest<T>(data: IData): Promise<T> {
+    const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
+      method: data.method,
+      headers: {
+        'Content-Type': 'text/plain;charset=UTF-8'
+      },
+      body: data.body
+    })
     try {
-      const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
-        method: data.method,
-        headers: {
-          'Content-Type': 'text/plain;charset=UTF-8'
-        },
-        body: data.body
-      })
       return await response.json()
     }
     catch {
-      throw new Error('')
+      throw {
+        url: response.url,
+        status: response.status,
+        statusText: response.statusText
+      }
     }
   }
 }
