@@ -14,7 +14,14 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
- 
+  async GET_WORDS_BY_ID<T>(id: string): Promise<T> {
+    const data: IData = {
+      url: `words/${id}`,
+      method: 'GET'
+    }
+    return await this.sendRequest(data)
+  }
+
   async sendRequest<T>(data: IData): Promise<T> {
     const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
       method: data.method,
