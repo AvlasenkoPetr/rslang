@@ -12,6 +12,18 @@ interface IUSER_BODY {
   password: string
 }
 
+interface ICREATE_USER_WORD {
+  userId: string,
+  wordId: string,
+  word: {
+    difficulty: string,
+    optional?: {
+      testFieldString: string,
+      testFieldBoolean: boolean
+    }
+  }
+}
+
 class Fetch {
 
   //-------------------------- WORDS ---------------------------------------------
@@ -109,6 +121,16 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
+  async CREATE_USER_WORDS<T>(id: string, wordId: string, token: string, body: ICREATE_USER_WORD): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/words/${wordId}`,
+      method: 'POST',
+      credentials: true,
+      token: token
+    }
+    return await this.sendRequest(data)
+  }
+
   //------------------------- Users/AggregatedWords -------------------------------
 
   //------------------------- Users/Statistic -------------------------------------
@@ -128,13 +150,12 @@ class Fetch {
         password: body.password
       })
     }
-    const response: Awaited<T> = await this.sendRequest(data)
-    return response
+
+    return await this.sendRequest(data)
   };
 
 
   async sendRequest<T>(data: IData): Promise<T> {
-
     const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
       method: data.method,
       credentials: data.credentials ? 'include' : 'omit',
