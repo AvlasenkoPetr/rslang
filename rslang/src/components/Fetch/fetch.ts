@@ -2,7 +2,6 @@ interface IData {
   url: string,
   method: string,
   body?: null | string,
-  credentials: boolean,
   token: null | string
 }
 
@@ -20,6 +19,15 @@ export interface ICREATE_USER_WORD {
   }
 }
 
+export interface IUPDATE_STATISTICS {
+  learnedWords: number,
+  optional?: {
+
+  }
+}
+
+
+
 class Fetch {
 
   //-------------------------- WORDS ---------------------------------------------
@@ -28,7 +36,6 @@ class Fetch {
     const data: IData = {
       url: `words?group=${group}&page=${page}`,
       method: 'GET',
-      credentials: false,
       token: null
     }
     return await this.sendRequest(data)
@@ -38,7 +45,6 @@ class Fetch {
     const data: IData = {
       url: `words/${wordId}`,
       method: 'GET',
-      credentials: false,
       token: null
     }
     return await this.sendRequest(data)
@@ -50,7 +56,6 @@ class Fetch {
     const data: IData = {
       url: `users/${userId}`,
       method: 'GET',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -60,7 +65,6 @@ class Fetch {
     const data: IData = {
       url: `users`,
       method: 'POST',
-      credentials: false,
       token: null,
       body: JSON.stringify({
         name: body.name,
@@ -75,7 +79,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}`,
       method: 'PUT',
-      credentials: false,
       token: token,
       body: JSON.stringify({
         email: body.email,
@@ -89,7 +92,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}`,
       method: 'DELETE',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -99,7 +101,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/tokens`,
       method: 'GET',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -111,7 +112,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words`,
       method: 'GET',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -121,7 +121,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words/${wordId}`,
       method: 'POST',
-      credentials: false,
       token: token,
       body: JSON.stringify(body)
     }
@@ -132,7 +131,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words/${wordId}`,
       method: 'GET',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -142,7 +140,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words/${wordId}`,
       method: 'PUT',
-      credentials: false,
       token: token,
       body: JSON.stringify(body)
     }
@@ -153,7 +150,6 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words/${wordId}`,
       method: 'DELETE',
-      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
@@ -163,6 +159,27 @@ class Fetch {
 
   //------------------------- Users/Statistic -------------------------------------
 
+  async GET_STATISTICS<T>(id: string, token: string): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/statistics`,
+      method: 'GET',
+      token: token,
+    }
+
+    return await this.sendRequest(data)
+  };
+
+  async UPDATE_STATISTICS<T>(id: string, token: string, body: IUPDATE_STATISTICS): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/statistics`,
+      method: 'PUT',
+      token: token,
+      body: JSON.stringify(body)
+    }
+
+    return await this.sendRequest(data)
+  };
+
   //------------------------- Users/Setting ---------------------------------------
 
   //------------------------- Sign In ---------------------------------------------
@@ -171,7 +188,6 @@ class Fetch {
     const data: IData = {
       url: `signin`,
       method: 'POST',
-      credentials: false,
       token: null,
       body: JSON.stringify({
         email: body.email,
@@ -186,7 +202,6 @@ class Fetch {
   async sendRequest<T>(data: IData): Promise<T> {
     const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
       method: data.method,
-      credentials: data.credentials ? 'include' : 'omit',
       headers: {
         ['Authorization']: `Bearer ${data.token}`,
         ['Content-Type']: 'application/json',
