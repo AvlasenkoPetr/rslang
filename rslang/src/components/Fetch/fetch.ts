@@ -26,6 +26,12 @@ export interface IUPDATE_STATISTICS {
   }
 }
 
+export interface IUPDATE_SETTINGS {
+  wordsPerDay: number,
+  optional?: {
+
+  }
+}
 
 
 class Fetch {
@@ -181,6 +187,27 @@ class Fetch {
   };
 
   //------------------------- Users/Setting ---------------------------------------
+
+  async GET_USER_SETTINGS<T>(id: string, token: string): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/settings`,
+      method: 'GET',
+      token: token,
+    }
+
+    return await this.sendRequest(data)
+  };
+
+  async UPDATE_USER_SETTINGS<T>(id: string, token: string, body: IUPDATE_SETTINGS): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/settings`,
+      method: 'PUT',
+      token: token,
+      body: JSON.stringify(body)
+    }
+
+    return await this.sendRequest(data)
+  };
 
   //------------------------- Sign In ---------------------------------------------
 
