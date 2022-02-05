@@ -1,7 +1,9 @@
 interface IData {
   url: string,
   method: string,
-  body?: null | string
+  body?: null | string,
+  credentials: boolean,
+  token: null | string
 }
 
 interface IUSER_BODY {
@@ -17,33 +19,41 @@ class Fetch {
   async GET_WORDS<T>(group: string, page: string): Promise<T> {
     const data: IData = {
       url: `words?group=${group}&page=${page}`,
-      method: 'GET'
+      method: 'GET',
+      credentials: false,
+      token: null
     }
     return await this.sendRequest(data)
   }
 
-  async GET_WORD_BY_ID<T>(id: string): Promise<T> {
+  async GET_WORD_BY_ID<T>(wordId: string): Promise<T> {
     const data: IData = {
-      url: `words/${id}`,
-      method: 'GET'
+      url: `words/${wordId}`,
+      method: 'GET',
+      credentials: false,
+      token: null
     }
     return await this.sendRequest(data)
   }
 
   //-------------------------- USERS ----------------------------------------------
 
-  async GET_USER<T>(id: string): Promise<T> {
+  async GET_USER<T>(userId: string, token: string): Promise<T> {
     const data: IData = {
-      url: `users/${id}`,
-      method: 'GET'
+      url: `users/${userId}`,
+      method: 'GET',
+      credentials: false,
+      token: token
     }
     return await this.sendRequest(data)
   }
 
-  async POST_USER<T>(body: IUSER_BODY): Promise<T> {
+  async CREATE_USER<T>(body: IUSER_BODY): Promise<T> {
     const data: IData = {
       url: `users`,
       method: 'POST',
+      credentials: false,
+      token: null,
       body: JSON.stringify({
         name: body.name,
         email: body.email,
@@ -53,10 +63,12 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async UPDATE_USER<T>(id: string, body: IUSER_BODY): Promise<T> {
+  async UPDATE_USER<T>(id: string, token: string, body: IUSER_BODY): Promise<T> {
     const data: IData = {
       url: `users/${id}`,
-      method: 'UPDATE',
+      method: 'PUT',
+      credentials: false,
+      token: token,
       body: JSON.stringify({
         email: body.email,
         password: body.password
@@ -65,22 +77,37 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async DELETE_USER<T>(id: string): Promise<T> {
+  async DELETE_USER<T>(id: string, token: string): Promise<T> {
     const data: IData = {
       url: `users/${id}`,
-      method: 'DELETE'
+      method: 'DELETE',
+      credentials: false,
+      token: token
     }
     return await this.sendRequest(data)
   }
 
-  async GET_USER_TOKENS<T>(id: string): Promise<T> {
+  async GET_USER_TOKENS<T>(id: string, token: string): Promise<T> {
     const data: IData = {
       url: `users/${id}/tokens`,
-      method: 'GET'
+      method: 'GET',
+      credentials: false,
+      token: token
     }
     return await this.sendRequest(data)
   }
+
   //------------------------- Users/Words -----------------------------------------
+
+  async GET_USER_WORDS<T>(id: string, token: string): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/words`,
+      method: 'GET',
+      credentials: false,
+      token: token
+    }
+    return await this.sendRequest(data)
+  }
 
   //------------------------- Users/AggregatedWords -------------------------------
 
@@ -90,11 +117,31 @@ class Fetch {
 
   //------------------------- Sign In ---------------------------------------------
 
+  async SIGN_IN<T>(body: IUSER_BODY): Promise<T> {
+    const data: IData = {
+      url: `signin`,
+      method: 'POST',
+      credentials: false,
+      token: null,
+      body: JSON.stringify({
+        email: body.email,
+        password: body.password
+      })
+    }
+    const response: Awaited<T> = await this.sendRequest(data)
+    return response
+  };
+
+
   async sendRequest<T>(data: IData): Promise<T> {
+
     const response = await fetch(`https://rss21q3-rslang.herokuapp.com/${data.url}`, {
       method: data.method,
+      credentials: data.credentials ? 'include' : 'omit',
       headers: {
-        'Content-Type': 'text/plain;charset=UTF-8'
+        ['Authorization']: `Bearer ${data.token}`,
+        ['Content-Type']: 'application/json',
+        ['Accept']: 'application/json',
       },
       body: data.body
     })
