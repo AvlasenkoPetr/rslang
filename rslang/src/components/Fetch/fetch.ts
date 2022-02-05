@@ -12,15 +12,11 @@ interface IUSER_BODY {
   password: string
 }
 
-interface ICREATE_USER_WORD {
-  userId: string,
-  wordId: string,
-  word: {
-    difficulty: string,
-    optional?: {
-      testFieldString: string,
-      testFieldBoolean: boolean
-    }
+export interface ICREATE_USER_WORD {
+  difficulty: string,
+  optional?: {
+    testFieldString: string,
+    testFieldBoolean?: boolean
   }
 }
 
@@ -125,7 +121,39 @@ class Fetch {
     const data: IData = {
       url: `users/${id}/words/${wordId}`,
       method: 'POST',
-      credentials: true,
+      credentials: false,
+      token: token,
+      body: JSON.stringify(body)
+    }
+    return await this.sendRequest(data)
+  }
+
+  async GET_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string,): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/words/${wordId}`,
+      method: 'GET',
+      credentials: false,
+      token: token
+    }
+    return await this.sendRequest(data)
+  }
+
+  async UPDATE_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string, body: ICREATE_USER_WORD): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/words/${wordId}`,
+      method: 'PUT',
+      credentials: false,
+      token: token,
+      body: JSON.stringify(body)
+    }
+    return await this.sendRequest(data)
+  }
+
+  async DELETE_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string,): Promise<T> {
+    const data: IData = {
+      url: `users/${id}/words/${wordId}`,
+      method: 'DELETE',
+      credentials: false,
       token: token
     }
     return await this.sendRequest(data)
