@@ -1,0 +1,75 @@
+:root {
+  --main-purple: #745296;
+  --footer-purple: #684587;
+  --dark-purple: #632A50;
+  --font-color-main: #ffffff;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  font-size: 18px;
+  color: var(--font-color-main);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+h1 {
+  font-size: 144px;
+}
+
+h2 {
+  font-size: 36px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul, ol {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+input,
+button,
+textarea,
+select {
+font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+.main__wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
