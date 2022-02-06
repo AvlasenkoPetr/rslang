@@ -2,15 +2,18 @@
   --main-purple: #745296;
   --footer-purple: #684587;
   --dark-purple: #632A50;
-  --font-color-main: #ffffff;
+  --light-purple: #EBE4F1;
+  --interactive-blue: #71A0C1;
+  --font-color-main: #000000;
+  --font-color-secondary: #ffffff;
 }
 
 * {
   margin: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  font-size: 18px;
-  color: var(--font-color-main);
+  font-size: 24px;
+  // color: var(--font-color-main);
 }
 
 html {
@@ -30,14 +33,6 @@ h1 {
 
 h2 {
   font-size: 36px;
-}
-
-h3 {
-  font-size: 30px;
-}
-
-h4 {
-  font-size: 24px;
 }
 
 a {

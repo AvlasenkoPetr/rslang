@@ -1,4 +1,72 @@
+@import '../../footer/footer.scss';
+
 .login-page {
   width: 100%;
   height: calc(100vh - $footer-height);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  // p, a {
+  //   font-size: 24px;
+  //   color: var(--font-color-secondary);
+  // }
+
+  .login-page__title {
+    margin-bottom: 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1 {
+      color: var(--dark-purple);
+
+      span {
+        font-size: inherit;
+        color: var(--interactive-blue);
+      }
+    }
+  }
+
+  input {
+    display: block;
+    width: 515px;
+    height: 75px;
+    padding: 0 25px;
+    margin-bottom: 4vh;
+
+    border: 2px solid var(--dark-purple);
+    border-radius: 10px;
+
+    color: var(--dark-purple);
+  }
+
+  input::placeholder {
+    color: #C4C4C4;
+  }
+
+  input:focus {
+    border: 2px solid var(--interactive-blue);
+    color: var(--interactive-blue);
+  }
+
+  .login-page__enter-account {
+    width: 375px;
+    height: 55px;
+
+    background-color: var(--main-purple);
+    color: var(--font-color-secondary);
+    border-radius: 10px;
+    transition: .2s linear;
+
+    &.light {
+      margin-top: 50px;
+
+      color: var(--font-color-main);
+      background-color: var(--light-purple);
+    }
+  }
 }
