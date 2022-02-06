@@ -21,11 +21,16 @@ export class Router {
 
     const clickedButton: HTMLElement = e.target
 
-    switch (clickedButton.dataset.navigation) {
-      case 'open': this.NAV_BLOCK.classList.toggle('opened')
-        return
+    if (clickedButton.dataset.navigation === 'open') {
+      this.NAV_BLOCK.classList.toggle('opened')
+      return
+    }
+    // Работает через дата-атрибуты детей эл-та aside
+    // прим.: кнопка для переклчения на страницу книги имеет атрибут 'book', т.е.
+    // пишем: case 'book': ${метод рендера у класса страницы книги} return
 
-      case 'book': 
+    switch (clickedButton.dataset.navigation) {
+      case 'book': // ф-ция рендера
         return
     }
   }
