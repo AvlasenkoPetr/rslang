@@ -25,8 +25,17 @@ export class Router {
       this.NAV_BLOCK.classList.toggle('opened')
       return
     }
+
+    const currentlyActiveButton: HTMLElement | null = this.NAV_BLOCK.querySelector('.active')
+    if (currentlyActiveButton) {
+      if (currentlyActiveButton.dataset.navigation === e.target.dataset.navigation) return
+      currentlyActiveButton.classList.remove('active')
+    }
+    
+    clickedButton.classList.add('active')
+
     // Работает через дата-атрибуты детей эл-та aside
-    // прим.: кнопка для переклчения на страницу книги имеет атрибут 'book', т.е.
+    // прим.: кнопка для переклчения на страницу книги имеет атрибут data-navigation='book', т.е.
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
 
     switch (clickedButton.dataset.navigation) {
