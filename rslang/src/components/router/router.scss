@@ -1,7 +1,7 @@
 $aside-closed-width: 4vw;
 $aside-opened-width: calc($aside-closed-width * 3);
 $button-open-size: 30px;
-$button-nav-size: 20px;
+$button-nav-size: 30px;
 
 .aside {
     position: relative;
@@ -11,7 +11,7 @@ $button-nav-size: 20px;
     height: 100vh;
     padding-top: 20px;
     
-    background-color: var(--main-purple);
+    background-color: var(--purple-main);
     color: var(--font-color-secondary);
 
     display: flex;
@@ -59,7 +59,7 @@ $button-nav-size: 20px;
             transition: .2s linear;
         
             &:hover {
-                background-color: var(--footer-purple);
+                background-color: var(--purple-footer);
             }
             
             &.active::after {
@@ -69,6 +69,28 @@ $button-nav-size: 20px;
                 height: 50px;
                 width: 3px;
                 background-color: var(--font-color-secondary);
+            }
+
+            &[data-navigation="main"] {
+                background-image: url(../../images/home.svg);
+            }
+            &[data-navigation="book"] {
+                background-image: url(../../images/book.svg);
+                background-size: $button-nav-size calc($button-nav-size - 7px);
+            }
+            &[data-navigation="games"] {
+                background-image: url(../../images/games.svg);
+                background-size: $button-nav-size calc($button-nav-size - 5px);
+            }
+            &[data-navigation="stats"] {
+                background-image: url(../../images/stats.svg);
+                background-size: $button-nav-size calc($button-nav-size - 5px);
+            }
+            &[data-navigation="team"] {
+                background-image: url(../../images/team.svg);
+            }
+            &[data-navigation="login"] {
+                background-image: url(../../images/home.svg);
             }
         }
     }

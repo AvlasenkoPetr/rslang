@@ -1,9 +1,10 @@
 :root {
-  --main-purple: #745296;
-  --footer-purple: #684587;
-  --dark-purple: #632A50;
-  --light-purple: #EBE4F1;
-  --interactive-blue: #71A0C1;
+  --purple-main: #745296;
+  --purple-footer: #684587;
+  --purple-dark: #632A50;
+  --purple-light: #EBE4F1;
+  --blue-interactive: #71A0C1;
+  --blue-interactive-light: #C6D9E6;
   --font-color-main: #000000;
   --font-color-secondary: #ffffff;
 }
@@ -14,6 +15,7 @@
   overflow-x: hidden;
   font-size: 24px;
   // color: var(--font-color-main);
+  font-family: 'Source Sans Pro';
 }
 
 html {
@@ -29,14 +31,20 @@ body {
 
 h1 {
   font-size: 144px;
+  font-family: 'Quicksand';
 }
 
 h2 {
   font-size: 36px;
+  font-family: 'Quicksand';
 }
 
 a {
   text-decoration: none;
+}
+
+a, span {
+  font: inherit;
 }
 
 ul, ol {
@@ -56,7 +64,8 @@ input,
 button,
 textarea,
 select {
-font: inherit;
+  outline: none;
+  font: inherit;
 }
 
 ::-webkit-scrollbar {
