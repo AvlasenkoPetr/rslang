@@ -69,5 +69,6 @@ export class Router {
 
   openMenu = (): void => {
     this.NAV_BLOCK.classList.toggle('opened')
+    this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened')
   }
 }
