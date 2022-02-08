@@ -18,9 +18,9 @@ export class Router {
     const clickedButton: HTMLElement = e.target
     if (!clickedButton.dataset.navigation) return
 
-    const clickedDataset: string = clickedButton.dataset.navigation
+    const clickedButtonDataset: string = clickedButton.dataset.navigation
 
-    if (clickedDataset === 'open') {
+    if (clickedButtonDataset === 'open') {
       this.openMenu()
       return
     }
@@ -28,7 +28,7 @@ export class Router {
     // вынести в отдельную ф-цию (снимаем класс эктив в нав блоке)
     const currentlyActiveButton: HTMLElement | null = this.NAV_BLOCK.querySelector('.active')
     if (currentlyActiveButton) {
-      if (currentlyActiveButton.dataset.navigation === clickedDataset) return
+      if (currentlyActiveButton.dataset.navigation === clickedButtonDataset) return
       currentlyActiveButton.classList.remove('active')
     }
     
@@ -36,15 +36,24 @@ export class Router {
     if (clickedButton.closest('aside')) {
       clickedButton.classList.add('active')
     } else {
-      const navClickedButton: HTMLElement | null = this.NAV_BLOCK.querySelector(`[data-navigation=${clickedDataset}]`)
+      const navClickedButton: HTMLElement | null = this.NAV_BLOCK.querySelector(`[data-navigation=${clickedButtonDataset}]`)
       navClickedButton?.classList.add('active')
     }
 
+    this.renderPage(clickedButtonDataset)
+  }
+
+  openMenu = (): void => {
+    this.NAV_BLOCK.classList.toggle('opened')
+    this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened')
+  }
+
+  renderPage = (buttonDataset: string): void => {
     // Работает через дата-атрибуты
     // прим.: кнопка для переклчения на страницу книги имеет атрибут data-navigation='book', т.е.
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
 
-    switch (clickedDataset) {
+    switch (buttonDataset) {
       case 'main':  // ф-ция рендера
         return
 
@@ -62,13 +71,8 @@ export class Router {
 
       case 'login':
         const loginPage = new LoginPage
-        loginPage.render()
+        loginPage.renderLoginPage()
         return
     }
-  }
-
-  openMenu = (): void => {
-    this.NAV_BLOCK.classList.toggle('opened')
-    this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened')
   }
 }
