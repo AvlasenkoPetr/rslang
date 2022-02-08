@@ -1,0 +1,117 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: url(../../../assets/images/background-guys/man-on-chair.svg) left 8% bottom 10%/15% no-repeat, url(../../../assets/images/background-guys/girl-on-chair.svg) right 8% bottom 10%/20% no-repeat;
+
+  .login-page__title {
+    margin-bottom: 70px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h2 {
+    margin-bottom: 10px;
+
+    color: var(--purple-dark);
+    font-family: 'Source Sans Pro';
+    text-align: center;
+
+    span {
+      color: var(--blue-interactive);
+    }
+  }
+
+}
+
+.login-page__input {
+  display: block;
+  width: 450px;
+  height: 55px;
+  padding: 0 15px;
+  margin-bottom: 3vh;
+
+  border: 3px solid var(--purple-dark);
+  border-radius: 10px;
+
+  color: var(--purple-dark);
+}
+
+.login-page__input::placeholder {
+  color: #C4C4C4;
+}
+
+.login-page__input:focus {
+  border: 3px solid var(--blue-interactive);
+  color: var(--blue-interactive);
+}
+
+.login-page__button {
+  width: 300px;
+  height: 50px;
+  margin-top: 40px;
+
+  background-color: var(--purple-main);
+  color: var(--font-color-secondary);
+  border-radius: 10px;
+  transition: .2s linear;
+
+  &:hover {
+    background-color: var(--blue-interactive);
+  }
+
+  &.light {
+    margin-top: 50px;
+
+    color: var(--font-color-main);
+    background-color: var(--purple-light);
+
+    &:hover {
+      background-color: var(--blue-interactive-light);
+    }
+  }
+
+  + p {
+    margin-top: 5px;
+    font-size: 20px;
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+$signup-contaner-height: 65vh;
+$signup-contaner-width: 40vw;
+
+.signup__container {
+  width: $signup-contaner-width;
+  min-width: 550px;
+  height: $signup-contaner-height;
+  min-height: 500px;
+  padding: 40px;
+
+  position: absolute;
+  left: calc( 52vw - ( $signup-contaner-width / 2) );
+  top: calc( 45vh - ( $signup-contaner-width / 2) );
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--font-color-secondary);
+  border-radius: 20px;
+
+  h2 {
+    font-family: 'Source Sans Pro';
+    color: var(--purple-dark);
+    margin-bottom: 8%;
+  }
+}
