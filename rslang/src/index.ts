@@ -19,7 +19,7 @@ interface IWord {
 
 const app = document.querySelector('body') as HTMLElement;
 
-let timerCount: number = 10;
+let timerCount: number = 30;
 
 let words: Array<IWord>;
 let points = 0;
@@ -30,25 +30,71 @@ let answers = 0;
 let rightAnswers = 0;
 let mistakes = 0;
 
+let currentWord: IWord;
 let word: string;
 let translate: string;
+
+const rightAnswersArr: Array<IWord> = [];
+const mistakesArr: Array<IWord> = [];
 
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
+  const li = document.createElement('li');
+  li.className = 'answer';
+  li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
+  li.addEventListener('click', () => {
+    const audio = new Audio(
+      `https://rss21q3-rslang.herokuapp.com/${ans.audio}`
+    );
+    audio.play();
+  });
+
+  wrapper.append(li);
+}
+
 function renderResults() {
+  let accurancy = Math.round((rightAnswers / answers) * 100);
+  if (Number.isNaN(accurancy)) accurancy = 0;
+
   app.insertAdjacentHTML(
     'beforeend',
     `
     <div class="results">
-      <p class="accurancy">${Math.round((rightAnswers / answers) * 100)}%</p>
-      <p class="right-answ">Правильный ответов: ${rightAnswers}</p>
-      <p class="mistakes">Ошибок: ${mistakes}</p>
+      <p class="result-points">Вы набрали ${points} очков</p>
+      <p class="accurancy">Accurancy ${accurancy}%</p>
+      <p class="right-answ-count">Правильных ответов: ${rightAnswers}</p>
+      <p class="mistakes-count">Ошибок: ${mistakes}</p>
       <p class="repeated">Всего слов: ${answers}</p>
     </div>
   `
   );
+
+  const results = document.querySelector('.results') as HTMLElement;
+  results.insertAdjacentHTML(
+    'beforeend',
+    `
+    <ul class="right-answers">Correct Answers</ul>
+    <ul class="mistake-answers">Mistakes</ul>
+  `
+  );
+
+  const rightAnswersUl = document.querySelector(
+    '.right-answers'
+  ) as HTMLElement;
+  const mistakeAnswersUl = document.querySelector(
+    '.mistake-answers'
+  ) as HTMLElement;
+
+  rightAnswersArr.forEach((ans) => {
+    renderResultsAnswer(ans, rightAnswersUl);
+  });
+
+  mistakesArr.forEach((ans) => {
+    renderResultsAnswer(ans, mistakeAnswersUl);
+  });
 }
 
 function stopGame() {
@@ -77,15 +123,18 @@ function round() {
     '.translate-word'
   ) as HTMLElement;
 
-  let randomWord = words[getRandomInt(0, 19)].word;
+  const wordInfo = words[getRandomInt(0, 19)];
+  let randomWord = wordInfo.word;
   let randomTranslate = words[getRandomInt(0, 19)].wordTranslate;
   const random = Boolean(getRandomInt(0, 2));
 
   if (random) {
-    const wordInfo = words[getRandomInt(0, 19)];
+    // wordInfo = words[getRandomInt(0, 19)];
     randomWord = wordInfo.word;
     randomTranslate = wordInfo.wordTranslate;
   }
+
+  currentWord = wordInfo;
 
   wordContainer.innerHTML = randomWord;
   translateContainer.innerHTML = randomTranslate;
@@ -107,6 +156,7 @@ function updatePointsInfo(state: boolean) {
     points += countPoints;
     progress += 1;
     rightAnswers += 1;
+
     if (progress === 4) {
       progress = 0;
       countPoints *= 2;
@@ -174,8 +224,19 @@ function game() {
 
     if (translate === rightTranslate) {
       updatePointsInfo(true);
+      if (
+        rightAnswersArr.find((wordInfo) => wordInfo === currentWord) ===
+        undefined
+      ) {
+        rightAnswersArr.push(currentWord);
+      }
     } else {
       updatePointsInfo(false);
+      if (
+        mistakesArr.find((wordInfo) => wordInfo === currentWord) === undefined
+      ) {
+        mistakesArr.push(currentWord);
+      }
     }
 
     round();
@@ -188,8 +249,19 @@ function game() {
 
     if (translate !== rightTranslate) {
       updatePointsInfo(true);
+      if (
+        rightAnswersArr.find((wordInfo) => wordInfo === currentWord) ===
+        undefined
+      ) {
+        rightAnswersArr.push(currentWord);
+      }
     } else {
       updatePointsInfo(false);
+      if (
+        mistakesArr.find((wordInfo) => wordInfo === currentWord) === undefined
+      ) {
+        mistakesArr.push(currentWord);
+      }
     }
 
     round();
