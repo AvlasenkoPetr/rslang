@@ -1,0 +1,1 @@
+import { Fetch, ICREATE_USER_WORD, IUPDATE_SETTINGS, IUPDATE_STATISTICS } from "./components/Fetch/fetch";

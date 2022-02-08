@@ -6,41 +6,57 @@ interface IData {
 }
 
 interface IUSER_BODY {
-  name?: string,
+  name: string,
   email: string,
   password: string
 }
 
 export interface ICREATE_USER_WORD {
-  difficulty: string,
+  difficulty: 'hard' | 'easy',
   optional?: {
-    testFieldString: string,
-    testFieldBoolean?: boolean
+    name: string,
+    
   }
 }
 
 export interface IUPDATE_STATISTICS {
   learnedWords: number,
   optional?: {
-
   }
 }
 
 export interface IUPDATE_SETTINGS {
   wordsPerDay: number,
   optional?: {
-
   }
 }
 
+interface IUserInfo {
+  token: string,
+  userId: string
+}
+
+const getUserInfo = (): IUserInfo => {
+  let userInfo: IUserInfo
+  if (localStorage.getItem('UserInfo') !== null) {
+    userInfo = JSON.parse(localStorage.getItem('UserInfo')!)
+  }
+  else {
+    userInfo = {
+      token: '1',
+      userId: '1'
+    }
+  }
+  return userInfo
+}
 
 class Fetch {
 
   //-------------------------- WORDS ---------------------------------------------
 
-  async GET_WORDS<T>(group: string, page: string): Promise<T> {
+  async GET_WORDS<T>(group: string = '0', page: string = '0'): Promise<T> {
     const data: IData = {
-      url: `words?group=${group}&page=${page}`,
+      url: `words?group=${group}`,
       method: 'GET',
       token: null
     }
@@ -58,11 +74,11 @@ class Fetch {
 
   //-------------------------- USERS ----------------------------------------------
 
-  async GET_USER<T>(userId: string, token: string): Promise<T> {
+  async GET_USER<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${userId}`,
+      url: `users/${getUserInfo().userId}`,
       method: 'GET',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
@@ -81,11 +97,11 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async UPDATE_USER<T>(id: string, token: string, body: IUSER_BODY): Promise<T> {
+  async UPDATE_USER<T>(body: IUSER_BODY): Promise<T> {
     const data: IData = {
-      url: `users/${id}`,
+      url: `users/${getUserInfo().userId}`,
       method: 'PUT',
-      token: token,
+      token: getUserInfo().token,
       body: JSON.stringify({
         email: body.email,
         password: body.password
@@ -94,118 +110,124 @@ class Fetch {
     return await this.sendRequest(data)
   }
 
-  async DELETE_USER<T>(id: string, token: string): Promise<T> {
+  async DELETE_USER<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}`,
+      url: `users/${getUserInfo().userId}`,
       method: 'DELETE',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
 
-  async GET_USER_TOKENS<T>(id: string, token: string): Promise<T> {
+  async GET_USER_TOKENS<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}/tokens`,
+      url: `users/${getUserInfo().userId}/tokens`,
       method: 'GET',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
 
   //------------------------- Users/Words -----------------------------------------
 
-  async GET_USER_WORDS<T>(id: string, token: string): Promise<T> {
+  async GET_USER_WORDS<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}/words`,
+      url: `users/${getUserInfo().userId}/words`,
       method: 'GET',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
 
-  async CREATE_USER_WORDS<T>(id: string, wordId: string, token: string, body: ICREATE_USER_WORD): Promise<T> {
+  async CREATE_USER_WORDS<T>(wordId: string, body: ICREATE_USER_WORD): Promise<T> {
     const data: IData = {
-      url: `users/${id}/words/${wordId}`,
+      url: `users/${getUserInfo().userId}/words/${wordId}`,
       method: 'POST',
-      token: token,
+      token: getUserInfo().token,
       body: JSON.stringify(body)
     }
     return await this.sendRequest(data)
   }
 
-  async GET_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string,): Promise<T> {
+  async GET_USER_WORDS_BY_ID<T>(wordId: string,): Promise<T> {
     const data: IData = {
-      url: `users/${id}/words/${wordId}`,
+      url: `users/${getUserInfo().userId}/words/${wordId}`,
       method: 'GET',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
 
-  async UPDATE_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string, body: ICREATE_USER_WORD): Promise<T> {
+  async UPDATE_USER_WORDS_BY_ID<T>(wordId: string, body: ICREATE_USER_WORD): Promise<T> {
     const data: IData = {
-      url: `users/${id}/words/${wordId}`,
+      url: `users/${getUserInfo().userId}/words/${wordId}`,
       method: 'PUT',
-      token: token,
+      token: getUserInfo().token,
       body: JSON.stringify(body)
     }
     return await this.sendRequest(data)
   }
 
-  async DELETE_USER_WORDS_BY_ID<T>(id: string, wordId: string, token: string,): Promise<T> {
+  async DELETE_USER_WORDS_BY_ID<T>(wordId: string,): Promise<T> {
     const data: IData = {
-      url: `users/${id}/words/${wordId}`,
+      url: `users/${getUserInfo().userId}/words/${wordId}`,
       method: 'DELETE',
-      token: token
+      token: getUserInfo().token
     }
     return await this.sendRequest(data)
   }
 
   //------------------------- Users/AggregatedWords -------------------------------
 
-  //------------------------- Users/Statistic -------------------------------------
-
-  async GET_STATISTICS<T>(id: string, token: string): Promise<T> {
+  async GET_AGGREGATED_WORDS<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}/statistics`,
+      url: `users/${getUserInfo().userId}/aggregatedWords`,
       method: 'GET',
-      token: token,
-    }
+      token: getUserInfo().token,
 
+    }
     return await this.sendRequest(data)
   };
 
-  async UPDATE_STATISTICS<T>(id: string, token: string, body: IUPDATE_STATISTICS): Promise<T> {
+  //------------------------- Users/Statistic -------------------------------------
+
+  async GET_STATISTICS<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}/statistics`,
+      url: `users/${getUserInfo().userId}/statistics`,
+      method: 'GET',
+      token: getUserInfo().token,
+    }
+    return await this.sendRequest(data)
+  };
+
+  async UPDATE_STATISTICS<T>(body: IUPDATE_STATISTICS): Promise<T> {
+    const data: IData = {
+      url: `users/${getUserInfo().userId}/statistics`,
       method: 'PUT',
-      token: token,
+      token: getUserInfo().token,
       body: JSON.stringify(body)
     }
-
     return await this.sendRequest(data)
   };
 
   //------------------------- Users/Setting ---------------------------------------
 
-  async GET_USER_SETTINGS<T>(id: string, token: string): Promise<T> {
+  async GET_USER_SETTINGS<T>(): Promise<T> {
     const data: IData = {
-      url: `users/${id}/settings`,
+      url: `users/${getUserInfo().userId}/settings`,
       method: 'GET',
-      token: token,
+      token: getUserInfo().token,
     }
-
     return await this.sendRequest(data)
   };
 
-  async UPDATE_USER_SETTINGS<T>(id: string, token: string, body: IUPDATE_SETTINGS): Promise<T> {
+  async UPDATE_USER_SETTINGS<T>(body: IUPDATE_SETTINGS): Promise<T> {
     const data: IData = {
-      url: `users/${id}/settings`,
+      url: `users/${getUserInfo().userId}/settings`,
       method: 'PUT',
-      token: token,
+      token: getUserInfo().token,
       body: JSON.stringify(body)
     }
-
     return await this.sendRequest(data)
   };
 
@@ -221,7 +243,6 @@ class Fetch {
         password: body.password
       })
     }
-
     return await this.sendRequest(data)
   };
 
