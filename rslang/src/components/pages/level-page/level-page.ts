@@ -12,6 +12,26 @@ class LevelPage {
     this.LEVEL_PAGE.className = 'level-page page';
   }
 
+  processClick(e: MouseEvent): void {
+    if (e.target instanceof HTMLElement) {
+      let clickedButton = e.target as HTMLElement;
+
+      if (
+        clickedButton.className === 'level-item' ||
+        clickedButton.className === 'label'
+      ) {
+        const levelItems: Array<HTMLElement> = Array.from(
+          document.querySelectorAll('.level-item')
+        );
+        if (clickedButton.className === 'label')
+          clickedButton = clickedButton.offsetParent as HTMLElement;
+
+        const level = levelItems.indexOf(clickedButton);
+        console.log(level);
+      }
+    }
+  }
+
   renderLevelPage(): void {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LEVEL_PAGE.innerHTML = `
@@ -51,6 +71,7 @@ class LevelPage {
       </div>`;
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
     appendFooter(this.MAIN_WRAPPER);
+    this.LEVEL_PAGE.addEventListener('click', this.processClick);
   }
 }
 
