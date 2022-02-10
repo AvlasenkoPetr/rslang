@@ -1,4 +1,4 @@
-import { appendFooter } from '../../footer/footer'
+import { appendFooter } from '../../Footer/footer'
 import './main-page.scss'
 
 export class MainPage {
