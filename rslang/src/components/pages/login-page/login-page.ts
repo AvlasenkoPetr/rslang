@@ -1,4 +1,4 @@
-import appendFooter from '../../footer/footer';
+import { appendFooter } from '../../Footer/footer';
 import './login-page.scss';
 
 type signUpBody = {
@@ -75,7 +75,7 @@ export class LoginPage {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LOGIN_PAGE.innerHTML = `
         <div class="login-page__title">
-            <h2>Войдите</h2>
+            <h2>Авторизируйтесь</h2>
             <p>и используйте возможности RSLang на максимум!</p>
         </div>
 
