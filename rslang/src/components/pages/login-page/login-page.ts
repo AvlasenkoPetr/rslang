@@ -1,15 +1,13 @@
+import { Fetch } from '../../Fetch/fetch'
+import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import { appendFooter } from '../../footer/footer'
 import './login-page.scss'
-
-type signUpBody = {
-    name: string,
-    email: string,
-    password: string
-}
+import { getUserInfo } from '../../Helpers/helpers'
 
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
     LOGIN_PAGE: HTMLElement
+    Fetch
 
     constructor() {
         this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement
@@ -17,9 +15,11 @@ export class LoginPage {
         this.LOGIN_PAGE = document.createElement('main')
         this.LOGIN_PAGE.className = 'login-page page'
         this.LOGIN_PAGE.addEventListener('click', this.processClick)
+        
+        this.Fetch = new Fetch
     }
 
-    processClick = (e: MouseEvent): void => {
+    processClick = async (e: MouseEvent) => {
         if (!(e.target instanceof HTMLElement)) return
     
         const clickedButton: HTMLElement = e.target
@@ -105,39 +105,35 @@ export class LoginPage {
         appendFooter(this.MAIN_WRAPPER)
     }
 
-    signUp = async (name: string, email: string, password: string) => {
-        
-        await fetch('https://rss21q3-rslang.herokuapp.com/users', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                })
-            })
-            .then(() => this.login(email, password))
-            .catch(() => {
+    signUp = async(name: string, email: string, password: string) => {
+        const createUserBody: IUSER_BODY = {
+            name: name,
+            email: email,
+            password: password
+        }
 
-            })
+        await this.Fetch.CREATE_USER(createUserBody)
+        .then(() => this.login(email, password))
     }
 
-    login = async (email: string, password: string) => {
+    login = async(email: string, password: string) => {
+        const signInBody: IUSER_BODY = {
+            email: email,
+            password: password  
+        }
 
-        const res = await fetch('https://rss21q3-rslang.herokuapp.com/signin', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8'
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            })
-        })
-        const data = await res.json()
-        console.log(data)
+        await this.Fetch.SIGN_IN(signInBody)
+        .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
+        .then(() => this.redirectToMain());
+        
+    }
+
+    redirectToMain = () => {
+        const loginNavButton: HTMLElement | null = document.querySelector('.active')
+        if (loginNavButton) {
+            loginNavButton.dataset.navigation = 'logout'
+            loginNavButton.innerHTML = 'Выйти'
+        }
     }
 
     isFormsEmpty = (): boolean => {

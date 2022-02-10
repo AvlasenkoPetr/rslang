@@ -73,6 +73,10 @@ export class Router {
         const loginPage = new LoginPage
         loginPage.renderLoginPage()
         return
+
+      case 'logout':
+        console.log('ф-ция выхода из аккаунта');
+        return
     }
   }
 }
