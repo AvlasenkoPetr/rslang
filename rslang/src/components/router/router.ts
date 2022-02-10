@@ -79,8 +79,17 @@ export class Router {
         return;
 
       case 'login':
-        const loginPage = new LoginPage();
-        loginPage.renderLoginPage();
+        const loginPage = new LoginPage
+        loginPage.renderLoginPage()
+        return
+
+      case 'logout':
+        localStorage.removeItem('UserInfo')
+        const logoutNavButton: HTMLElement | null = document.querySelector(`[data-navigation="${buttonDataset}"]`)
+        if (logoutNavButton) {
+          logoutNavButton.dataset.navigation = 'login'
+        }
+        return
     }
   };
 }
