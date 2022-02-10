@@ -1,19 +1,5 @@
+import { getUserInfo } from './../Helpers/helpers';
 import { ICREATE_USER_WORD, IData, IGET_AGGREGATED_WORDS, IUPDATE_SETTINGS, IUPDATE_STATISTICS, IUserInfo, IUSER_BODY } from "../Interfaces/interfaces"
-
-
-const getUserInfo = (): IUserInfo => {
-  let userInfo: IUserInfo
-  if (localStorage.getItem('UserInfo') !== null) {
-    userInfo = JSON.parse(localStorage.getItem('UserInfo')!)
-  }
-  else {
-    userInfo = {
-      token: '1',
-      userId: '1'
-    }
-  }
-  return userInfo
-}
 
 class Fetch {
 
