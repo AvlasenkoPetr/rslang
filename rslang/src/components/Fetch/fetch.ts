@@ -1,40 +1,5 @@
-interface IData {
-  url: string,
-  method: string,
-  body?: null | string,
-  token: null | string
-}
+import { ICREATE_USER_WORD, IData, IGET_AGGREGATED_WORDS, IUPDATE_SETTINGS, IUPDATE_STATISTICS, IUserInfo, IUSER_BODY } from "../Interfaces/interfaces"
 
-interface IUSER_BODY {
-  name: string,
-  email: string,
-  password: string
-}
-
-export interface ICREATE_USER_WORD {
-  difficulty: 'hard' | 'easy',
-  optional?: {
-    name: string,
-    
-  }
-}
-
-export interface IUPDATE_STATISTICS {
-  learnedWords: number,
-  optional?: {
-  }
-}
-
-export interface IUPDATE_SETTINGS {
-  wordsPerDay: number,
-  optional?: {
-  }
-}
-
-interface IUserInfo {
-  token: string,
-  userId: string
-}
 
 const getUserInfo = (): IUserInfo => {
   let userInfo: IUserInfo
