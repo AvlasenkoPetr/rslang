@@ -75,7 +75,11 @@ export class Router {
         return
 
       case 'logout':
-        console.log('ф-ция выхода из аккаунта');
+        localStorage.removeItem('UserInfo')
+        const logoutNavButton: HTMLElement | null = document.querySelector(`[data-navigation="${buttonDataset}"]`)
+        if (logoutNavButton) {
+          logoutNavButton.dataset.navigation = 'login'
+        }
         return
     }
   }
