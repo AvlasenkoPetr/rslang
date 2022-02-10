@@ -1,7 +1,6 @@
 import { setRandomNumber } from './utilities';
 import { GamePage } from './gamePage';
 import { IState, INewState, IWord, IAnswer } from './interfaces';
-import { StartPage } from './startPage';
 import './audioCall.scss'
 import { Fetch } from '../../../Fetch/fetch';
 
@@ -32,17 +31,7 @@ class AudioCall {
     fullScreen: false
   }
 
-  public startPage = new StartPage()
   public gamePage = new GamePage()
-
-  _initStartPage() {
-    this.startPage.render()
-    const startGameButton = document.querySelector('#startAudioCallGame') as HTMLButtonElement
-    const gameLevel = document.querySelector('#gameLevel') as HTMLSelectElement
-    
-    startGameButton.addEventListener('click', this.startGame.bind(this))
-    gameLevel.addEventListener('change', this.setGroupValueActionCreator.bind(this))
-  }
 
   async setFullScreen(e: Event) {
     const target = e.currentTarget as HTMLElement
@@ -138,7 +127,6 @@ class AudioCall {
       type: Actions.BACK_TO_START_PAGE
     }
     this.setState(action)
-    this._initStartPage()
   }
 
   setNextPageActionCreator() {
