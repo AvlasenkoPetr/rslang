@@ -1,6 +1,6 @@
 import { Fetch } from '../../Fetch/fetch'
 import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
-import { appendFooter } from '../../footer/footer'
+import appendFooter from '../../footer/footer'
 import './login-page.scss'
 import { getUserInfo } from '../../Helpers/helpers'
 
@@ -62,11 +62,12 @@ export class LoginPage {
                 return
       
         }
-    }
+        return;
+  };
 
-    renderLoginPage = (): void => {
-        this.MAIN_WRAPPER.innerHTML = ''
-        this.LOGIN_PAGE.innerHTML = `
+  renderLoginPage = (): void => {
+    this.MAIN_WRAPPER.innerHTML = '';
+    this.LOGIN_PAGE.innerHTML = `
         <div class="login-page__title">
             <h2>Авторизируйтесь</h2>
             <p>и используйте возможности RSLang на максимум!</p>
