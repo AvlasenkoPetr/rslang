@@ -1,4 +1,4 @@
-import { LoginPage } from '../Pages/login-page/login-page';
+import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
 

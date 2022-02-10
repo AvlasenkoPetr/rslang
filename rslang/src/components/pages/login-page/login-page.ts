@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { appendFooter } from '../../Footer/footer';
 import './login-page.scss';
+=======
+import { appendFooter } from '../../footer/footer'
+import './login-page.scss'
+>>>>>>> 25ef291e53f2dc600fc953158ec9e0eafa1a0a6b
 
 type signUpBody = {
   name: string;
