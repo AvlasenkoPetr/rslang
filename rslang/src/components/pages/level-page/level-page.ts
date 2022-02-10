@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import './level-page.scss';
 import appendFooter from '../../footer/footer';
 
@@ -27,7 +28,29 @@ class LevelPage {
           clickedButton = clickedButton.offsetParent as HTMLElement;
 
         const level = levelItems.indexOf(clickedButton);
-        console.log(level);
+
+        const target = document.querySelector(
+          '.navigation .active'
+        ) as HTMLElement;
+
+        if (target.dataset.navigation) {
+          const targetAttr: string = target.dataset.navigation;
+
+          switch (targetAttr) {
+            case 'book':
+              console.log(level);
+              // запускаем рендер книги
+              break;
+            case 'sprint':
+              // запускаем рендер спринта
+              break;
+            case 'audiocall':
+              // запускаем рендер аудиовызова
+              break;
+            default:
+              break;
+          }
+        }
       }
     }
   }
