@@ -56,7 +56,7 @@ class Fetch {
 
   async GET_WORDS<T>(group: string = '0', page: string = '0'): Promise<T> {
     const data: IData = {
-      url: `words?group=${group}`,
+      url: `words?group=${group}&page=${page}`,
       method: 'GET',
       token: null
     }
