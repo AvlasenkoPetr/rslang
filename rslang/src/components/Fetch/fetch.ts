@@ -144,12 +144,20 @@ class Fetch {
 
   //------------------------- Users/AggregatedWords -------------------------------
 
-  async GET_AGGREGATED_WORDS<T>(): Promise<T> {
+  async GET_AGGREGATED_WORDS<T>(params: IGET_AGGREGATED_WORDS): Promise<T> {
     const data: IData = {
-      url: `users/${getUserInfo().userId}/aggregatedWords`,
+      url: `users/${getUserInfo().userId}/aggregatedWords?group=${params.group || ''}&page=${params.page || ''}&wordsPerPage=${params.wordsPerPage || ''}&filter=${params.filter || ''}`,
       method: 'GET',
       token: getUserInfo().token,
+    }
+    return await this.sendRequest(data)
+  };
 
+  async GET_AGGREGATED_WORDS_BY_ID<T>(wordId:string): Promise<T> {
+    const data: IData = {
+      url: `users/${getUserInfo().userId}/aggregatedWords/${wordId}`,
+      method: 'GET',
+      token: getUserInfo().token,
     }
     return await this.sendRequest(data)
   };
