@@ -1,4 +1,4 @@
-import { appendFooter } from '../../Footer/footer'
+import { appendFooter } from '../../footer/footer'
 import './login-page.scss'
 
 type signUpBody = {
