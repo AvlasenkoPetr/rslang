@@ -2,6 +2,8 @@
 import './level-page.scss';
 import appendFooter from '../../footer/footer';
 
+const auth: boolean = true;
+
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
 
@@ -95,6 +97,24 @@ class LevelPage {
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
     appendFooter(this.MAIN_WRAPPER);
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
+
+    const target = document.querySelector('.navigation .active') as HTMLElement;
+
+    if (target.dataset.navigation) {
+      const targetAttr: string = target.dataset.navigation;
+      if (targetAttr === 'book' && auth === true) {
+        const levelsWrapper = document.querySelector('.levels') as HTMLElement;
+        levelsWrapper.insertAdjacentHTML(
+          'beforeend',
+          `
+        <div class="level-item">
+          <div class="label">HARD</div>
+          <span class="label-title">Hard words</span>
+        </div>
+        `
+        );
+      }
+    }
   }
 }
 

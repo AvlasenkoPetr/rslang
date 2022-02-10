@@ -2,7 +2,7 @@
   &-page {
   background: url(../../../assets/images/background-waves/level-page-wave.svg) no-repeat;
   background-position: right;
-  padding-top: 100px;
+  padding-top: 65px;
   padding-left: 235px;
   padding-right: 350px;
     &-content {
@@ -55,6 +55,7 @@
             }
           }
           &:nth-child(7) .label {
+            font-size: 36px;
             background-color: #EB4F4F;
             &::after {
               border-color: transparent transparent transparent #EB4F4F;
