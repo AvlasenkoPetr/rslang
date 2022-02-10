@@ -1,9 +1,9 @@
-import './footer.scss'
+import './footer.scss';
 
-export function appendFooter(wrapper: HTMLElement): void {
-    const footer: HTMLElement = document.createElement('footer')
-    footer.className = 'footer'
-    footer.innerHTML = `
+function appendFooter(wrapper: HTMLElement): void {
+  const footer: HTMLElement = document.createElement('footer');
+  footer.className = 'footer';
+  footer.innerHTML = `
     <a href="https://rs.school/js/" target="_blink" class="rsschool"></a>
     <div class="team">
         <a href="https://github.com/Prizzz" target="_blink">Prizzz</a>
@@ -11,6 +11,8 @@ export function appendFooter(wrapper: HTMLElement): void {
         <a href="https://github.com/rakyt4gin" target="_blink">rakyt4gin</a>
     </div>
     <div class="year">2022</div>
-    `
-    wrapper.append(footer)
+    `;
+  wrapper.append(footer);
 }
+
+export default appendFooter;
