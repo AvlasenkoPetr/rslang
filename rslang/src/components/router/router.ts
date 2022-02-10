@@ -1,4 +1,4 @@
-import { LoginPage } from '../Pages/login-page/login-page'
+import { LoginPage } from '../pages/login-page/login-page'
 import './router.scss'
 
 export class Router {
