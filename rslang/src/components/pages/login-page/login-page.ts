@@ -24,7 +24,7 @@ export class LoginPage {
     
         const clickedButton: HTMLElement = e.target
         if (!clickedButton.dataset.login) return
-
+ 
         const clickedButtonDataset: string = clickedButton.dataset.login
 
         switch (clickedButtonDataset) {
@@ -45,7 +45,7 @@ export class LoginPage {
                     this.signUp(name, email, password)
 
                 } else {
-                    console.log('Поля не заполнены')
+                    this.dropError()
                 }
                 return
       
@@ -57,7 +57,7 @@ export class LoginPage {
                     this.login(email, password)
 
                 } else {
-                    console.log('Поля не заполнены')
+                    this.dropError()
                 }
                 return
       
@@ -76,8 +76,10 @@ export class LoginPage {
 
         <input class="login-page__input" type="password" placeholder="Введите пароль">
 
-        <button class="login-page__button" data-login="login">ВОЙТИ</button>
-        <p>Еще нет аккаунта? Самое время <a data-login="render-signup">создать</a>!</p>
+        <div class="login-page__button_wrapper">
+            <button class="login-page__button" data-login="login">ВОЙТИ</button>
+            <p>Еще нет аккаунта? Самое время <a data-login="render-signup">создать</a>!</p>
+        </div>
         `
         this.MAIN_WRAPPER.prepend(this.LOGIN_PAGE)
         appendFooter(this.MAIN_WRAPPER)
@@ -92,10 +94,12 @@ export class LoginPage {
             </div>
 
             <input class="login-page__input" type="text" placeholder="Введите имя">
-            <input class="login-page__input" type="email" placeholder="Введите e-mail">
-            <input class="login-page__input" type="password" placeholder="Введите пароль">
-            <button class="login-page__button" data-login="signup">СОЗДАТЬ АККАУНТ</button>
-            <p>Уже есть аккаунт? Тогда стоит в него <a data-login="render-login">войти</a>!</p>
+            <input class="login-page__input" type="email" placeholder="Введите e-mail" autocomplete="off">
+            <input class="login-page__input" type="password" placeholder="Введите пароль" autocomplete="off">
+            <div class="login-page__button_wrapper">
+                <button class="login-page__button" data-login="signup">СОЗДАТЬ АККАУНТ</button>
+                <p>Уже есть аккаунт? Тогда стоит в него <a data-login="render-login">войти</a>!</p>
+            </div>
         `
         this.MAIN_WRAPPER.prepend(this.LOGIN_PAGE)
         appendFooter(this.MAIN_WRAPPER)
@@ -143,5 +147,20 @@ export class LoginPage {
             if (!form.value) result = true
         }
         return result
+    }
+
+    dropError = () => {
+        const oldError: HTMLElement | null = document.querySelector('.error')
+        if (oldError) oldError.remove()
+
+        const error: HTMLElement = document.createElement('p')
+        error.className = 'error'
+        error.innerHTML = 'Нужно заполнить все поля!'
+
+        const buttonWrapper: HTMLElement | null = document.querySelector('.login-page__button_wrapper')
+        if (!buttonWrapper) return
+        buttonWrapper.prepend(error)
+
+        setTimeout(() => error.remove(), 5000)
     }
 }
