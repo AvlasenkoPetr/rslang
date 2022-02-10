@@ -1,4 +1,3 @@
-import { appendFooter } from '../../footer/footer';
 import './main-page.scss';
 export class MainPage {
   MAIN_WRAPPER: HTMLElement | null;
