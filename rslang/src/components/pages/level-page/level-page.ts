@@ -1,8 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
+import { getUserInfo } from '../../Helpers/helpers';
 import appendFooter from '../../footer/footer';
 
-const auth: boolean = true;
+const userInfo = getUserInfo();
+const auth = userInfo.token === '1' ? false : true;
 
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
