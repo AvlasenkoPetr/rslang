@@ -65,7 +65,7 @@ export class LoginPage {
         return;
   };
 
-  renderLoginPage = (): void => {
+    renderLoginPage = (): void => {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LOGIN_PAGE.innerHTML = `
         <div class="login-page__title">
