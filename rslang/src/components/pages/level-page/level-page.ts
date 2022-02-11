@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
-import appendFooter from '../../footer/footer';
+import appendFooter from '../../Footer/footer';
 
 const userInfo = getUserInfo();
 const auth = userInfo.token === '1' ? false : true;

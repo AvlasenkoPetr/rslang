@@ -1,6 +1,7 @@
-import { LoginPage } from '../pages/login-page/login-page';
-import LevelPage from '../pages/level-page/level-page';
+import { LoginPage } from '../Pages/login-page/login-page';
+import LevelPage from '../Pages/level-page/level-page';
 import './router.scss';
+import { AudioCall } from '../Pages/games/audiocall/audioCallGame';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -73,6 +74,8 @@ export class Router {
         return;
 
       case 'stats':
+        const audiocall = new AudioCall()
+        audiocall.startGame()
         return;
 
       case 'team':

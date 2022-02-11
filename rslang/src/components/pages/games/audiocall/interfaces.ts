@@ -6,7 +6,8 @@ export interface IState {
   currentAnswers?: Array<IWord>,
   words: Array<IAnswer>,
   disabledButtons: boolean,
-  fullScreen:boolean
+  fullScreen:boolean,
+  inRow:number
 }
 
 export interface INewState {
@@ -18,7 +19,8 @@ export interface INewState {
   currentAnswers?: Array<IWord>,
   word?: IAnswer,
   disabledButtons?: boolean,
-  fullScreen?:boolean
+  fullScreen?:boolean,
+  inRow?: number
 }
 
 export interface IAnswer {

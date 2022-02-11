@@ -28,7 +28,8 @@ class AudioCall {
     currentAnswers: [],
     words: [],
     disabledButtons: false,
-    fullScreen: false
+    fullScreen: false,
+    inRow: 0
   }
 
   public gamePage = new GamePage()
@@ -84,11 +85,13 @@ class AudioCall {
       const target = (e.target) as HTMLElement
       if (target.hasAttribute('isRight')) {
         if (target.getAttribute('isRight') === 'true') {
+          this.state.inRow += 1
           target.classList.add('right-answer')
           this.setWordActionCreator(this.state.data![this.state.currentPage], 'true')
         }
         else if (target.getAttribute('isRight') === 'false') {
           target.classList.add('bad-answer')
+          this.state.inRow = 0
           this.setWordActionCreator(this.state.data![this.state.currentPage], 'false');
           ((target.closest('.answers__wrapper') as HTMLElement).querySelector('[isRight="true"]')as HTMLElement).classList.add('right-answer')
         }
@@ -142,7 +145,7 @@ class AudioCall {
       this._initPlay()
     }
     else {
-
+      
     }
 
   }
