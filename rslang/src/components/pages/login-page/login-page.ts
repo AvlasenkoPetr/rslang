@@ -1,15 +1,13 @@
-import { appendFooter } from '../../footer/footer'
+import { Fetch } from '../../Fetch/fetch'
+import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
+import appendFooter from '../../footer/footer'
 import './login-page.scss'
-
-type signUpBody = {
-    name: string,
-    email: string,
-    password: string
-}
+import { getUserInfo } from '../../Helpers/helpers'
 
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
     LOGIN_PAGE: HTMLElement
+    Fetch
 
     constructor() {
         this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement
@@ -17,14 +15,16 @@ export class LoginPage {
         this.LOGIN_PAGE = document.createElement('main')
         this.LOGIN_PAGE.className = 'login-page page'
         this.LOGIN_PAGE.addEventListener('click', this.processClick)
+        
+        this.Fetch = new Fetch
     }
 
-    processClick = (e: MouseEvent): void => {
+    processClick = async (e: MouseEvent) => {
         if (!(e.target instanceof HTMLElement)) return
     
         const clickedButton: HTMLElement = e.target
         if (!clickedButton.dataset.login) return
-
+ 
         const clickedButtonDataset: string = clickedButton.dataset.login
 
         switch (clickedButtonDataset) {
@@ -45,7 +45,7 @@ export class LoginPage {
                     this.signUp(name, email, password)
 
                 } else {
-                    console.log('Поля не заполнены')
+                    this.dropError()
                 }
                 return
       
@@ -57,18 +57,19 @@ export class LoginPage {
                     this.login(email, password)
 
                 } else {
-                    console.log('Поля не заполнены')
+                    this.dropError()
                 }
                 return
       
         }
-    }
+        return;
+  };
 
     renderLoginPage = (): void => {
-        this.MAIN_WRAPPER.innerHTML = ''
-        this.LOGIN_PAGE.innerHTML = `
+    this.MAIN_WRAPPER.innerHTML = '';
+    this.LOGIN_PAGE.innerHTML = `
         <div class="login-page__title">
-            <h2>Войдите</h2>
+            <h2>Авторизируйтесь</h2>
             <p>и используйте возможности RSLang на максимум!</p>
         </div>
 
@@ -76,8 +77,10 @@ export class LoginPage {
 
         <input class="login-page__input" type="password" placeholder="Введите пароль">
 
-        <button class="login-page__button" data-login="login">ВОЙТИ</button>
-        <p>Еще нет аккаунта? Самое время <a data-login="render-signup">создать</a>!</p>
+        <div class="login-page__button_wrapper">
+            <button class="login-page__button" data-login="login">ВОЙТИ</button>
+            <p>Еще нет аккаунта? Самое время <a data-login="render-signup">создать</a>!</p>
+        </div>
         `
         this.MAIN_WRAPPER.prepend(this.LOGIN_PAGE)
         appendFooter(this.MAIN_WRAPPER)
@@ -92,48 +95,46 @@ export class LoginPage {
             </div>
 
             <input class="login-page__input" type="text" placeholder="Введите имя">
-            <input class="login-page__input" type="email" placeholder="Введите e-mail">
-            <input class="login-page__input" type="password" placeholder="Введите пароль">
-            <button class="login-page__button" data-login="signup">СОЗДАТЬ АККАУНТ</button>
-            <p>Уже есть аккаунт? Тогда стоит в него <a data-login="render-login">войти</a>!</p>
+            <input class="login-page__input" type="email" placeholder="Введите e-mail" autocomplete="off">
+            <input class="login-page__input" type="password" placeholder="Введите пароль" autocomplete="off">
+            <div class="login-page__button_wrapper">
+                <button class="login-page__button" data-login="signup">СОЗДАТЬ АККАУНТ</button>
+                <p>Уже есть аккаунт? Тогда стоит в него <a data-login="render-login">войти</a>!</p>
+            </div>
         `
         this.MAIN_WRAPPER.prepend(this.LOGIN_PAGE)
         appendFooter(this.MAIN_WRAPPER)
     }
 
-    signUp = async (name: string, email: string, password: string) => {
-        
-        await fetch('https://rss21q3-rslang.herokuapp.com/users', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                })
-            })
-            .then(() => this.login(email, password))
-            .catch(() => {
+    signUp = async(name: string, email: string, password: string) => {
+        const createUserBody: IUSER_BODY = {
+            name: name,
+            email: email,
+            password: password
+        }
 
-            })
+        await this.Fetch.CREATE_USER(createUserBody)
+        .then(() => this.login(email, password))
     }
 
-    login = async (email: string, password: string) => {
+    login = async(email: string, password: string) => {
+        const signInBody: IUSER_BODY = {
+            email: email,
+            password: password  
+        }
 
-        const res = await fetch('https://rss21q3-rslang.herokuapp.com/signin', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8'
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            })
-        })
-        const data = await res.json()
-        console.log(data)
+        await this.Fetch.SIGN_IN(signInBody)
+        .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
+        .then(() => this.redirectToMain());
+        
+    }
+
+    redirectToMain = () => {
+        const loginNavButton: HTMLElement | null = document.querySelector('.active')
+        if (loginNavButton) {
+            loginNavButton.dataset.navigation = 'logout'
+            loginNavButton.innerHTML = 'Выйти'
+        }
     }
 
     isFormsEmpty = (): boolean => {
@@ -143,5 +144,20 @@ export class LoginPage {
             if (!form.value) result = true
         }
         return result
+    }
+
+    dropError = () => {
+        const oldError: HTMLElement | null = document.querySelector('.error')
+        if (oldError) oldError.remove()
+
+        const error: HTMLElement = document.createElement('p')
+        error.className = 'error'
+        error.innerHTML = 'Нужно заполнить все поля!'
+
+        const buttonWrapper: HTMLElement | null = document.querySelector('.login-page__button_wrapper')
+        if (!buttonWrapper) return
+        buttonWrapper.prepend(error)
+
+        setTimeout(() => error.remove(), 5000)
     }
 }

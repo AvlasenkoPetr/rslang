@@ -1,54 +1,5 @@
-interface IData {
-  url: string,
-  method: string,
-  body?: null | string,
-  token: null | string
-}
-
-interface IUSER_BODY {
-  name: string,
-  email: string,
-  password: string
-}
-
-export interface ICREATE_USER_WORD {
-  difficulty: 'hard' | 'easy',
-  optional?: {
-    name: string,
-    
-  }
-}
-
-export interface IUPDATE_STATISTICS {
-  learnedWords: number,
-  optional?: {
-  }
-}
-
-export interface IUPDATE_SETTINGS {
-  wordsPerDay: number,
-  optional?: {
-  }
-}
-
-interface IUserInfo {
-  token: string,
-  userId: string
-}
-
-const getUserInfo = (): IUserInfo => {
-  let userInfo: IUserInfo
-  if (localStorage.getItem('UserInfo') !== null) {
-    userInfo = JSON.parse(localStorage.getItem('UserInfo')!)
-  }
-  else {
-    userInfo = {
-      token: '1',
-      userId: '1'
-    }
-  }
-  return userInfo
-}
+import { getUserInfo } from './../Helpers/helpers';
+import { ICREATE_USER_WORD, IData, IGET_AGGREGATED_WORDS, IUPDATE_SETTINGS, IUPDATE_STATISTICS, IUserInfo, IUSER_BODY } from "../Interfaces/interfaces"
 
 class Fetch {
 
@@ -56,7 +7,7 @@ class Fetch {
 
   async GET_WORDS<T>(group: string = '0', page: string = '0'): Promise<T> {
     const data: IData = {
-      url: `words?group=${group}`,
+      url: `words?group=${group}&page=${page}`,
       method: 'GET',
       token: null
     }
@@ -179,12 +130,20 @@ class Fetch {
 
   //------------------------- Users/AggregatedWords -------------------------------
 
-  async GET_AGGREGATED_WORDS<T>(): Promise<T> {
+  async GET_AGGREGATED_WORDS<T>(params: IGET_AGGREGATED_WORDS): Promise<T> {
     const data: IData = {
-      url: `users/${getUserInfo().userId}/aggregatedWords`,
+      url: `users/${getUserInfo().userId}/aggregatedWords?group=${params.group || ''}&page=${params.page || ''}&wordsPerPage=${params.wordsPerPage || ''}&filter=${params.filter || ''}`,
       method: 'GET',
       token: getUserInfo().token,
+    }
+    return await this.sendRequest(data)
+  };
 
+  async GET_AGGREGATED_WORDS_BY_ID<T>(wordId:string): Promise<T> {
+    const data: IData = {
+      url: `users/${getUserInfo().userId}/aggregatedWords/${wordId}`,
+      method: 'GET',
+      token: getUserInfo().token,
     }
     return await this.sendRequest(data)
   };
