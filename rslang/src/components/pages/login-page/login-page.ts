@@ -127,7 +127,6 @@ export class LoginPage {
         await this.FETCH.SIGN_IN(signInBody)
         .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
         .then(() => this.redirectToMain())
-        // .catch((error) => console.log(error.status, typeof error.status));
         .catch((error) => this.dropError(error.status));
         
     }
@@ -155,8 +154,6 @@ export class LoginPage {
 
         const error: HTMLElement = document.createElement('p')
         error.className = 'error'
-
-        // if (!errorStatus) error.innerHTML = 'Нужно заполнить все поля!'
 
         switch(errorStatus) {
             case 403: error.innerHTML = 'Неправильный пароль!'
