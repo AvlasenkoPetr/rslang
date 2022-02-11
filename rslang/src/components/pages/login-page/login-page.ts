@@ -7,7 +7,7 @@ import { getUserInfo } from '../../Helpers/helpers'
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
     LOGIN_PAGE: HTMLElement
-    Fetch
+    FETCH
 
     constructor() {
         this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement
@@ -16,7 +16,7 @@ export class LoginPage {
         this.LOGIN_PAGE.className = 'login-page page'
         this.LOGIN_PAGE.addEventListener('click', this.processClick)
         
-        this.Fetch = new Fetch
+        this.FETCH = new Fetch
     }
 
     processClick = async (e: MouseEvent) => {
@@ -113,8 +113,9 @@ export class LoginPage {
             password: password
         }
 
-        await this.Fetch.CREATE_USER(createUserBody)
+        await this.FETCH.CREATE_USER(createUserBody)
         .then(() => this.login(email, password))
+        .catch((error) => this.dropError(error.status));
     }
 
     login = async(email: string, password: string) => {
@@ -123,9 +124,11 @@ export class LoginPage {
             password: password  
         }
 
-        await this.Fetch.SIGN_IN(signInBody)
+        await this.FETCH.SIGN_IN(signInBody)
         .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
-        .then(() => this.redirectToMain());
+        .then(() => this.redirectToMain())
+        // .catch((error) => console.log(error.status, typeof error.status));
+        .catch((error) => this.dropError(error.status));
         
     }
 
@@ -146,13 +149,28 @@ export class LoginPage {
         return result
     }
 
-    dropError = () => {
+    dropError = (errorStatus?: number) => {
         const oldError: HTMLElement | null = document.querySelector('.error')
         if (oldError) oldError.remove()
 
         const error: HTMLElement = document.createElement('p')
         error.className = 'error'
-        error.innerHTML = 'Нужно заполнить все поля!'
+
+        // if (!errorStatus) error.innerHTML = 'Нужно заполнить все поля!'
+
+        switch(errorStatus) {
+            case 403: error.innerHTML = 'Неправильный пароль!'
+                break;
+
+            case 404: error.innerHTML = 'Такого пользователя нет!'
+                break;
+
+            case 417: error.innerHTML = 'Эта почта уже зарегистрирована!'
+                break;
+            
+            default: error.innerHTML = 'Нужно заполнить все поля!'
+                break;
+        }
 
         const buttonWrapper: HTMLElement | null = document.querySelector('.login-page__button_wrapper')
         if (!buttonWrapper) return
