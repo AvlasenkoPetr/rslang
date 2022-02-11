@@ -14,15 +14,15 @@ class GameResult{
     if(data.points) this.points = data.points
     this.total = data.total
     this.inRow = data.inRow
-    this.correctAnswers = data.answersArr.filter(item => item.isRight === true)
+    this.correctAnswers = data.answersArr.filter(item => item.isRight === 'true')
     this.correctAnswersCounter = this.correctAnswers.length
-    this.wrongAnswers = data.answersArr.filter(item => item.isRight === false)
+    this.wrongAnswers = data.answersArr.filter(item => item.isRight === 'false')
     this.wrongAnswersCounter = this.wrongAnswers.length
     this.accuracy = Math.round(this.correctAnswersCounter / +this.total * 100)
     document.body.style.setProperty('--p', `${this.accuracy}`)
   }
 
-  _initButtons(){
+  async _initButtons(){
     const modal = document.querySelector('#gameResultModalWindow') as HTMLElement
     const modalResults = document.querySelector('#modalResults') as HTMLElement
     const closeWindowBtn = document.querySelector('#closeWindowBtn') as HTMLElement
@@ -37,12 +37,12 @@ class GameResult{
     restartGame.addEventListener('click', () => modal.remove())
   }
 
-  render(){
+  render(wrapper:HTMLElement){
     const modal:HTMLElement = document.createElement('div')
     modal.className = 'gameResult-modalWindow'
     modal.id = 'gameResultModalWindow'
     modal.innerHTML = this.content()
-    document.body.append(modal)
+    wrapper.append(modal)
     this._initButtons()
   }
 

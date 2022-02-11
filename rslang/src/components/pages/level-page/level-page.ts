@@ -3,6 +3,7 @@ import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
 import appendFooter from '../../Reusable-components/footer/footer';
 
+
 const userInfo = getUserInfo();
 const auth = userInfo.token === '1' ? false : true;
 

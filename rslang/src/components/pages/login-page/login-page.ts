@@ -1,6 +1,7 @@
 import { Fetch } from '../../Fetch/fetch'
 import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
+
 import './login-page.scss'
 import { getUserInfo } from '../../Helpers/helpers'
 
