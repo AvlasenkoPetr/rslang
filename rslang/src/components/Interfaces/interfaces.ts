@@ -52,18 +52,13 @@ export interface IGET_AGGREGATED_WORDS {
 }
 
 export interface IResult{
-  points?:number | string,
-  total: number | string,
-  inRow: number | string,
-  answersArr: Array<IAnswersArr>
+  points?:number,
+  total: number,
+  inRow: number,
+  answersArr: Array<IAnswer>
 }
 
-export interface IAnswersArr{
-  info: IWord,
-  isRight: boolean
-}
-
-interface IWord {
+export interface IWord {
   id: string,
   group: number,
   page: number,
@@ -78,4 +73,34 @@ interface IWord {
   textExampleTranslate: string,
   textMeaningTranslate: string,
   wordTranslate: string
+}
+
+export interface IState {
+  data: null | Array<IWord>,
+  group: string,
+  currentPage: number,
+  isAnswerHide: boolean,
+  currentAnswers?: Array<IWord>,
+  words: Array<IAnswer>,
+  disabledButtons: boolean,
+  fullScreen:boolean,
+  inRow:number
+}
+
+export interface INewState {
+  type: string,
+  group?: string,
+  data?: Array<IWord>,
+  currentPage?: number,
+  isAnswerHide?: boolean,
+  currentAnswers?: Array<IWord>,
+  word?: IAnswer,
+  disabledButtons?: boolean,
+  fullScreen?:boolean,
+  inRow?: number
+}
+
+export interface IAnswer {
+  info: IWord,
+  isRight: string
 }
