@@ -1,8 +1,10 @@
-import { setRandomNumber } from './utilities';
+import { setRandomNumber } from './../../../Helpers/helpers';
+import { IAnswer, INewState, IState, IWord } from './../../../Interfaces/interfaces';
 import { GamePage } from './gamePage';
-import { IState, INewState, IWord, IAnswer } from './interfaces';
 import './audioCall.scss'
 import { Fetch } from '../../../Fetch/fetch';
+import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
+import { IResult } from '../../../Interfaces/interfaces';
 
 const PAGES = 30
 const ROUNDS_AMOUNT = 20
@@ -23,7 +25,7 @@ class AudioCall {
   public state: IState = {
     data: null,
     group: '4',
-    currentPage: 0,
+    currentPage: 18,
     isAnswerHide: true,
     currentAnswers: [],
     words: [],
@@ -145,7 +147,13 @@ class AudioCall {
       this._initPlay()
     }
     else {
-      
+      const audioCallMainElement = document.querySelector('#audioCallMainElement') as HTMLElement
+      const result:IResult = {
+        total:this.state.data!.length,
+        inRow:this.state.inRow,
+        answersArr: this.state.words
+      }
+      new GameResult(result).render(audioCallMainElement)
     }
 
   }
@@ -171,8 +179,14 @@ class AudioCall {
       type: Actions.SHOW_ANSWER,
     }
     this.setState(action)
+    this.showRightAnswer()
     this.gamePage.renderWords(this.state)
     this._initPlay()
+  }
+ 
+  showRightAnswer(){
+    const answersWrapper = document.querySelector('#answersWrapper') as HTMLElement
+    (answersWrapper.querySelector('[isright="true"]') as HTMLElement).classList.add('right-answer')
   }
 
   setAnswersActionCreator(data: Array<IWord>) {

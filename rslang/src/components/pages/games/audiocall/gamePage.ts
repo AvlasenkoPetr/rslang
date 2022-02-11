@@ -1,6 +1,5 @@
 import appendFooter from "../../../Footer/footer"
-import { IAnswer, IState, IWord } from "./interfaces"
-
+import { IAnswer, IState, IWord } from "../../../Interfaces/interfaces"
 
 class GamePage {
 
