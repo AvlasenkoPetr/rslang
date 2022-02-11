@@ -87,62 +87,69 @@ $button-nav-size: 30px;
     top: 90px;
     left: 0;
     width: $aside-opened-width;
+  }
 
-    li {
-      position: relative;
-      width: 100%;
-      height: 50px;
-      padding-left: $aside-closed-width;
+  li {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    padding-left: $aside-closed-width;
 
-      display: flex;
-      align-items: center;
+    display: flex;
+    align-items: center;
 
-      background-position: calc(($aside-closed-width - $button-nav-size) / 2)
-        center;
-      background-size: $button-nav-size $button-nav-size;
-      background-repeat: no-repeat;
+    background-position: calc(($aside-closed-width - $button-nav-size) / 2)
+      center;
+    background-size: $button-nav-size $button-nav-size;
+    background-repeat: no-repeat;
 
-      cursor: pointer;
-      transition: 0.2s linear;
+    cursor: pointer;
+    transition: 0.2s linear;
 
-      &:hover {
-        background-color: var(--purple-footer);
-      }
-
-      &.active::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        height: 50px;
-        width: 3px;
-        background-color: var(--font-color-secondary);
-      }
-
-      &[data-navigation='main'] {
-        background-image: url(../../assets/images/navigation/home.svg);
-      }
-      &[data-navigation='book'] {
-        background-image: url(../../assets/images/navigation/book.svg);
-        background-size: $button-nav-size calc($button-nav-size - 7px);
-      }
-      &[data-navigation='games'] {
-        background-image: url(../../assets/images/navigation/games.svg);
-        background-size: $button-nav-size calc($button-nav-size - 5px);
-      }
-      &[data-navigation='stats'] {
-        background-image: url(../../assets/images/navigation/stats.svg);
-        background-size: $button-nav-size calc($button-nav-size - 5px);
-      }
-      &[data-navigation='team'] {
-        background-image: url(../../assets/images/navigation/team.svg);
-      }
-      &[data-navigation='login'] {
-        background-image: url(../../assets/images/navigation/login1.svg);
-      }
-      &[data-navigation='logout'] {
-        background-image: url(../../assets/images/navigation/logout.svg);
-        background-size: $button-nav-size calc($button-nav-size - 2px);
-      }
+    &:hover {
+      background-color: var(--purple-footer);
     }
+
+    &.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      height: 50px;
+      width: 3px;
+      background-color: var(--font-color-secondary);
+    }
+
+    &[data-navigation='main'] {
+      background-image: url(../../assets/images/navigation/home.svg);
+    }
+    &[data-navigation='book'] {
+      background-image: url(../../assets/images/navigation/book.svg);
+      background-size: $button-nav-size calc($button-nav-size - 7px);
+    }
+    &[data-navigation='games'] {
+      background-image: url(../../assets/images/navigation/games.svg);
+      background-size: $button-nav-size calc($button-nav-size - 5px);
+    }
+    &[data-navigation='stats'] {
+      background-image: url(../../assets/images/navigation/stats.svg);
+      background-size: $button-nav-size calc($button-nav-size - 5px);
+    }
+    &[data-navigation='team'] {
+      background-image: url(../../assets/images/navigation/team.svg);
+    }
+    &[data-navigation='login'] {
+      background-image: url(../../assets/images/navigation/login2.svg);
+      justify-self: flex-end;
+    }
+    &[data-navigation='logout'] {
+      background-image: url(../../assets/images/navigation/logout.svg);
+      background-size: $button-nav-size calc($button-nav-size - 2px);
+    }
+  }
+
+  .navigation__login {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
   }
 }

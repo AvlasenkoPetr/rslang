@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
-import appendFooter from '../../Footer/footer';
+import appendFooter from '../../Reusable-components/footer/footer';
+
 
 const userInfo = getUserInfo();
 const auth = userInfo.token === '1' ? false : true;
@@ -98,6 +99,7 @@ class LevelPage {
       </div>`;
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
     appendFooter(this.MAIN_WRAPPER);
+
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
 
     const target = document.querySelector('.navigation .active') as HTMLElement;
