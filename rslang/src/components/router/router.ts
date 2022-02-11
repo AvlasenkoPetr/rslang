@@ -74,6 +74,8 @@ export class Router {
         return;
 
       case 'stats':
+        const game = new AudioCall()
+        game.startGame()
         return;
 
       case 'team':

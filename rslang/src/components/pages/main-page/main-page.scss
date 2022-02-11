@@ -4,19 +4,31 @@
   justify-content: center;
   align-items: center;
 
-
   .main-page__title {
     margin-bottom: 30px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    
     h1 {
       color: var(--purple-dark);
-
       span {
         color: var(--blue-interactive);
+      }
+    }
+  }
+  .main-page__features {
+   
+    .main-page__cards {
+      display: flex;
+      .main-page__card {
+
+      }
+      .card-img__wrapper {
+      }
+      .card__title {
+      }
+      .card__text {
       }
     }
   }
