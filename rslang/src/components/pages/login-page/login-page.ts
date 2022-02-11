@@ -182,4 +182,4 @@ window.addEventListener('load', () => {
     if (localStorage.getItem('UserInfo')) {
       (document.querySelector('[data-navigation="login"]') as HTMLElement).dataset.navigation = 'logout'
     }
-  })
+})

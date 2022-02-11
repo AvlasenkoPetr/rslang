@@ -26,6 +26,12 @@ export class Router {
       return;
     }
 
+    if (clickedButtonDataset === 'logout') {
+      localStorage.removeItem('UserInfo')
+      clickedButton.dataset.navigation = 'login'
+      return
+    }
+
     // вынести в отдельную ф-цию (снимаем класс эктив в нав блоке)
     const currentlyActiveButton: HTMLElement | null =
       this.NAV_BLOCK.querySelector('.active');
@@ -81,14 +87,6 @@ export class Router {
       case 'login':
         const loginPage = new LoginPage
         loginPage.renderLoginPage()
-        return
-
-      case 'logout':
-        localStorage.removeItem('UserInfo')
-        const logoutNavButton: HTMLElement | null = document.querySelector(`[data-navigation="${buttonDataset}"]`)
-        if (logoutNavButton) {
-          logoutNavButton.dataset.navigation = 'login'
-        }
         return
     }
   };
