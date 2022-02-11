@@ -51,3 +51,31 @@ export interface IGET_AGGREGATED_WORDS {
  filter?:string
 }
 
+export interface IResult{
+  points?:number | string,
+  total: number | string,
+  inRow: number | string,
+  answersArr: Array<IAnswersArr>
+}
+
+export interface IAnswersArr{
+  info: IWord,
+  isRight: boolean
+}
+
+interface IWord {
+  id: string,
+  group: number,
+  page: number,
+  word: string,
+  image: string,
+  audio: string,
+  audioMeaning: string,
+  audioExample: string,
+  textMeaning: string,
+  textExample: string,
+  transcription: string,
+  textExampleTranslate: string,
+  textMeaningTranslate: string,
+  wordTranslate: string
+}
