@@ -25,7 +25,7 @@ class AudioCall {
   public state: IState = {
     data: null,
     group: '4',
-    currentPage: 18,
+    currentPage: 0,
     isAnswerHide: true,
     currentAnswers: [],
     words: [],
