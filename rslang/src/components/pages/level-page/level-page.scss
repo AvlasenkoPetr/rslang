@@ -1,15 +1,19 @@
 .level {
   &-page {
-  background: url(../../../assets/images/background-waves/level-page-wave.svg) no-repeat;
-  background-position: right;
-  padding-top: 65px;
-  padding-left: 235px;
-  padding-right: 350px;
+    background: url(../../../assets/images/background-waves/level-page-wave.svg)
+      no-repeat;
+    background-position: right;
+    padding-top: 50px;
+    padding-left: 235px;
+    padding-right: 350px;
+
     &-content {
       display: flex;
       justify-content: space-between;
+
       .levels {
         width: 475px;
+
         .level-item {
           position: relative;
           display: flex;
@@ -18,49 +22,57 @@
           border: 1px solid #000;
           margin-bottom: 30px;
           box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
           &:nth-child(1) .label {
-            background-color: #FFEBEC;
+            background-color: #ffebec;
             &::after {
-              border-color: transparent transparent transparent #FFEBEC;
+              border-color: transparent transparent transparent #ffebec;
             }
           }
+
           &:nth-child(2) .label {
-            background-color: #FFCFD2;
+            background-color: #ffcfd2;
             &::after {
-              border-color: transparent transparent transparent #FFCFD2;
+              border-color: transparent transparent transparent #ffcfd2;
             }
           }
+
           &:nth-child(3) .label {
-            background-color: #EBE4F1;
+            background-color: #ebe4f1;
             &::after {
-              border-color: transparent transparent transparent #EBE4F1;
+              border-color: transparent transparent transparent #ebe4f1;
             }
           }
+
           &:nth-child(4) .label {
-            background-color: #B9A1CE;
+            background-color: #b9a1ce;
             &::after {
-              border-color: transparent transparent transparent #B9A1CE;
+              border-color: transparent transparent transparent #b9a1ce;
             }
           }
+
           &:nth-child(5) .label {
-            background-color: #95B8D1;
+            background-color: #95b8d1;
             &::after {
-              border-color: transparent transparent transparent #95B8D1;
+              border-color: transparent transparent transparent #95b8d1;
             }
           }
+
           &:nth-child(6) .label {
-            background-color: #71A0C1;
+            background-color: #71a0c1;
             &::after {
-              border-color: transparent transparent transparent #71A0C1;
+              border-color: transparent transparent transparent #71a0c1;
             }
           }
+
           &:nth-child(7) .label {
             font-size: 36px;
-            background-color: #EB4F4F;
+            background-color: #eb4f4f;
             &::after {
-              border-color: transparent transparent transparent #EB4F4F;
+              border-color: transparent transparent transparent #eb4f4f;
             }
           }
+
           .label {
             display: flex;
             justify-content: center;
@@ -70,6 +82,7 @@
             font-family: 'Quicksand';
             font-size: 54px;
             transition: 0.3s;
+
             span {
               position: absolute;
               left: 50px;
@@ -85,13 +98,14 @@
               z-index: -1;
             }
           }
+
           .label-title {
             display: block;
             margin: auto;
             font-family: 'Quicksand';
             font-size: 24px;
           }
-          &:hover .label{
+          &:hover .label {
             width: 100%;
             &-title {
               display: none;
@@ -102,6 +116,7 @@
           }
         }
       }
+
       .level-img {
         width: 50%;
       }
@@ -112,6 +127,6 @@
 .title {
   font-size: 48px;
   font-family: 'Source Sans Pro';
-  font-weight: 400;
+  // font-weight: 400;
   margin-bottom: 55px;
 }
