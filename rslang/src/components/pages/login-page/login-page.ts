@@ -4,6 +4,7 @@ import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
 import { getUserInfo, isUserExists } from '../../Helpers/helpers'
+import { Router } from '../../router/router'
 
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
@@ -137,6 +138,11 @@ export class LoginPage {
         if (loginNavButton) {
             loginNavButton.dataset.navigation = 'logout'
             loginNavButton.innerHTML = 'Выйти'
+            loginNavButton.classList.remove('active')
+
+            document.querySelector('[data-navigation="main"]')?.classList.add('active')
+            const router = new Router
+            router.renderPage()
         }
     }
 

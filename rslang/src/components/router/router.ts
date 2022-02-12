@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import { MainPage } from './../pages/main-page/main-page';
->>>>>>> ca68227ca77ec9b12d6850fe174baf71cd321c70
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
