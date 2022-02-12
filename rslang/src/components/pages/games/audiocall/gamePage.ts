@@ -1,4 +1,4 @@
-import appendFooter from "../../../Footer/footer"
+import appendFooter from "../../../Reusable-components/footer/footer"
 import { IAnswer, IState, IWord } from "../../../Interfaces/interfaces"
 
 class GamePage {

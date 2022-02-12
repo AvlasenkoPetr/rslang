@@ -3,7 +3,7 @@ import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
-import { getUserInfo } from '../../Helpers/helpers'
+import { getUserInfo, isUserExists } from '../../Helpers/helpers'
 
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
@@ -180,7 +180,9 @@ export class LoginPage {
 
 // временная затычка для отрисовки залогиненного юзера
 window.addEventListener('load', () => {
-    if (localStorage.getItem('UserInfo')) {
-      (document.querySelector('[data-navigation="login"]') as HTMLElement).dataset.navigation = 'logout'
+    if (isUserExists()) {
+      const logoutButton = document.querySelector('[data-navigation="login"]') as HTMLElement
+      logoutButton.dataset.navigation = 'logout'
+      logoutButton.innerHTML = 'Выйти'
     }
 })
