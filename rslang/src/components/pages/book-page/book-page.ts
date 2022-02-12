@@ -44,6 +44,23 @@ export class BookPage {
       case 'next':
         this.toNextPage(clickedButton)
         return
+
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+        if (clickedButton.classList.contains('active')) return
+        
+        const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
+        pageCounter.value = '1'
+
+        this.LEVEL = clickedButtonDataset
+        this.setActiveLevel()
+        this.renderWordsContainer()
+        return
     }
   }
 
@@ -96,9 +113,7 @@ export class BookPage {
 
       </div>
       ` 
-      this.WORDS_CONTAINER.append(wordItem)
-      console.log(word);
-      
+      this.WORDS_CONTAINER.append(wordItem)      
     }
   }
 
@@ -118,6 +133,10 @@ export class BookPage {
 
   setActiveLevel = (): void => {
     const currentLevelButton: HTMLElement | null = document.querySelector(`[data-book="${this.LEVEL}"]`)
+    const activeLevelButton = currentLevelButton?.parentElement?.querySelector('.active')
+    if (activeLevelButton) {
+      activeLevelButton.classList.remove('active')
+    }
     currentLevelButton?.classList.add('active')
   }
 
