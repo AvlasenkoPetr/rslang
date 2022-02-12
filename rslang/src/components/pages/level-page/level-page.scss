@@ -4,8 +4,11 @@
       no-repeat;
     background-position: right;
     padding-top: 50px;
-    padding-left: 235px;
-    padding-right: 350px;
+    .wrapper {
+      position: relative;
+      max-width: 1360px;
+      margin: auto;
+    }
 
     &-content {
       display: flex;
@@ -119,15 +122,28 @@
       }
 
       .level-img {
-        width: 50%;
+        height: 500px;
+        position: absolute;
+        right: 10%;
+        bottom: 0px;
       }
     }
   }
 }
 
 .title {
+  position: absolute;
+  right: 0;
   font-size: 48px;
   font-family: 'Source Sans Pro';
-  // font-weight: 400;
-  margin-bottom: 55px;
+  font-weight: 300;
+}
+
+.subtitle {
+  max-width: 580px;
+  font-size: 28px;
+  margin-top: 100px;
+  span {
+    font-weight: 700;
+  }
 }

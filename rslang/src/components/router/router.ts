@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { MainPage } from './../pages/main-page/main-page';
+>>>>>>> ca68227ca77ec9b12d6850fe174baf71cd321c70
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
@@ -60,13 +64,33 @@ export class Router {
     this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened');
   };
 
-  renderPage = (buttonDataset: string): void => {
+  setLastPageToLocalStorage(page:string){
+    localStorage.setItem('lastPage', page)
+  }
+
+  setActivePage(currentPage:string){
+    const navigation = document.querySelector('.navigation') as HTMLElement
+    const pages = navigation.querySelectorAll('li') as NodeList
+    pages.forEach(item => {
+     if((item as HTMLElement).dataset.navigation === currentPage){
+      (item as HTMLElement).classList.add('active')
+     }else{
+      (item as HTMLElement).classList.remove('active')
+     }
+    })
+  }
+
+  renderPage = (buttonDataset: string = 'main'): void => {
     // Работает через дата-атрибуты
     // прим.: кнопка для переклчения на страницу книги имеет атрибут data-navigation='book', т.е.
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
+    this.setLastPageToLocalStorage(buttonDataset)
+    this.setActivePage(buttonDataset)
 
     switch (buttonDataset) {
       case 'main': // ф-ция рендера
+        const main = new MainPage()
+        main.render()
         return;
 
       case 'book':

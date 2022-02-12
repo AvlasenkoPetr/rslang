@@ -3,10 +3,6 @@ import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
 import appendFooter from '../../Reusable-components/footer/footer';
 
-
-const userInfo = getUserInfo();
-const auth = userInfo.token === '1' ? false : true;
-
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
 
@@ -63,6 +59,7 @@ class LevelPage {
   renderLevelPage(): void {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LEVEL_PAGE.innerHTML = `
+      <div class="wrapper">
       <h1 class="title">Выберите уровень сложности</h1>
       <div class="level-page-content">
         <div class="levels">
@@ -91,11 +88,13 @@ class LevelPage {
             <span class="label-title">Proficiency</span>
           </div>
         </div>
+        <p class="subtitle"><span>Электронный учебник</span> - библиотека из 4000 часто встречающихся слов. Изучай в своем темпе</p>
         <img
           src="./assets/images/background-guys/man-reading-newspaper.svg"
           class="level-img"
           alt="img"
         />
+      </div>
       </div>`;
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
     appendFooter(this.MAIN_WRAPPER);
@@ -103,6 +102,8 @@ class LevelPage {
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
 
     const target = document.querySelector('.navigation .active') as HTMLElement;
+    const userInfo = getUserInfo();
+    const auth = userInfo.token === '1' ? false : true;
 
     if (target.dataset.navigation) {
       const targetAttr: string = target.dataset.navigation;
@@ -117,6 +118,11 @@ class LevelPage {
         </div>
         `
         );
+      }
+      if (targetAttr === 'games') {
+        const subtitle = document.querySelector('.subtitle') as HTMLElement;
+        subtitle.innerHTML =
+          '<span>Играй</span> - для лучшего запоминания играй и делись результатами с другими';
       }
     }
   }
