@@ -1,7 +1,7 @@
-import { LoginPage } from '../Pages/login-page/login-page';
-import LevelPage from '../Pages/level-page/level-page';
+import { LoginPage } from '../pages/login-page/login-page';
+import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
-import { AudioCall } from '../Pages/games/audiocall/audioCallGame';
+import { AudioCall } from '../pages/games/audiocall/audioCallGame';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -80,17 +80,19 @@ export class Router {
         return;
 
       case 'login':
-        const loginPage = new LoginPage
-        loginPage.renderLoginPage()
-        return
+        const loginPage = new LoginPage();
+        loginPage.renderLoginPage();
+        return;
 
       case 'logout':
-        localStorage.removeItem('UserInfo')
-        const logoutNavButton: HTMLElement | null = document.querySelector(`[data-navigation="${buttonDataset}"]`)
+        localStorage.removeItem('UserInfo');
+        const logoutNavButton: HTMLElement | null = document.querySelector(
+          `[data-navigation="${buttonDataset}"]`
+        );
         if (logoutNavButton) {
-          logoutNavButton.dataset.navigation = 'login'
+          logoutNavButton.dataset.navigation = 'login';
         }
-        return
+        return;
     }
   };
 }

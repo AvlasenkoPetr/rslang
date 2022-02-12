@@ -3,10 +3,6 @@ import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
 import appendFooter from '../../Reusable-components/footer/footer';
 
-
-const userInfo = getUserInfo();
-const auth = userInfo.token === '1' ? false : true;
-
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
 
@@ -103,6 +99,8 @@ class LevelPage {
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
 
     const target = document.querySelector('.navigation .active') as HTMLElement;
+    const userInfo = getUserInfo();
+    const auth = userInfo.token === '1' ? false : true;
 
     if (target.dataset.navigation) {
       const targetAttr: string = target.dataset.navigation;
