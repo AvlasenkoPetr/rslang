@@ -1,62 +1,68 @@
-import appendFooter from "../../../Reusable-components/footer/footer"
-import { IAnswer, IState, IWord } from "../../../Interfaces/interfaces"
+import appendFooter from '../../../Reusable-components/footer/footer';
+import { IAnswer, IState, IWord } from '../../../Interfaces/interfaces';
 
 class GamePage {
-
-  public MAIN_WRAPPER: HTMLElement
+  public MAIN_WRAPPER: HTMLElement;
 
   constructor() {
-    this.MAIN_WRAPPER =document.querySelector('.main__wrapper') as HTMLElement
+    this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
   }
 
   renderWords(state: IState) {
-    const wordWrapper = document.querySelector('#wordWrapper') as HTMLElement
-    const audioWrapper = document.querySelector('#audioWrapper') as HTMLElement
-    const nextPageButton = document.querySelector('#nextPageButton') as HTMLElement
-    const data = state.data!
-    const currentPage = state.currentPage
-    this.renderCurrentPage(currentPage)
-    audioWrapper.innerHTML = `<img class="answer-img" src="https://rss21q3-rslang.herokuapp.com/${data[currentPage].image}">`
-    wordWrapper.innerHTML = this.pageContent(data[currentPage])
-    const hiddenWord = document.querySelector('#hiddenWord') as HTMLElement
+    const wordWrapper = document.querySelector('#wordWrapper') as HTMLElement;
+    const audioWrapper = document.querySelector('#audioWrapper') as HTMLElement;
+    const nextPageButton = document.querySelector(
+      '#nextPageButton'
+    ) as HTMLElement;
+    const data = state.data!;
+    const currentPage = state.currentPage;
+    this.renderCurrentPage(currentPage);
+    audioWrapper.innerHTML = `<img class="answer-img" src="https://rss21q3-rslang.herokuapp.com/${data[currentPage].image}">`;
+    wordWrapper.innerHTML = this.pageContent(data[currentPage]);
+    const hiddenWord = document.querySelector('#hiddenWord') as HTMLElement;
     if (state.isAnswerHide === false) {
-      hiddenWord.classList.add('visible')
+      hiddenWord.classList.add('visible');
       nextPageButton.classList.remove('hide');
-      (nextPageButton.nextElementSibling as HTMLElement).classList.add('hide')
-    }
-    else if (state.isAnswerHide === true) {
-      hiddenWord.classList.remove('visible')
+      (nextPageButton.nextElementSibling as HTMLElement).classList.add('hide');
+    } else if (state.isAnswerHide === true) {
+      hiddenWord.classList.remove('visible');
       nextPageButton.classList.add('hide');
-      (nextPageButton.nextElementSibling as HTMLButtonElement).classList.remove('hide')
+      (nextPageButton.nextElementSibling as HTMLButtonElement).classList.remove(
+        'hide'
+      );
     }
   }
 
-  renderCurrentPage(currentPage:number){
-    const audioCallCurrentPage = document.querySelector('#audioCallCurrentPage') as HTMLSpanElement
-    audioCallCurrentPage.innerHTML = `${currentPage += 1}`
+  renderCurrentPage(currentPage: number) {
+    const audioCallCurrentPage = document.querySelector(
+      '#audioCallCurrentPage'
+    ) as HTMLSpanElement;
+    audioCallCurrentPage.innerHTML = `${(currentPage += 1)}`;
   }
 
   renderAnswers(data: Array<IWord>, currentPage: IWord) {
-    const answersWrapper = document.querySelector('#answersWrapper') as HTMLElement
-    const audioWrapper = document.querySelector('#audioWrapper') as HTMLElement
-    audioWrapper.innerHTML = this.audioContent(currentPage,true);
-    answersWrapper.innerHTML = ''
-    data.forEach(item => {
-      const button = document.createElement('button')
+    const answersWrapper = document.querySelector(
+      '#answersWrapper'
+    ) as HTMLElement;
+    const audioWrapper = document.querySelector('#audioWrapper') as HTMLElement;
+    audioWrapper.innerHTML = this.audioContent(currentPage, true);
+    answersWrapper.innerHTML = '';
+    data.forEach((item) => {
+      const button = document.createElement('button');
       if (item.id === currentPage.id) {
-        button.setAttribute('isRight', 'true')
-      } else button.setAttribute('isRight', 'false')
-      button.textContent = item.wordTranslate
-      button.setAttribute('id', item.id)
-      button.classList.add('answer')
-      button.classList.add('btn')
-      answersWrapper.append(button)
-    })
+        button.setAttribute('isRight', 'true');
+      } else button.setAttribute('isRight', 'false');
+      button.textContent = item.wordTranslate;
+      button.setAttribute('id', item.id);
+      button.classList.add('answer');
+      button.classList.add('btn');
+      answersWrapper.append(button);
+    });
   }
 
   render() {
-    this.MAIN_WRAPPER.innerHTML = this.gamePageContent()
-    appendFooter(this.MAIN_WRAPPER)
+    this.MAIN_WRAPPER.innerHTML = this.gamePageContent();
+    appendFooter(this.MAIN_WRAPPER);
   }
 
   resultsContent(rightAnswers: Array<IAnswer>, worthAnswers: Array<IAnswer>) {
@@ -65,26 +71,34 @@ class GamePage {
       <div class="modal-window__wrapper">
         <h2 class="modal-window__title>Результаты</h2>
         <div class="modal-window__content">
-          <h3 class="rightContent__title">Я знаю <span id="rightAnswersCounter" class="right-answers_counter">${rightAnswers.length}</span></h3>        
+          <h3 class="rightContent__title">Я знаю <span id="rightAnswersCounter" class="right-answers_counter">${
+            rightAnswers.length
+          }</span></h3>        
           <div id="rightContentBody" class="rightContent__body">
-          ${rightAnswers.map((answer: IAnswer) => {
-      return `
+          ${rightAnswers
+            .map((answer: IAnswer) => {
+              return `
       <div>${answer.info.word} - ${answer.info.wordTranslate}</div>
-      `
-    }).join('')}
+      `;
+            })
+            .join('')}
           </div>
-          <h3 class="worthContent__title">Я не знаю <span id="worthAnswersCounter" class="worth-answers_counter">${worthAnswers.length}</span></h3>        
+          <h3 class="worthContent__title">Я не знаю <span id="worthAnswersCounter" class="worth-answers_counter">${
+            worthAnswers.length
+          }</span></h3>        
           <div id="worthContentBody" class="worthContent__body">
-          ${worthAnswers.map((answer: IAnswer) => {
-      return `
+          ${worthAnswers
+            .map((answer: IAnswer) => {
+              return `
             <div>${answer.info.word} - ${answer.info.wordTranslate}</div>
-            `
-    }).join('')}</div>
+            `;
+            })
+            .join('')}</div>
           <button id="closeModalWindow" class="close-modal-window">Закрыть</button>
         </div>
       </div>
     </div>
-    `
+    `;
   }
 
   audioContent(data: IWord, isAutoPlay: boolean) {
@@ -94,8 +108,10 @@ class GamePage {
         <img src="../../../../assets/images/audioCall/audio-button.svg" alt="audio-button">
       </span>
     </button>
-    <audio ${isAutoPlay ? 'autoplay' : ''} src="https://rss21q3-rslang.herokuapp.com/${data.audio}"></audio>
-    `
+    <audio ${
+      isAutoPlay ? 'autoplay' : ''
+    } src="https://rss21q3-rslang.herokuapp.com/${data.audio}"></audio>
+    `;
   }
 
   pageContent(data: IWord) {
@@ -104,7 +120,7 @@ class GamePage {
         <p>${data.word}</p>
         ${this.audioContent(data, false)}
       </div>
-    `
+    `;
   }
 
   gamePageContent() {
@@ -130,8 +146,8 @@ class GamePage {
           </div>
         </div>
       </main>
-    `
+    `;
   }
 }
 
-export { GamePage }
+export { GamePage };
