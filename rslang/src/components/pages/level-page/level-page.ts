@@ -59,6 +59,7 @@ class LevelPage {
   renderLevelPage(): void {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LEVEL_PAGE.innerHTML = `
+      <div class="wrapper">
       <h1 class="title">Выберите уровень сложности</h1>
       <div class="level-page-content">
         <div class="levels">
@@ -87,11 +88,13 @@ class LevelPage {
             <span class="label-title">Proficiency</span>
           </div>
         </div>
+        <p class="subtitle"><span>Электронный учебник</span> - библиотека из 4000 часто встречающихся слов. Изучай в своем темпе</p>
         <img
           src="./assets/images/background-guys/man-reading-newspaper.svg"
           class="level-img"
           alt="img"
         />
+      </div>
       </div>`;
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
     appendFooter(this.MAIN_WRAPPER);
@@ -115,6 +118,11 @@ class LevelPage {
         </div>
         `
         );
+      }
+      if (targetAttr === 'games') {
+        const subtitle = document.querySelector('.subtitle') as HTMLElement;
+        subtitle.innerHTML =
+          '<span>Играй</span> - для лучшего запоминания играй и делись результатами с другими';
       }
     }
   }

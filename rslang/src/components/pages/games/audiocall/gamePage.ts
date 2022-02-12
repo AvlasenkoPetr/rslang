@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import appendFooter from '../../../Reusable-components/footer/footer';
 import { IAnswer, IState, IWord } from '../../../Interfaces/interfaces';
-=======
-import appendFooter from "../../../Reusable-components/footer/footer"
-import { IAnswer, IState, IWord } from "../../../Interfaces/interfaces"
->>>>>>> bce9854e33138f849343ea3c5fc697f742b602e1
 
 class GamePage {
   public MAIN_WRAPPER: HTMLElement;

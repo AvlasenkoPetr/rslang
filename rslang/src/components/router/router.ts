@@ -1,14 +1,7 @@
-<<<<<<< HEAD
+import { MainPage } from './../pages/main-page/main-page';
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
-import { AudioCall } from '../pages/games/audiocall/audioCallGame';
-=======
-import { MainPage } from './../Pages/main-page/main-page';
-import { LoginPage } from '../Pages/login-page/login-page';
-import LevelPage from '../Pages/level-page/level-page';
-import './router.scss';
->>>>>>> bce9854e33138f849343ea3c5fc697f742b602e1
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -113,25 +106,9 @@ export class Router {
         return;
 
       case 'login':
-<<<<<<< HEAD
-        const loginPage = new LoginPage();
-        loginPage.renderLoginPage();
-        return;
-
-      case 'logout':
-        localStorage.removeItem('UserInfo');
-        const logoutNavButton: HTMLElement | null = document.querySelector(
-          `[data-navigation="${buttonDataset}"]`
-        );
-        if (logoutNavButton) {
-          logoutNavButton.dataset.navigation = 'login';
-        }
-        return;
-=======
         const loginPage = new LoginPage
         loginPage.renderLoginPage()
         return
->>>>>>> bce9854e33138f849343ea3c5fc697f742b602e1
     }
   };
 }
