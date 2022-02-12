@@ -40,7 +40,7 @@ class LevelPage {
 
           switch (targetAttr) {
             case 'book':
-              const bookPage = new BookPage(level)
+              const bookPage = new BookPage(String(level))
               bookPage.renderBookPage()
               break;
 
