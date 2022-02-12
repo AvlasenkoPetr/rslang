@@ -1,4 +1,4 @@
-import './styles.sass';
+import './spint.sass';
 
 interface IWord {
   id: string;
