@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
+import { Sprint } from '../games/sprint/sprint';
 import appendFooter from '../../Reusable-components/footer/footer';
 
 class LevelPage {
@@ -43,7 +44,8 @@ class LevelPage {
               // запускаем рендер книги
               break;
             case 'sprint':
-              // запускаем рендер спринта
+              const sprintGame = new Sprint(level);
+              sprintGame.startGame();
               break;
             case 'audiocall':
               // запускаем рендер аудиовызова
@@ -119,10 +121,15 @@ class LevelPage {
         `
         );
       }
-      if (targetAttr === 'games') {
+      if (targetAttr === 'sprint') {
         const subtitle = document.querySelector('.subtitle') as HTMLElement;
         subtitle.innerHTML =
-          '<span>Играй</span> - для лучшего запоминания играй и делись результатами с другими';
+          '<span>Спринт</span> - выберите соответсвует ли перевод предложенному слову';
+      }
+      if (targetAttr === 'audiocall') {
+        const subtitle = document.querySelector('.subtitle') as HTMLElement;
+        subtitle.innerHTML =
+          '<span>Аудиовызов</span> - выберите из предложенных вариантов ответа правильный перевод слова, который услышите';
       }
     }
   }

@@ -1,279 +1,280 @@
-import './spint.sass';
+import './sprint';
+import { setRandomNumber } from '../../../Helpers/helpers';
+import { IWord } from '../../../Interfaces/interfaces';
+import { Fetch } from '../../../Fetch/fetch';
 
-interface IWord {
-  id: string;
-  group: number;
-  page: number;
-  word: string;
-  image: string;
-  audio: string;
-  audioMeaning: string;
-  audioExample: string;
-  textMeaning: string;
-  textExample: string;
-  transcription: string;
-  wordTranslate: string;
-  textMeaningTranslate: string;
-  textExampleTranslate: string;
-}
+const fetch = new Fetch();
+export class Sprint {
+  timerCount: number;
+  words: Array<IWord>;
+  points: number;
+  countPoints: number;
+  progress: number;
+  answers: number;
+  rightAnswers: number;
+  mistakes: number;
+  currentWord!: IWord;
+  word!: string;
+  translate!: string;
+  rightAnswersArr: Array<IWord>;
+  mistakesArr: Array<IWord>;
+  MAIN_WRAPPER: HTMLElement;
+  group: string;
 
-const app = document.querySelector('body') as HTMLElement;
+  constructor(group: number) {
+    this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
-let timerCount: number = 30;
+    this.group = String(group);
 
-let words: Array<IWord>;
-let points = 0;
-let countPoints = 10;
-let progress = 0;
+    this.timerCount = 30;
 
-let answers = 0;
-let rightAnswers = 0;
-let mistakes = 0;
+    this.words = [];
+    this.points = 0;
+    this.countPoints = 10;
+    this.progress = 0;
 
-let currentWord: IWord;
-let word: string;
-let translate: string;
+    this.answers = 0;
+    this.rightAnswers = 0;
+    this.mistakes = 0;
 
-const rightAnswersArr: Array<IWord> = [];
-const mistakesArr: Array<IWord> = [];
-
-function getRandomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
-  const li = document.createElement('li');
-  li.className = 'answer';
-  li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
-  li.addEventListener('click', () => {
-    const audio = new Audio(
-      `https://rss21q3-rslang.herokuapp.com/${ans.audio}`
-    );
-    audio.play();
-  });
-
-  wrapper.append(li);
-}
-
-function renderResults() {
-  let accurancy = Math.round((rightAnswers / answers) * 100);
-  if (Number.isNaN(accurancy)) accurancy = 0;
-
-  app.insertAdjacentHTML(
-    'beforeend',
-    `
-    <div class="results">
-      <p class="result-points">Вы набрали ${points} очков</p>
-      <p class="accurancy">Accurancy ${accurancy}%</p>
-      <p class="right-answ-count">Правильных ответов: ${rightAnswers}</p>
-      <p class="mistakes-count">Ошибок: ${mistakes}</p>
-      <p class="repeated">Всего слов: ${answers}</p>
-    </div>
-  `
-  );
-
-  const results = document.querySelector('.results') as HTMLElement;
-  results.insertAdjacentHTML(
-    'beforeend',
-    `
-    <ul class="right-answers">Correct Answers</ul>
-    <ul class="mistake-answers">Mistakes</ul>
-  `
-  );
-
-  const rightAnswersUl = document.querySelector(
-    '.right-answers'
-  ) as HTMLElement;
-  const mistakeAnswersUl = document.querySelector(
-    '.mistake-answers'
-  ) as HTMLElement;
-
-  rightAnswersArr.forEach((ans) => {
-    renderResultsAnswer(ans, rightAnswersUl);
-  });
-
-  mistakesArr.forEach((ans) => {
-    renderResultsAnswer(ans, mistakeAnswersUl);
-  });
-}
-
-function stopGame() {
-  const gameArea = document.querySelector('.game-area') as HTMLElement;
-
-  gameArea.style.display = 'none';
-  renderResults();
-}
-
-function timer() {
-  const timerContainer = document.querySelector('.timer') as HTMLElement;
-
-  const timerId = setInterval(() => {
-    timerCount -= 1;
-    timerContainer.innerHTML = String(timerCount);
-    if (timerCount === 0) {
-      clearInterval(timerId);
-      stopGame();
-    }
-  }, 1000);
-}
-
-function round() {
-  const wordContainer = document.querySelector('.word') as HTMLElement;
-  const translateContainer = document.querySelector(
-    '.translate-word'
-  ) as HTMLElement;
-
-  const wordInfo = words[getRandomInt(0, 19)];
-  let randomWord = wordInfo.word;
-  let randomTranslate = words[getRandomInt(0, 19)].wordTranslate;
-  const random = Boolean(getRandomInt(0, 2));
-
-  if (random) {
-    // wordInfo = words[getRandomInt(0, 19)];
-    randomWord = wordInfo.word;
-    randomTranslate = wordInfo.wordTranslate;
+    this.rightAnswersArr = [];
+    this.mistakesArr = [];
   }
 
-  currentWord = wordInfo;
+  async startGame() {
+    const randomPage: string = String(setRandomNumber(29));
+    this.words = await fetch.GET_WORDS(this.group, randomPage);
+    this.MAIN_WRAPPER.innerHTML = '';
+    this.game();
+  }
 
-  wordContainer.innerHTML = randomWord;
-  translateContainer.innerHTML = randomTranslate;
+  timer() {
+    const timerContainer = document.querySelector('.timer') as HTMLElement;
 
-  word = wordContainer.innerText;
-  translate = translateContainer.innerText;
-}
+    const timerId = setInterval(() => {
+      this.timerCount -= 1;
+      timerContainer.innerHTML = String(this.timerCount);
+      if (this.timerCount === 0) {
+        clearInterval(timerId);
+        this.stopGame();
+      }
+    }, 1000);
+  }
 
-function updatePointsInfo(state: boolean) {
-  answers += 1;
-  const pointsContainer = document.querySelector('.points') as HTMLElement;
-  const countPointsContainer = document.querySelector(
-    '.count-points'
-  ) as HTMLElement;
-  const progressItems =
-    document.querySelectorAll<HTMLElement>('.progress-item');
+  round() {
+    const wordContainer = document.querySelector('.word') as HTMLElement;
+    const translateContainer = document.querySelector(
+      '.translate-word'
+    ) as HTMLElement;
 
-  if (state) {
-    points += countPoints;
-    progress += 1;
-    rightAnswers += 1;
+    const wordInfo = this.words[setRandomNumber(19)];
+    let randomWord = wordInfo.word;
+    let randomTranslate = this.words[setRandomNumber(19)].wordTranslate;
+    const random = Boolean(setRandomNumber(2));
 
-    if (progress === 4) {
-      progress = 0;
-      countPoints *= 2;
+    if (random) {
+      randomWord = wordInfo.word;
+      randomTranslate = wordInfo.wordTranslate;
+    }
+
+    this.currentWord = wordInfo;
+
+    wordContainer.innerHTML = randomWord;
+    translateContainer.innerHTML = randomTranslate;
+
+    this.word = wordContainer.innerText;
+    this.translate = translateContainer.innerText;
+  }
+
+  updatePointsInfo(state: boolean) {
+    this.answers += 1;
+    const pointsContainer = document.querySelector('.points') as HTMLElement;
+    const countPointsContainer = document.querySelector(
+      '.count-points'
+    ) as HTMLElement;
+    const progressItems =
+      document.querySelectorAll<HTMLElement>('.progress-item');
+
+    if (state) {
+      this.points += this.countPoints;
+      this.progress += 1;
+      this.rightAnswers += 1;
+
+      if (this.progress === 4) {
+        this.progress = 0;
+        this.countPoints *= 2;
+        progressItems.forEach((el) => {
+          el.classList.remove('complete');
+        });
+      }
+
+      pointsContainer.innerHTML = String(this.points);
+      countPointsContainer.innerHTML = `+${this.countPoints} points`;
+      for (let i = 0; i < this.progress; i += 1) {
+        progressItems[i].classList.add('complete');
+      }
+    } else {
+      this.progress = 0;
+      this.countPoints = 10;
+      this.mistakes += 1;
+      countPointsContainer.innerHTML = `+${this.countPoints} points`;
       progressItems.forEach((el) => {
         el.classList.remove('complete');
       });
     }
+  }
 
-    pointsContainer.innerHTML = String(points);
-    countPointsContainer.innerHTML = `+${countPoints} points`;
-    for (let i = 0; i < progress; i += 1) {
-      progressItems[i].classList.add('complete');
-    }
-  } else {
-    progress = 0;
-    countPoints = 10;
-    mistakes += 1;
-    countPointsContainer.innerHTML = `+${countPoints} points`;
-    progressItems.forEach((el) => {
-      el.classList.remove('complete');
+  renderGame() {
+    this.MAIN_WRAPPER.insertAdjacentHTML(
+      'beforeend',
+      `
+      <div class="game-area">
+        <span class="points">0</span>
+        <span class="count-points">+10 points</span>
+        <div class="progress">
+          <div class="progress-item"></div>
+          <div class="progress-item"></div>
+          <div class="progress-item"></div>
+        </div>
+  
+        <div class="main-window">
+          <span class="word"></span>
+          <span class="translate-word"></span>
+          <div class="main-buttons">
+            <button class="right">right</button>
+            <button class="wrong">wrong</button>
+          </div>
+        </div>
+  
+        <span class="timer">${this.timerCount}</span>
+      </div>
+    `
+    );
+  }
+
+  renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
+    const li = document.createElement('li');
+    li.className = 'answer';
+    li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
+    li.addEventListener('click', () => {
+      const audio = new Audio(
+        `https://rss21q3-rslang.herokuapp.com/${ans.audio}`
+      );
+      audio.play();
+    });
+
+    wrapper.append(li);
+  }
+
+  renderResults() {
+    let accurancy = Math.round((this.rightAnswers / this.answers) * 100);
+    if (Number.isNaN(accurancy)) accurancy = 0;
+
+    this.MAIN_WRAPPER.insertAdjacentHTML(
+      'beforeend',
+      `
+      <div class="results">
+        <p class="result-points">Вы набрали ${this.points} очков</p>
+        <p class="accurancy">Accurancy ${accurancy}%</p>
+        <p class="right-answ-count">Правильных ответов: ${this.rightAnswers}</p>
+        <p class="mistakes-count">Ошибок: ${this.mistakes}</p>
+        <p class="repeated">Всего слов: ${this.answers}</p>
+      </div>
+    `
+    );
+
+    const results = document.querySelector('.results') as HTMLElement;
+    results.insertAdjacentHTML(
+      'beforeend',
+      `
+      <ul class="right-answers">Correct Answers</ul>
+      <ul class="mistake-answers">Mistakes</ul>
+    `
+    );
+
+    const rightAnswersUl = document.querySelector(
+      '.right-answers'
+    ) as HTMLElement;
+    const mistakeAnswersUl = document.querySelector(
+      '.mistake-answers'
+    ) as HTMLElement;
+
+    this.rightAnswersArr.forEach((ans) => {
+      this.renderResultsAnswer(ans, rightAnswersUl);
+    });
+
+    this.mistakesArr.forEach((ans) => {
+      this.renderResultsAnswer(ans, mistakeAnswersUl);
     });
   }
-}
 
-function renderGame() {
-  app.insertAdjacentHTML(
-    'beforeend',
-    `
-    <div class="game-area">
-      <span class="points">0</span>
-      <span class="count-points">+10 points</span>
-      <div class="progress">
-        <div class="progress-item"></div>
-        <div class="progress-item"></div>
-        <div class="progress-item"></div>
-      </div>
+  game() {
+    this.renderGame();
+    const right = document.querySelector('.right') as HTMLElement;
+    const wrong = document.querySelector('.wrong') as HTMLElement;
 
-      <div class="main-window">
-        <span class="word"></span>
-        <span class="translate-word"></span>
-        <div class="main-buttons">
-          <button class="right">right</button>
-          <button class="wrong">wrong</button>
-        </div>
-      </div>
+    this.timer();
+    this.round();
 
-      <span class="timer">${timerCount}</span>
-    </div>
-  `
-  );
-}
+    right.addEventListener('click', () => {
+      const rightTranslate = this.words.find(
+        (wordInfo) => wordInfo.word === this.word
+      )?.wordTranslate;
 
-function game() {
-  renderGame();
-  const right = document.querySelector('.right') as HTMLElement;
-  const wrong = document.querySelector('.wrong') as HTMLElement;
-
-  timer();
-  round();
-
-  right.addEventListener('click', () => {
-    const rightTranslate = words.find(
-      (wordInfo) => wordInfo.word === word
-    )?.wordTranslate;
-
-    if (translate === rightTranslate) {
-      updatePointsInfo(true);
-      if (
-        rightAnswersArr.find((wordInfo) => wordInfo === currentWord) ===
-        undefined
-      ) {
-        rightAnswersArr.push(currentWord);
+      if (this.translate === rightTranslate) {
+        this.updatePointsInfo(true);
+        if (
+          this.rightAnswersArr.find(
+            (wordInfo) => wordInfo === this.currentWord
+          ) === undefined
+        ) {
+          this.rightAnswersArr.push(this.currentWord);
+        }
+      } else {
+        this.updatePointsInfo(false);
+        if (
+          this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
+          undefined
+        ) {
+          this.mistakesArr.push(this.currentWord);
+        }
       }
-    } else {
-      updatePointsInfo(false);
-      if (
-        mistakesArr.find((wordInfo) => wordInfo === currentWord) === undefined
-      ) {
-        mistakesArr.push(currentWord);
+
+      this.round();
+    });
+
+    wrong.addEventListener('click', () => {
+      const rightTranslate = this.words.find(
+        (wordInfo) => wordInfo.word === this.word
+      )?.wordTranslate;
+
+      if (this.translate !== rightTranslate) {
+        this.updatePointsInfo(true);
+        if (
+          this.rightAnswersArr.find(
+            (wordInfo) => wordInfo === this.currentWord
+          ) === undefined
+        ) {
+          this.rightAnswersArr.push(this.currentWord);
+        }
+      } else {
+        this.updatePointsInfo(false);
+        if (
+          this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
+          undefined
+        ) {
+          this.mistakesArr.push(this.currentWord);
+        }
       }
-    }
 
-    round();
-  });
+      this.round();
+    });
+  }
 
-  wrong.addEventListener('click', () => {
-    const rightTranslate = words.find(
-      (wordInfo) => wordInfo.word === word
-    )?.wordTranslate;
+  stopGame() {
+    const gameArea = document.querySelector('.game-area') as HTMLElement;
 
-    if (translate !== rightTranslate) {
-      updatePointsInfo(true);
-      if (
-        rightAnswersArr.find((wordInfo) => wordInfo === currentWord) ===
-        undefined
-      ) {
-        rightAnswersArr.push(currentWord);
-      }
-    } else {
-      updatePointsInfo(false);
-      if (
-        mistakesArr.find((wordInfo) => wordInfo === currentWord) === undefined
-      ) {
-        mistakesArr.push(currentWord);
-      }
-    }
-
-    round();
-  });
+    gameArea.style.display = 'none';
+    this.renderResults();
+  }
 }
-
-async function getWords() {
-  const randomPage = getRandomInt(0, 29);
-  const res = await fetch(
-    `https://rss21q3-rslang.herokuapp.com/words?group=1&page=${randomPage}`
-  );
-  words = await res.json();
-  game();
-}
-getWords();
