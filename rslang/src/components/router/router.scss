@@ -139,15 +139,18 @@ $button-nav-size: 30px;
     }
     &[data-navigation='login'] {
       background-image: url(../../assets/images/navigation/login2.svg);
-      justify-self: flex-end;
+      transition: 0s;
     }
     &[data-navigation='logout'] {
       background-image: url(../../assets/images/navigation/logout.svg);
       background-size: $button-nav-size calc($button-nav-size - 2px);
+      transition: 0s;
     }
   }
 
   .navigation__login {
+    width: 100%;
+
     position: absolute;
     bottom: 10px;
     left: 0;

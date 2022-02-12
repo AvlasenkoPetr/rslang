@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
 import { AudioCall } from '../pages/games/audiocall/audioCallGame';
+=======
+import { MainPage } from './../Pages/main-page/main-page';
+import { LoginPage } from '../Pages/login-page/login-page';
+import LevelPage from '../Pages/level-page/level-page';
+import './router.scss';
+>>>>>>> bce9854e33138f849343ea3c5fc697f742b602e1
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -25,6 +32,12 @@ export class Router {
     if (clickedButtonDataset === 'open') {
       this.openMenu();
       return;
+    }
+
+    if (clickedButtonDataset === 'logout') {
+      localStorage.removeItem('UserInfo')
+      clickedButton.dataset.navigation = 'login'
+      return
     }
 
     // вынести в отдельную ф-цию (снимаем класс эктив в нав блоке)
@@ -54,13 +67,33 @@ export class Router {
     this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened');
   };
 
-  renderPage = (buttonDataset: string): void => {
+  setLastPageToLocalStorage(page:string){
+    localStorage.setItem('lastPage', page)
+  }
+
+  setActivePage(currentPage:string){
+    const navigation = document.querySelector('.navigation') as HTMLElement
+    const pages = navigation.querySelectorAll('li') as NodeList
+    pages.forEach(item => {
+     if((item as HTMLElement).dataset.navigation === currentPage){
+      (item as HTMLElement).classList.add('active')
+     }else{
+      (item as HTMLElement).classList.remove('active')
+     }
+    })
+  }
+
+  renderPage = (buttonDataset: string = 'main'): void => {
     // Работает через дата-атрибуты
     // прим.: кнопка для переклчения на страницу книги имеет атрибут data-navigation='book', т.е.
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
+    this.setLastPageToLocalStorage(buttonDataset)
+    this.setActivePage(buttonDataset)
 
     switch (buttonDataset) {
       case 'main': // ф-ция рендера
+        const main = new MainPage()
+        main.render()
         return;
 
       case 'book':
@@ -80,6 +113,7 @@ export class Router {
         return;
 
       case 'login':
+<<<<<<< HEAD
         const loginPage = new LoginPage();
         loginPage.renderLoginPage();
         return;
@@ -93,6 +127,11 @@ export class Router {
           logoutNavButton.dataset.navigation = 'login';
         }
         return;
+=======
+        const loginPage = new LoginPage
+        loginPage.renderLoginPage()
+        return
+>>>>>>> bce9854e33138f849343ea3c5fc697f742b602e1
     }
   };
 }
