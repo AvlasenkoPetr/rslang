@@ -1,4 +1,4 @@
-import './sprint';
+import './sprint.scss';
 import { setRandomNumber } from '../../../Helpers/helpers';
 import { IWord } from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
@@ -26,7 +26,7 @@ export class Sprint {
 
     this.group = String(group);
 
-    this.timerCount = 30;
+    this.timerCount = 60;
 
     this.words = [];
     this.points = 0;
@@ -128,25 +128,27 @@ export class Sprint {
     this.MAIN_WRAPPER.insertAdjacentHTML(
       'beforeend',
       `
+      <div class="sprint-wrapper">
       <div class="game-area">
-        <span class="points">0</span>
-        <span class="count-points">+10 points</span>
-        <div class="progress">
-          <div class="progress-item"></div>
-          <div class="progress-item"></div>
-          <div class="progress-item"></div>
-        </div>
-  
+        <span class="timer">${this.timerCount}</span>
+
         <div class="main-window">
+          <span class="points">0</span>
+          <span class="count-points">+10 points</span>
+          <div class="progress">
+            <div class="progress-item"></div>
+            <div class="progress-item"></div>
+            <div class="progress-item"></div>
+          </div>
           <span class="word"></span>
           <span class="translate-word"></span>
           <div class="main-buttons">
-            <button class="right">right</button>
-            <button class="wrong">wrong</button>
+            <button class="right btn">right</button>
+            <button class="wrong btn">wrong</button>
           </div>
         </div>
   
-        <span class="timer">${this.timerCount}</span>
+      </div>
       </div>
     `
     );
