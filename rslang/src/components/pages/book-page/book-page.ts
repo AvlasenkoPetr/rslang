@@ -38,21 +38,24 @@ export class BookPage {
 
     switch(clickedButtonDataset) {
       case 'prev':
+        this.toPrevPage(clickedButton)
         return
-
+        
       case 'next':
+        this.toNextPage(clickedButton)
         return
     }
   }
 
   renderBookPage = async () => {
-
     this.MAIN_WRAPPER.innerHTML = ''
-    this.BOOK_PAGE.innerHTML = this.bookMenuContent()
-    await this.renderWordsContainer()
 
+    this.BOOK_PAGE.innerHTML = this.bookMenuContent()
     this.MAIN_WRAPPER.append(this.BOOK_PAGE)
+    
+    await this.renderWordsContainer()
     this.BOOK_PAGE.append(this.WORDS_CONTAINER)
+
     appendFooter(this.BOOK_PAGE)
 
     this.setActiveLevel()
@@ -61,7 +64,8 @@ export class BookPage {
   renderWordsContainer = async () => {
     this.WORDS_CONTAINER.innerHTML = ''
 
-    const pageNum: string | undefined = document.getElementById('counter')?.innerHTML
+    const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
+    const pageNum: string = String( Number(pageCounter.value) - 1 )
 
     const wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
     console.log(wordsData);
@@ -99,13 +103,17 @@ export class BookPage {
   }
 
   toNextPage(button: HTMLElement) {
-    const pageCounter: HTMLElement | null = document.getElementById('counter')
-    if (pageCounter) {
-      pageCounter.innerHTML = String(Number(pageCounter.innerHTML) + 1)
+    const pageCounter = button.previousElementSibling as HTMLInputElement
+    if (pageCounter.value === '30') return
+    pageCounter.stepUp()
+    this.renderWordsContainer()
+  }
 
-      if (pageCounter.innerHTML === '30') button.classList.add('disabled')
-      if (pageCounter.innerHTML === '2') button.parentElement?.querySelector('[data-book="prev"]')?.classList.remove('disabled')
-    }
+  toPrevPage(button: HTMLElement) {
+    const pageCounter = button.nextElementSibling as HTMLInputElement
+    if (pageCounter.value === '1') return
+    pageCounter.stepDown()
+    this.renderWordsContainer()
   }
 
   setActiveLevel = (): void => {
