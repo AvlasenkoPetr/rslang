@@ -1,0 +1,148 @@
+.book-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+
+  h2 {
+    font-size: 42px;
+    font-family: 'Source Sans Pro';
+    font-weight: lighter;
+  }
+
+  &__games-menu {
+    width: 50%;
+    margin: 20px 0;
+    padding: 20px 50px;
+
+    display: flex;
+    justify-content: space-between;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    &_button {
+      height: 60px;
+      width: 43%;
+      min-width: 300px;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 15px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      background-color: var(--purple-light);
+
+      text-align: center;
+      font-size: 32px;
+      font-family: 'Quicksand';
+      transition: 0.2s linear;
+
+      &:hover {
+        background-color: var(--blue-interactive-light);
+      }
+    }
+  }
+
+  &__menu-row {
+    width: 50%;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__pagination-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &_button {
+      width: 50px;
+      height: 50px;
+      margin: 7px 0;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      background-color: var(--font-color-secondary);
+
+      background-position: center;
+      background-repeat: no-repeat;
+
+      &[data-book='prev'] {
+        background-image: url(../../../assets/images/book-page/arrow-left.svg);
+      }
+      &[data-book='next'] {
+        background-image: url(../../../assets/images/book-page/arrow-right.svg);
+      }
+    }
+
+    &_counter {
+      width: 40px;
+      height: 40px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  &__level-container {
+    margin: 7px 0;
+    height: 60px;
+    min-width: 300px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    &_button {
+      width: 40px;
+      height: 40px;
+
+      opacity: 0.5;
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+      transition: 0.1s linear;
+      &:hover {
+        opacity: 1;
+      }
+      &.active {
+        opacity: 1;
+      }
+
+      &[data-book='0'] {
+        background-color: var(--a1);
+      }
+      &[data-book='1'] {
+        background-color: var(--a2);
+      }
+      &[data-book='2'] {
+        background-color: var(--b1);
+      }
+      &[data-book='3'] {
+        background-color: var(--b2);
+      }
+      &[data-book='4'] {
+        background-color: var(--c1);
+      }
+      &[data-book='5'] {
+        background-color: var(--c2);
+      }
+      &[data-book='6'] {
+        background-color: var(--red);
+      }
+    }
+  }
+}

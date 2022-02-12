@@ -134,7 +134,7 @@ export class LoginPage {
     }
 
     redirectToMain = () => {
-        const loginNavButton: HTMLElement | null = document.querySelector('.active')
+        const loginNavButton: HTMLElement | null = document.querySelector('[data-navigation="login"]')
         if (loginNavButton) {
             loginNavButton.dataset.navigation = 'logout'
             loginNavButton.innerHTML = 'Выйти'

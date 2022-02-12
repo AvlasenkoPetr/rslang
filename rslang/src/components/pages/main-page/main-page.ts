@@ -3,7 +3,7 @@ import './main-page.scss';
 
 export class MainPage {
 
-  render(){
+  renderMainPage(){
     const mainWrapper = document.querySelector('.main__wrapper') as HTMLElement;
     mainWrapper.innerHTML = ''
     const mainPage = document.createElement('main')

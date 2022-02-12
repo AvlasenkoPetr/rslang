@@ -85,9 +85,9 @@ export class Router {
     this.setActivePage(buttonDataset)
 
     switch (buttonDataset) {
-      case 'main': // ф-ция рендера
+      case 'main':
         const main = new MainPage()
-        main.render()
+        main.renderMainPage()
         return;
 
       case 'book':
