@@ -135,11 +135,16 @@ export class Sprint {
 
       if (this.progress === 4) {
         this.progress = 0;
-        this.countPoints *= 2;
-        progressItems.forEach((el) => {
-          el.classList.remove('complete');
-        });
-        countPointsContainer.style.animation = `progress 1s linear forwards`;
+        if (this.countPoints !== 80) {
+          this.countPoints *= 2;
+          progressItems.forEach((el) => {
+            el.classList.remove('complete');
+          });
+          countPointsContainer.style.animation = `progress 1s linear forwards`;
+          countPointsContainer.addEventListener('animationend', () => {
+            countPointsContainer.style.animation = ``;
+          });
+        }
       }
 
       pointsContainer.innerHTML = String(this.points);
@@ -149,10 +154,15 @@ export class Sprint {
       }
     } else {
       this.progress = 0;
-      this.countPoints = 10;
       this.mistakes += 1;
+      if (this.countPoints !== 10) {
+        this.countPoints = 10;
+        countPointsContainer.style.animation = `progress 1s linear forwards`;
+        countPointsContainer.addEventListener('animationend', () => {
+          countPointsContainer.style.animation = ``;
+        });
+      }
       countPointsContainer.innerHTML = `+${this.countPoints} points`;
-      countPointsContainer.style.animation = `progress 1s linear forwards`;
       progressItems.forEach((el) => {
         el.classList.remove('complete');
       });
