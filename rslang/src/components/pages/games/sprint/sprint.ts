@@ -257,65 +257,50 @@ export class Sprint {
     this.fullscreen();
     this.volume();
 
-    right.addEventListener('click', () => {
-      const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
-      )?.wordTranslate;
+    const rightTranslate = this.words.find(
+      (wordInfo) => wordInfo.word === this.word
+    )?.wordTranslate;
 
-      if (this.translate === rightTranslate) {
-        this.updatePointsInfo(true);
-        this.audio.src = '../../../../assets/sounds/correct.mp3';
-        this.audio.play();
-        if (
-          this.rightAnswersArr.find(
-            (wordInfo) => wordInfo === this.currentWord
-          ) === undefined
-        ) {
-          this.rightAnswersArr.push(this.currentWord);
-        }
-      } else {
-        this.updatePointsInfo(false);
-        this.audio.src = '../../../../assets/sounds/incorrect.mp3';
-        this.audio.play();
-        if (
-          this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
-          undefined
-        ) {
-          this.mistakesArr.push(this.currentWord);
-        }
+    const rightAnswer = () => {
+      this.updatePointsInfo(true);
+      this.audio.src = '../../../../assets/sounds/correct.mp3';
+      this.audio.play();
+      if (
+        this.rightAnswersArr.find(
+          (wordInfo) => wordInfo === this.currentWord
+        ) === undefined
+      ) {
+        this.rightAnswersArr.push(this.currentWord);
       }
+    };
 
+    const wrongAnswer = () => {
+      this.updatePointsInfo(false);
+      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+      this.audio.play();
+      if (
+        this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
+        undefined
+      ) {
+        this.mistakesArr.push(this.currentWord);
+      }
+    };
+
+    right.addEventListener('click', () => {
+      if (this.translate === rightTranslate) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
       this.round();
     });
 
     wrong.addEventListener('click', () => {
-      const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
-      )?.wordTranslate;
-
       if (this.translate !== rightTranslate) {
-        this.updatePointsInfo(true);
-        this.audio.src = '../../../../assets/sounds/correct.mp3';
-        this.audio.play();
-        if (
-          this.rightAnswersArr.find(
-            (wordInfo) => wordInfo === this.currentWord
-          ) === undefined
-        ) {
-          this.rightAnswersArr.push(this.currentWord);
-        }
+        rightAnswer();
       } else {
-        this.updatePointsInfo(false);
-        this.audio.src = '../../../../assets/sounds/incorrect.mp3';
-        this.audio.play();
-        if (
-          this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
-          undefined
-        ) {
-          this.mistakesArr.push(this.currentWord);
-        }
+        wrongAnswer();
       }
-
       this.round();
     });
   }
