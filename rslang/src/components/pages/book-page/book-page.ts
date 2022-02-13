@@ -81,7 +81,7 @@ export class BookPage {
     this.setActiveLevel()
   }
 
-  renderWordsContainer = async () => {
+  renderWordsContainer = async (): Promise<void> => {
     this.WORDS_CONTAINER.innerHTML = ''
 
     const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
@@ -129,7 +129,6 @@ export class BookPage {
 
         switch(clickedButtonDataset) {
           case 'play':
-
             if (clickedButton.classList.contains('playing')) {
               clickedButton.classList.remove('playing')
               this.AUDIO.pause()
@@ -145,6 +144,28 @@ export class BookPage {
             clickedButton.classList.add('playing')
             this.playAudioChain(clickedButton, word.audio, word.audioMeaning, word.audioExample)
             return
+          
+          case "hard":
+          case "easy":
+            const wordItem: HTMLElement | null = clickedButton.closest('.words-container__item')
+            if (!wordItem) return
+
+            if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
+              wordItem.classList.remove(`${clickedButtonDataset}`)
+              // запрос на удаление
+              return
+            }
+
+            if (wordItem.classList.length > 2) {
+              wordItem.classList.remove(`${wordItem.classList[wordItem.classList.length - 1]}`)
+              wordItem.classList.add(`${clickedButtonDataset}`)
+              // запрос на обновление статуса
+              return
+            }
+
+            wordItem.classList.add(`${clickedButtonDataset}`)
+            // запрос на присовение статуса
+            return
         }
       })
 
@@ -152,14 +173,14 @@ export class BookPage {
     }
   }
 
-  toNextPage(button: HTMLElement) {
+  toNextPage(button: HTMLElement): void {
     const pageCounter = button.previousElementSibling as HTMLInputElement
     if (pageCounter.value === '30') return
     pageCounter.stepUp()
     this.renderWordsContainer()
   }
 
-  toPrevPage(button: HTMLElement) {
+  toPrevPage(button: HTMLElement): void {
     const pageCounter = button.nextElementSibling as HTMLInputElement
     if (pageCounter.value === '1') return
     pageCounter.stepDown()
@@ -228,7 +249,15 @@ export class BookPage {
 
   wordControllsContent = (): string => {
     return `
+    <div class="difficulty-cotrolls__block">
+      <button class="difficulty-cotrolls__button" data-word="hard" title="Пометить слово как сложное"></button>
+      <button class="difficulty-cotrolls__button" data-word="easy" title="Пометить слово как изученное"></button>
+    </div>
 
+    <div class="answers-counter__block">
+      <input class="answers-counter__wrong" type="number" value="0" readonly>
+      <input class="answers-counter__correct" type="number" value="0" readonly>
+    </div>
     `
   }
 }
