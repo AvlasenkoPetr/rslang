@@ -125,6 +125,24 @@
 :-webkit-full-screen .fullscreen-btn{
   background: url('../../../../assets/images/sprint/fullscreen-off.svg');
 }
+
+@keyframes progress {
+  0% {
+    color: #000;
+  }
+
+  30% {
+    color: #EB4F4F;
+  }
+
+  70% {
+    color: #EB4F4F;
+  }
+
+  100% {
+    color: #000;
+  }
+}
   
   
   

@@ -139,6 +139,7 @@ export class Sprint {
         progressItems.forEach((el) => {
           el.classList.remove('complete');
         });
+        countPointsContainer.style.animation = `progress 1s linear forwards`;
       }
 
       pointsContainer.innerHTML = String(this.points);
@@ -151,6 +152,7 @@ export class Sprint {
       this.countPoints = 10;
       this.mistakes += 1;
       countPointsContainer.innerHTML = `+${this.countPoints} points`;
+      countPointsContainer.style.animation = `progress 1s linear forwards`;
       progressItems.forEach((el) => {
         el.classList.remove('complete');
       });
@@ -257,10 +259,6 @@ export class Sprint {
     this.fullscreen();
     this.volume();
 
-    const rightTranslate = this.words.find(
-      (wordInfo) => wordInfo.word === this.word
-    )?.wordTranslate;
-
     const rightAnswer = () => {
       this.updatePointsInfo(true);
       this.audio.src = '../../../../assets/sounds/correct.mp3';
@@ -287,6 +285,9 @@ export class Sprint {
     };
 
     right.addEventListener('click', () => {
+      const rightTranslate = this.words.find(
+        (wordInfo) => wordInfo.word === this.word
+      )?.wordTranslate;
       if (this.translate === rightTranslate) {
         rightAnswer();
       } else {
@@ -296,6 +297,9 @@ export class Sprint {
     });
 
     wrong.addEventListener('click', () => {
+      const rightTranslate = this.words.find(
+        (wordInfo) => wordInfo.word === this.word
+      )?.wordTranslate;
       if (this.translate !== rightTranslate) {
         rightAnswer();
       } else {
