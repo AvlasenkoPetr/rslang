@@ -20,6 +20,7 @@ export class Sprint {
   mistakesArr: Array<IWord>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
+  audio: HTMLAudioElement;
 
   constructor(group: number) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
@@ -39,6 +40,8 @@ export class Sprint {
 
     this.rightAnswersArr = [];
     this.mistakesArr = [];
+
+    this.audio = new Audio();
   }
 
   async startGame() {
@@ -94,6 +97,24 @@ export class Sprint {
         document.exitFullscreen();
       } else {
         this.MAIN_WRAPPER.requestFullscreen();
+      }
+    });
+  }
+
+  volume() {
+    const btn = document.querySelector('.audio-btn') as HTMLElement;
+
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('active')) {
+        btn.classList.remove('active');
+        this.audio.muted = false;
+        btn.style.background =
+          "url('../../../../assets/images/sprint/audio-on.svg')";
+      } else {
+        btn.classList.add('active');
+        this.audio.muted = true;
+        btn.style.background =
+          "url('../../../../assets/images/sprint/audio-off.svg')";
       }
     });
   }
@@ -234,6 +255,7 @@ export class Sprint {
     this.timer();
     this.round();
     this.fullscreen();
+    this.volume();
 
     right.addEventListener('click', () => {
       const rightTranslate = this.words.find(
@@ -242,6 +264,8 @@ export class Sprint {
 
       if (this.translate === rightTranslate) {
         this.updatePointsInfo(true);
+        this.audio.src = '../../../../assets/sounds/correct.mp3';
+        this.audio.play();
         if (
           this.rightAnswersArr.find(
             (wordInfo) => wordInfo === this.currentWord
@@ -251,6 +275,8 @@ export class Sprint {
         }
       } else {
         this.updatePointsInfo(false);
+        this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+        this.audio.play();
         if (
           this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
           undefined
@@ -269,6 +295,8 @@ export class Sprint {
 
       if (this.translate !== rightTranslate) {
         this.updatePointsInfo(true);
+        this.audio.src = '../../../../assets/sounds/correct.mp3';
+        this.audio.play();
         if (
           this.rightAnswersArr.find(
             (wordInfo) => wordInfo === this.currentWord
@@ -278,6 +306,8 @@ export class Sprint {
         }
       } else {
         this.updatePointsInfo(false);
+        this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+        this.audio.play();
         if (
           this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
           undefined
