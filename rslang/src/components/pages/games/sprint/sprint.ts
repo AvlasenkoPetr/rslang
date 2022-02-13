@@ -26,7 +26,7 @@ export class Sprint {
 
     this.group = String(group);
 
-    this.timerCount = 60;
+    this.timerCount = 3010;
 
     this.words = [];
     this.points = 0;
@@ -86,6 +86,18 @@ export class Sprint {
     this.translate = translateContainer.innerText;
   }
 
+  fullscreen() {
+    const btn = document.querySelector('.fullscreen-btn') as HTMLElement;
+
+    btn.addEventListener('click', () => {
+      if (document.fullscreenElement?.classList.contains('main__wrapper')) {
+        document.exitFullscreen();
+      } else {
+        this.MAIN_WRAPPER.requestFullscreen();
+      }
+    });
+  }
+
   updatePointsInfo(state: boolean) {
     this.answers += 1;
     const pointsContainer = document.querySelector('.points') as HTMLElement;
@@ -129,6 +141,10 @@ export class Sprint {
       'beforeend',
       `
       <div class="sprint-wrapper">
+      <div class="game-buttons">
+        <div class="fullscreen-btn"></div>
+        <div class="audio-btn"></div>
+      </div>
       <div class="game-area">
         <span class="timer">${this.timerCount}</span>
 
@@ -217,6 +233,7 @@ export class Sprint {
 
     this.timer();
     this.round();
+    this.fullscreen();
 
     right.addEventListener('click', () => {
       const rightTranslate = this.words.find(
