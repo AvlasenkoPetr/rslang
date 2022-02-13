@@ -10,6 +10,7 @@ export class BookPage {
   WORDS_CONTAINER: HTMLElement
   LEVEL: string
   LEVEL_NAMES: Array<string>
+  AUDIO
   FETCH
 
   constructor(level: string) {
@@ -24,6 +25,8 @@ export class BookPage {
       
       this.LEVEL = level
       this.LEVEL_NAMES = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'hard']
+
+      this.AUDIO = new Audio
 
       this.FETCH = new Fetch
   }
@@ -53,7 +56,7 @@ export class BookPage {
       case '5':
       case '6':
         if (clickedButton.classList.contains('active')) return
-        
+
         const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
         pageCounter.value = '1'
 
@@ -85,7 +88,7 @@ export class BookPage {
     const pageNum: string = String( Number(pageCounter.value) - 1 )
 
     const wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
-    console.log(wordsData);
+    console.log(wordsData)
     
     for (let word of wordsData) {
       const wordItem: HTMLElement = document.createElement('div')
@@ -110,9 +113,41 @@ export class BookPage {
       </div>
 
       <div class="words-container__item_controlls-block">
-
-      </div>
+        <button class="sound-button" data-word="play"></button>
+        ${isUserExists() ? this.wordControllsContent() : ''}
+      </div>   
       ` 
+
+      // я пока не знаю как вынести эту жесть, но она нужна чтобы замкнуть ссылки...
+      wordItem.addEventListener('click', async (e: MouseEvent) => {
+        if (!(e.target instanceof HTMLElement)) return
+    
+        const clickedButton: HTMLElement = e.target
+        if (!clickedButton.dataset.word) return
+    
+        const clickedButtonDataset: string = clickedButton.dataset.word
+
+        switch(clickedButtonDataset) {
+          case 'play':
+
+            if (clickedButton.classList.contains('playing')) {
+              clickedButton.classList.remove('playing')
+              this.AUDIO.pause()
+              return
+            }
+
+            const currentlyPlaying: HTMLElement | null = document.querySelector('.playing')
+            if (currentlyPlaying) {
+              currentlyPlaying.classList.remove('playing')
+              this.AUDIO.pause()
+            }
+
+            clickedButton.classList.add('playing')
+            this.playAudioChain(clickedButton, word.audio, word.audioMeaning, word.audioExample)
+            return
+        }
+      })
+
       this.WORDS_CONTAINER.append(wordItem)      
     }
   }
@@ -138,6 +173,18 @@ export class BookPage {
       activeLevelButton.classList.remove('active')
     }
     currentLevelButton?.classList.add('active')
+  }
+
+  playAudioChain = (button: HTMLElement, ...args: Array<string>): void => {
+    if (args.length === 0) {
+      this.AUDIO.pause()
+      button.classList.remove('playing')
+      return
+    }
+
+    this.AUDIO.src = `https://rss21q3-rslang.herokuapp.com/${args[0]}`
+    this.AUDIO.play()
+    this.AUDIO.onended = () => this.playAudioChain(button, ...args.slice(1))
   }
 
   bookMenuContent = (): string => {
@@ -176,6 +223,12 @@ export class BookPage {
       <input type="number" min="1" max="30" value="1" class="book-page__pagination-container_counter" id="counter" readonly></input>
       <button class="book-page__pagination-container_button" data-book="next"></button>
     </div>
+    `
+  }
+
+  wordControllsContent = (): string => {
+    return `
+
     `
   }
 }
