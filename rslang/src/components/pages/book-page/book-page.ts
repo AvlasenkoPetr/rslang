@@ -1,6 +1,6 @@
 import { Fetch } from "../../Fetch/fetch"
 import { isUserExists } from "../../Helpers/helpers"
-import { IWord } from "../../Interfaces/interfaces"
+import { IUserWord, IWord } from "../../Interfaces/interfaces"
 import appendFooter from "../../Reusable-components/footer/footer"
 import './book-page.scss'
 
@@ -90,9 +90,13 @@ export class BookPage {
     const wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
     console.log(wordsData)
     
+    const userWordsData: Array<IUserWord> = await this.FETCH.GET_USER_WORDS()
+    console.log(userWordsData)
+    
+    
     for (let word of wordsData) {
       const wordItem: HTMLElement = document.createElement('div')
-      wordItem.className = `words-container__item ${this.LEVEL_NAMES[ Number(this.LEVEL) ]}`
+      wordItem.className = `words-container__item ${this.LEVEL_NAMES[Number(this.LEVEL)]}`
       wordItem.innerHTML = `
       <div class="words-container__item_image-block">
         <img src="https://rss21q3-rslang.herokuapp.com/${word.image}">
@@ -116,7 +120,11 @@ export class BookPage {
         <button class="sound-button" data-word="play"></button>
         ${isUserExists() ? this.wordControllsContent() : ''}
       </div>   
-      ` 
+      `
+      const userWord = userWordsData.find((userWord) => userWord.wordId === word.id)
+      if (userWord && userWord.difficulty !== "string") {
+        wordItem.classList.add(`${userWord.difficulty}`)
+      }
 
       // я пока не знаю как вынести эту жесть, но она нужна чтобы замкнуть ссылки...
       wordItem.addEventListener('click', async (e: MouseEvent) => {
@@ -151,20 +159,25 @@ export class BookPage {
             if (!wordItem) return
 
             if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: 'string'})
+
               wordItem.classList.remove(`${clickedButtonDataset}`)
-              // запрос на удаление
               return
             }
 
             if (wordItem.classList.length > 2) {
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`})
+
               wordItem.classList.remove(`${wordItem.classList[wordItem.classList.length - 1]}`)
               wordItem.classList.add(`${clickedButtonDataset}`)
-              // запрос на обновление статуса
               return
             }
 
+            await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
+            .then(() => this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`}))
+            .catch(() => this.FETCH.CREATE_USER_WORDS(word.id, {difficulty: `${clickedButtonDataset}`}))
+
             wordItem.classList.add(`${clickedButtonDataset}`)
-            // запрос на присовение статуса
             return
         }
       })
@@ -247,7 +260,7 @@ export class BookPage {
     `
   }
 
-  wordControllsContent = (): string => {
+  wordControllsContent = (wrongAnswers?: string, correctAnswers?: string): string => {
     return `
     <div class="difficulty-cotrolls__block">
       <button class="difficulty-cotrolls__button" data-word="hard" title="Пометить слово как сложное"></button>
@@ -255,8 +268,8 @@ export class BookPage {
     </div>
 
     <div class="answers-counter__block">
-      <input class="answers-counter__wrong" type="number" value="0" readonly>
-      <input class="answers-counter__correct" type="number" value="0" readonly>
+      <input class="answers-counter__wrong" type="number" value="${wrongAnswers ? wrongAnswers : 0}" readonly>
+      <input class="answers-counter__correct" type="number" value="${correctAnswers ? correctAnswers : 0}" readonly>
     </div>
     `
   }
