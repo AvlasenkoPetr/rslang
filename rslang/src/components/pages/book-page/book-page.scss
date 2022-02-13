@@ -1,0 +1,353 @@
+.book-page {
+  padding: 10px 0 0;
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &__menu-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h2 {
+    font-size: 42px;
+    font-family: 'Source Sans Pro';
+    font-weight: lighter;
+  }
+
+  &__games-menu {
+    width: 50%;
+    margin: 20px 0;
+    padding: 20px 50px;
+
+    display: flex;
+    justify-content: space-between;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    &_button {
+      height: 60px;
+      width: 43%;
+      min-width: 300px;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 15px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      background-color: var(--purple-light);
+
+      text-align: center;
+      font-size: 32px;
+      font-family: 'Quicksand';
+      transition: 0.2s linear;
+
+      &:hover {
+        background-color: var(--blue-interactive-light);
+      }
+    }
+  }
+
+  &__menu-row {
+    width: 50%;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__pagination-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &_button {
+      width: 50px;
+      height: 50px;
+      margin: 7px 0;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+      background-position: center;
+      background-repeat: no-repeat;
+
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &[data-book='prev'] {
+        background-image: url(../../../assets/images/book-page/arrow-left.svg);
+      }
+      &[data-book='next'] {
+        background-image: url(../../../assets/images/book-page/arrow-right.svg);
+      }
+    }
+
+    &_counter {
+      all: unset;
+      width: 40px;
+      height: 40px;
+
+      text-align: center;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  &__level-container {
+    margin: 7px 0;
+    height: 60px;
+    min-width: 300px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    &_button {
+      width: 40px;
+      height: 40px;
+
+      opacity: 0.5;
+      border: 1px solid var(--font-color-main);
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+      transition: 0.1s linear;
+      &:hover {
+        opacity: 1;
+      }
+      &.active {
+        opacity: 1;
+      }
+
+      &[data-book='0'] {
+        background-color: var(--a1);
+      }
+      &[data-book='1'] {
+        background-color: var(--a2);
+      }
+      &[data-book='2'] {
+        background-color: var(--b1);
+      }
+      &[data-book='3'] {
+        background-color: var(--b2);
+      }
+      &[data-book='4'] {
+        background-color: var(--c1);
+      }
+      &[data-book='5'] {
+        background-color: var(--c2);
+      }
+      &[data-book='6'] {
+        background-color: var(--red);
+      }
+    }
+  }
+
+  .words-container {
+    width: 50%;
+    min-height: 150vh;
+    padding-bottom: 10px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+
+    &__item {
+      width: 100%;
+      height: 275px;
+
+      display: flex;
+
+      border: 1px solid var(--font-color-main);
+      border-radius: 15px;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+      &_image-block {
+        width: 28%;
+        padding: 20px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border-radius: 15px;
+
+        img {
+          width: 100%;
+          height: 220px;
+          object-fit: cover;
+          object-position: center center;
+
+          border-radius: 15px;
+        }
+      }
+
+      &.a1 {
+        .words-container__item_image-block {
+          background-color: var(--a1);
+        }
+      }
+      &.a2 {
+        .words-container__item_image-block {
+          background-color: var(--a2);
+        }
+      }
+      &.b1 {
+        .words-container__item_image-block {
+          background-color: var(--b1);
+        }
+      }
+      &.b2 {
+        .words-container__item_image-block {
+          background-color: var(--b2);
+        }
+      }
+      &.c1 {
+        .words-container__item_image-block {
+          background-color: var(--c1);
+        }
+      }
+      &.c2 {
+        .words-container__item_image-block {
+          background-color: var(--c2);
+        }
+      }
+      &.easy {
+        .words-container__item_image-block {
+          background-color: var(--easy);
+        }
+        [data-word='easy'] {
+          background-image: url(../../../assets/images/book-page/easy-active.svg);
+        }
+      }
+      &.hard {
+        .words-container__item_image-block {
+          background-color: var(--red);
+        }
+        [data-word='hard'] {
+          background-image: url(../../../assets/images/book-page/hard-active.svg);
+        }
+      }
+
+      &_info-block {
+        padding: 20px;
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .info-block_title {
+          font-family: 'Source Sans Pro';
+          font-weight: 400;
+          font-size: 30px;
+        }
+
+        .info-block_description {
+          font-size: 18px;
+
+          b,
+          i {
+            font-size: inherit;
+          }
+        }
+      }
+
+      &_controlls-block {
+        width: 70px;
+        padding: 20px 0 15px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        .sound-button {
+          width: 40px;
+          height: 40px;
+
+          background-image: url(../../../assets/images/book-page/play.svg);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+
+          &.playing {
+            background-image: url(../../../assets/images/book-page/pause.svg);
+            background-size: 40px 35px;
+          }
+        }
+
+        .difficulty-cotrolls {
+          &__block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+          }
+
+          &__button {
+            width: 30px;
+            height: 30px;
+
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+          }
+        }
+        [data-word='hard'] {
+          background-image: url(../../../assets/images/book-page/hard.svg);
+        }
+        [data-word='easy'] {
+          background-image: url(../../../assets/images/book-page/easy.svg);
+        }
+
+        .answers-counter {
+          &__block {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            input[type='number'] {
+              all: unset;
+              width: 30px;
+              height: 30px;
+              margin-bottom: 4px;
+
+              text-align: center;
+              font-size: 20px;
+
+              border: 1px solid var(--font-color-main);
+              border-radius: 5px;
+              box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+
+              &.answers-counter__wrong {
+                background-color: var(--red);
+              }
+              &.answers-counter__correct {
+                background-color: var(--easy);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

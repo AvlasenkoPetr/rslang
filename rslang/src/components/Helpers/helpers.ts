@@ -18,3 +18,7 @@ export const getUserInfo = (): IUserInfo => {
 export const setRandomNumber = (number: number): number => {
   return Math.floor(Math.random() * number)
 }
+
+export const isUserExists = (): boolean => {
+  return localStorage.getItem('UserInfo') ? true : false
+}

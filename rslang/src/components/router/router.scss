@@ -136,6 +136,7 @@ $button-nav-size: 30px;
     }
     &[data-navigation='team'] {
       background-image: url(../../assets/images/navigation/team.svg);
+      background-size: calc($button-nav-size + 1px);
     }
     &[data-navigation='login'] {
       background-image: url(../../assets/images/navigation/login2.svg);

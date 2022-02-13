@@ -12,7 +12,7 @@ export interface IUSER_BODY {
 }
 
 export  interface ICREATE_USER_WORD {
-  difficulty: 'hard' | 'easy',
+  difficulty: 'hard' | 'easy' | 'string',
   optional?: {
     name: string,
     
@@ -73,6 +73,14 @@ export interface IWord {
   textExampleTranslate: string,
   textMeaningTranslate: string,
   wordTranslate: string
+}
+
+export interface IUserWord {
+  id: string,
+  wordId: string,
+  difficulty: string,
+  optional?: {
+  }
 }
 
 export interface IState {

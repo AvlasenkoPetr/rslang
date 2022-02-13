@@ -3,10 +3,22 @@
   --purple-footer: #684587;
   --purple-dark: #632a50;
   --purple-light: #ebe4f1;
+
   --blue-interactive: #71a0c1;
   --blue-interactive-light: #c6d9e6;
+
   --font-color-main: #000000;
   --font-color-secondary: #ffffff;
+
+  --a1: #ffebec;
+  --a2: #ffcfd2;
+  --b1: #ebe4f1;
+  --b2: #b9a1ce;
+  --c1: #95b8d1;
+  --c2: #71a0c1;
+
+  --red: #eb4f4f;
+  --easy: #a5d8ff;
 }
 
 * {
@@ -63,6 +75,8 @@ li {
 button {
   border: none;
   cursor: pointer;
+  appearance: none;
+  background-color: unset;
 }
 
 input,
