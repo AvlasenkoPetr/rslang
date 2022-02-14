@@ -10,6 +10,8 @@ export class Sprint {
   points: number;
   countPoints: number;
   progress: number;
+  inrow: number;
+  maxrow: number;
   answers: number;
   rightAnswers: number;
   mistakes: number;
@@ -27,12 +29,15 @@ export class Sprint {
 
     this.group = String(group);
 
-    this.timerCount = 3010;
+    this.timerCount = 10;
 
     this.words = [];
     this.points = 0;
     this.countPoints = 10;
     this.progress = 0;
+
+    this.inrow = 0;
+    this.maxrow = 0;
 
     this.answers = 0;
     this.rightAnswers = 0;
@@ -132,6 +137,7 @@ export class Sprint {
       this.points += this.countPoints;
       this.progress += 1;
       this.rightAnswers += 1;
+      this.inrow += 1;
 
       if (this.progress === 4) {
         this.progress = 0;
@@ -155,6 +161,7 @@ export class Sprint {
     } else {
       this.progress = 0;
       this.mistakes += 1;
+      this.inrow = 0;
       if (this.countPoints !== 10) {
         this.countPoints = 10;
         countPointsContainer.style.animation = `progress 1s linear forwards`;
@@ -166,6 +173,9 @@ export class Sprint {
       progressItems.forEach((el) => {
         el.classList.remove('complete');
       });
+    }
+    if (this.inrow > this.maxrow) {
+      this.maxrow = this.inrow;
     }
   }
 
@@ -229,6 +239,7 @@ export class Sprint {
         <p class="accurancy">Accurancy ${accurancy}%</p>
         <p class="right-answ-count">Правильных ответов: ${this.rightAnswers}</p>
         <p class="mistakes-count">Ошибок: ${this.mistakes}</p>
+        <p class="mistakes-count">Подряд: ${this.maxrow}</p>
         <p class="repeated">Всего слов: ${this.answers}</p>
       </div>
     `
