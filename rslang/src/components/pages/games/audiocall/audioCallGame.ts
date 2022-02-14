@@ -196,6 +196,7 @@ class AudioCall {
         '#audioCallMainElement'
       ) as HTMLElement;
       const result: IResult = {
+        group: this.state.group,
         total: this.state.data!.length,
         inRow: this.state.inRow,
         answersArr: this.state.words,

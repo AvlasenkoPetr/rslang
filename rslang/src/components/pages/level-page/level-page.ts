@@ -30,7 +30,7 @@ class LevelPage {
         if (clickedButton.className === 'label')
           clickedButton = clickedButton.offsetParent as HTMLElement;
 
-        const level = levelItems.indexOf(clickedButton);
+        const level = String(levelItems.indexOf(clickedButton));
 
         const target = document.querySelector(
           '.navigation .active'
@@ -41,8 +41,8 @@ class LevelPage {
 
           switch (targetAttr) {
             case 'book':
-              const bookPage = new BookPage(String(level))
-              bookPage.renderBookPage()
+              const bookPage = new BookPage(level);
+              bookPage.renderBookPage();
               break;
 
             case 'sprint':

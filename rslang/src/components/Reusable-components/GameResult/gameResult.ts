@@ -1,52 +1,88 @@
 import { IResult } from './../../Interfaces/interfaces';
-import './gameResult.scss'
+import './gameResult.scss';
+import LevelPage from '../../pages/level-page/level-page';
+import { Sprint } from '../../pages/games/sprint/sprint';
+import { AudioCall } from '../../pages/games/audiocall/audioCallGame';
 
-class GameResult{
-  private points
-  private total
-  private inRow
-  private correctAnswers
-  private correctAnswersCounter
-  private wrongAnswers
-  private wrongAnswersCounter
-  private accuracy
-  constructor(data: IResult){
-    if(data.points) this.points = data.points
-    this.total = data.total
-    this.inRow = data.inRow
-    this.correctAnswers = data.answersArr.filter(item => item.isRight === 'true')
-    this.correctAnswersCounter = this.correctAnswers.length
-    this.wrongAnswers = data.answersArr.filter(item => item.isRight === 'false')
-    this.wrongAnswersCounter = this.wrongAnswers.length
-    this.accuracy = Math.round(this.correctAnswersCounter / +this.total * 100)
-    document.body.style.setProperty('--p', `${this.accuracy}`)
+class GameResult {
+  private group;
+  private points;
+  private total;
+  private inRow;
+  private correctAnswers;
+  private correctAnswersCounter;
+  private wrongAnswers;
+  private wrongAnswersCounter;
+  private accuracy;
+  constructor(data: IResult) {
+    if (data.points) this.points = data.points;
+    this.group = data.group;
+    this.total = data.total;
+    this.inRow = data.inRow;
+    this.correctAnswers = data.answersArr.filter(
+      (item) => item.isRight === 'true'
+    );
+    this.correctAnswersCounter = this.correctAnswers.length;
+    if (data.rightCount) this.correctAnswersCounter = data.rightCount;
+    this.wrongAnswers = data.answersArr.filter(
+      (item) => item.isRight === 'false'
+    );
+    this.wrongAnswersCounter = this.wrongAnswers.length;
+    if (data.wrongCount) this.wrongAnswersCounter = data.wrongCount;
+    this.accuracy = Math.round(
+      (this.correctAnswersCounter / +this.total) * 100
+    );
+    document.body.style.setProperty('--p', `${this.accuracy}`);
   }
 
-  async _initButtons(){
-    const modal = document.querySelector('#gameResultModalWindow') as HTMLElement
-    const modalResults = document.querySelector('#modalResults') as HTMLElement
-    const closeWindowBtn = document.querySelector('#closeWindowBtn') as HTMLElement
-    const restartGame = document.querySelector('#restartGame') as HTMLElement
+  async _initButtons() {
+    const modal = document.querySelector(
+      '#gameResultModalWindow'
+    ) as HTMLElement;
+    const modalResults = document.querySelector('#modalResults') as HTMLElement;
+    const closeWindowBtn = document.querySelector(
+      '#closeWindowBtn'
+    ) as HTMLElement;
+    const restartGame = document.querySelector('#restartGame') as HTMLElement;
+
+    const target = document.querySelector('.navigation .active') as HTMLElement;
+    let targetAttr: string;
+    if (target.dataset.navigation) {
+      targetAttr = target.dataset.navigation;
+    }
+
     modalResults.addEventListener('click', (e) => {
-        const audio = (e.target as HTMLElement).closest('button') as HTMLElement
-        if(audio){
-          (audio.nextElementSibling as HTMLAudioElement).play()
-        }
-    })
-    closeWindowBtn.addEventListener('click', () => modal.remove())
-    restartGame.addEventListener('click', () => modal.remove())
+      const audio = (e.target as HTMLElement).closest('button') as HTMLElement;
+      if (audio) {
+        (audio.nextElementSibling as HTMLAudioElement).play();
+      }
+    });
+    closeWindowBtn.addEventListener('click', () => {
+      modal.remove();
+      const levelPage = new LevelPage();
+      levelPage.renderLevelPage();
+    });
+    restartGame.addEventListener('click', () => {
+      modal.remove();
+      if (targetAttr === 'sprint') {
+        new Sprint(this.group).startGame();
+      }
+      if (targetAttr === 'audiocall') {
+        new AudioCall().startGame();
+      }
+    });
   }
 
-  render(wrapper:HTMLElement){
-    const modal:HTMLElement = document.createElement('div')
-    modal.className = 'gameResult-modalWindow'
-    modal.id = 'gameResultModalWindow'
-    modal.innerHTML = this.content()
-    wrapper.append(modal)
-    this._initButtons()
+  render(wrapper: HTMLElement) {
+    const modal: HTMLElement = document.createElement('div');
+    modal.className = 'gameResult-modalWindow';
+    modal.id = 'gameResultModalWindow';
+    modal.innerHTML = this.content();
+    wrapper.append(modal);
+    this._initButtons();
   }
 
-  content(){
+  content() {
     return `
       <div id="modalContent" class="modal__content">
         <div class="close-window-button__wrapper">
@@ -58,7 +94,9 @@ class GameResult{
         </div>
         <div class="modal__container">
           <h3 class="modal__title">Результат</h3>
-          <p class="points">${this.points ? `Вы набрали ${this.points} очков` : ''}</p>
+          <p class="points">${
+            this.points ? `Вы набрали ${this.points} очков` : ''
+          }</p>
           <div class="modal__accuracy">
             <div class="accuracy__diagram animate">${this.accuracy}%</div>
             <div class="accuracy__description">Ваша точность</div>
@@ -86,8 +124,9 @@ class GameResult{
                 >
               </h4>
               <div class="answers__list">
-              ${this.correctAnswers.map(item => {
-                return `
+              ${this.correctAnswers
+                .map((item) => {
+                  return `
                   <div class="answer">
                     <div class="answer-audio__wrapper">
                       <button class="audio__btn">
@@ -99,8 +138,9 @@ class GameResult{
                     </div>
                     <p><span class="word_en">${item.info.word}</span> - <span class="word_ru">${item.info.wordTranslate}</span></p>
                   </div>
-                `
-              }).join('')}
+                `;
+                })
+                .join('')}
               </div>
             </div>
             <div class="answers__wrapper">
@@ -113,8 +153,9 @@ class GameResult{
                 >
               </h4>
               <div class="answers__list">
-              ${this.wrongAnswers.map(item => {
-                return `
+              ${this.wrongAnswers
+                .map((item) => {
+                  return `
                   <div class="answer">
                     <div class="answer-audio__wrapper">
                       <button class="audio__btn">
@@ -126,8 +167,9 @@ class GameResult{
                     </div>
                     <p><span class="word_en">${item.info.word}</span> - <span class="word_ru">${item.info.wordTranslate}</span></p>
                   </div>
-                `
-              }).join('')}
+                `;
+                })
+                .join('')}
               </div>
             </div>
           </div>
@@ -136,8 +178,8 @@ class GameResult{
           </div>
         </div>
       </div>
-    `
+    `;
   }
 }
 
-export { GameResult }
+export { GameResult };

@@ -19,19 +19,18 @@ export class Sprint {
   currentWord!: IWord;
   word!: string;
   translate!: string;
-  answersArr: Array<IAnswer>;
   rightAnswersArr: Array<IAnswer>;
   mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
   audio: HTMLAudioElement;
 
-  constructor(group: number) {
+  constructor(group: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
-    this.group = String(group);
+    this.group = group;
 
-    this.timerCount = 10;
+    this.timerCount = 60;
 
     this.words = [];
     this.points = 0;
@@ -45,7 +44,6 @@ export class Sprint {
     this.rightAnswers = 0;
     this.mistakes = 0;
 
-    this.answersArr = [];
     this.rightAnswersArr = [];
     this.mistakesArr = [];
 
@@ -232,8 +230,8 @@ export class Sprint {
 
   game() {
     this.renderGame();
-    const right = document.querySelector('.right') as HTMLElement;
-    const wrong = document.querySelector('.wrong') as HTMLElement;
+    const rightBtn = document.querySelector('.right') as HTMLElement;
+    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
 
     this.timer();
     this.round();
@@ -266,7 +264,7 @@ export class Sprint {
       }
     };
 
-    right.addEventListener('click', () => {
+    const right = () => {
       const rightTranslate = this.words.find(
         (wordInfo) => wordInfo.word === this.word
       )?.wordTranslate;
@@ -276,9 +274,9 @@ export class Sprint {
         wrongAnswer();
       }
       this.round();
-    });
+    };
 
-    wrong.addEventListener('click', () => {
+    const wrong = () => {
       const rightTranslate = this.words.find(
         (wordInfo) => wordInfo.word === this.word
       )?.wordTranslate;
@@ -288,6 +286,15 @@ export class Sprint {
         wrongAnswer();
       }
       this.round();
+    };
+
+    rightBtn.addEventListener('click', right);
+    wrongBtn.addEventListener('click', wrong);
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft') right();
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowRight') wrong();
     });
   }
 
@@ -297,9 +304,12 @@ export class Sprint {
     gameArea.innerHTML = '';
 
     const result: IResult = {
+      group: this.group,
       points: this.points,
       total: this.answers,
       inRow: this.maxrow,
+      rightCount: this.rightAnswers,
+      wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
     };
     new GameResult(result).render(this.MAIN_WRAPPER);
