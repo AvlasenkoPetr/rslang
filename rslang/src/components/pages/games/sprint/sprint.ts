@@ -1,7 +1,8 @@
 import './sprint.scss';
 import { setRandomNumber } from '../../../Helpers/helpers';
-import { IWord } from '../../../Interfaces/interfaces';
+import { IWord, IResult, IAnswer } from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
+import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 
 const fetch = new Fetch();
 export class Sprint {
@@ -18,8 +19,9 @@ export class Sprint {
   currentWord!: IWord;
   word!: string;
   translate!: string;
-  rightAnswersArr: Array<IWord>;
-  mistakesArr: Array<IWord>;
+  answersArr: Array<IAnswer>;
+  rightAnswersArr: Array<IAnswer>;
+  mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
   audio: HTMLAudioElement;
@@ -43,6 +45,7 @@ export class Sprint {
     this.rightAnswers = 0;
     this.mistakes = 0;
 
+    this.answersArr = [];
     this.rightAnswersArr = [];
     this.mistakesArr = [];
 
@@ -227,49 +230,6 @@ export class Sprint {
     wrapper.append(li);
   }
 
-  renderResults() {
-    let accurancy = Math.round((this.rightAnswers / this.answers) * 100);
-    if (Number.isNaN(accurancy)) accurancy = 0;
-
-    this.MAIN_WRAPPER.insertAdjacentHTML(
-      'beforeend',
-      `
-      <div class="results">
-        <p class="result-points">Вы набрали ${this.points} очков</p>
-        <p class="accurancy">Accurancy ${accurancy}%</p>
-        <p class="right-answ-count">Правильных ответов: ${this.rightAnswers}</p>
-        <p class="mistakes-count">Ошибок: ${this.mistakes}</p>
-        <p class="mistakes-count">Подряд: ${this.maxrow}</p>
-        <p class="repeated">Всего слов: ${this.answers}</p>
-      </div>
-    `
-    );
-
-    const results = document.querySelector('.results') as HTMLElement;
-    results.insertAdjacentHTML(
-      'beforeend',
-      `
-      <ul class="right-answers">Correct Answers</ul>
-      <ul class="mistake-answers">Mistakes</ul>
-    `
-    );
-
-    const rightAnswersUl = document.querySelector(
-      '.right-answers'
-    ) as HTMLElement;
-    const mistakeAnswersUl = document.querySelector(
-      '.mistake-answers'
-    ) as HTMLElement;
-
-    this.rightAnswersArr.forEach((ans) => {
-      this.renderResultsAnswer(ans, rightAnswersUl);
-    });
-
-    this.mistakesArr.forEach((ans) => {
-      this.renderResultsAnswer(ans, mistakeAnswersUl);
-    });
-  }
-
   game() {
     this.renderGame();
     const right = document.querySelector('.right') as HTMLElement;
@@ -286,10 +246,10 @@ export class Sprint {
       this.audio.play();
       if (
         this.rightAnswersArr.find(
-          (wordInfo) => wordInfo === this.currentWord
+          (wordInfo) => wordInfo.info === this.currentWord
         ) === undefined
       ) {
-        this.rightAnswersArr.push(this.currentWord);
+        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
       }
     };
 
@@ -298,10 +258,11 @@ export class Sprint {
       this.audio.src = '../../../../assets/sounds/incorrect.mp3';
       this.audio.play();
       if (
-        this.mistakesArr.find((wordInfo) => wordInfo === this.currentWord) ===
-        undefined
+        this.mistakesArr.find(
+          (wordInfo) => wordInfo.info === this.currentWord
+        ) === undefined
       ) {
-        this.mistakesArr.push(this.currentWord);
+        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
       }
     };
 
@@ -333,7 +294,14 @@ export class Sprint {
   stopGame() {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
 
-    gameArea.style.display = 'none';
-    this.renderResults();
+    gameArea.innerHTML = '';
+
+    const result: IResult = {
+      points: this.points,
+      total: this.answers,
+      inRow: this.maxrow,
+      answersArr: this.rightAnswersArr.concat(this.mistakesArr),
+    };
+    new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }
