@@ -2,6 +2,7 @@
 import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
 import { Sprint } from '../games/sprint/sprint';
+import { AudioCall } from '../games/audiocall/audioCallGame';
 import appendFooter from '../../Reusable-components/footer/footer';
 import { BookPage } from '../book-page/book-page';
 
@@ -46,12 +47,11 @@ class LevelPage {
               break;
 
             case 'sprint':
-              const sprintGame = new Sprint(level);
-              sprintGame.startGame();
+              new Sprint(level).startGame();
               break;
 
             case 'audiocall':
-              // запускаем рендер аудиовызова
+              new AudioCall().startGame();
               break;
 
             default:
