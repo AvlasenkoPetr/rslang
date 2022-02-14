@@ -30,6 +30,7 @@ export class Router {
     if (clickedButtonDataset === 'logout') {
       localStorage.removeItem('UserInfo');
       clickedButton.dataset.navigation = 'login';
+      clickedButton.innerHTML = 'Войти';
       return;
     }
 
@@ -84,9 +85,9 @@ export class Router {
     this.setActivePage(buttonDataset);
 
     switch (buttonDataset) {
-      case 'main': // ф-ция рендера
+      case 'main':
         const main = new MainPage();
-        main.render();
+        main.renderMainPage();
         return;
 
       case 'book':

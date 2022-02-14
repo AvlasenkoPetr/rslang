@@ -28,52 +28,52 @@
           cursor: pointer;
 
           &:nth-child(1) .label {
-            background-color: #ffebec;
+            background-color: var(--a1);
             &::after {
-              border-color: transparent transparent transparent #ffebec;
+              border-color: transparent transparent transparent var(--a1);
             }
           }
 
           &:nth-child(2) .label {
-            background-color: #ffcfd2;
+            background-color: var(--a2);
             &::after {
-              border-color: transparent transparent transparent #ffcfd2;
+              border-color: transparent transparent transparent var(--a2);
             }
           }
 
           &:nth-child(3) .label {
-            background-color: #ebe4f1;
+            background-color: var(--b1);
             &::after {
-              border-color: transparent transparent transparent #ebe4f1;
+              border-color: transparent transparent transparent var(--b1);
             }
           }
 
           &:nth-child(4) .label {
-            background-color: #b9a1ce;
+            background-color: var(--b2);
             &::after {
-              border-color: transparent transparent transparent #b9a1ce;
+              border-color: transparent transparent transparent var(--b2);
             }
           }
 
           &:nth-child(5) .label {
-            background-color: #95b8d1;
+            background-color: var(--c1);
             &::after {
-              border-color: transparent transparent transparent #95b8d1;
+              border-color: transparent transparent transparent var(--c1);
             }
           }
 
           &:nth-child(6) .label {
-            background-color: #71a0c1;
+            background-color: var(--c2);
             &::after {
-              border-color: transparent transparent transparent #71a0c1;
+              border-color: transparent transparent transparent var(--c2);
             }
           }
 
           &:nth-child(7) .label {
             font-size: 36px;
-            background-color: #eb4f4f;
+            background-color: var(--red);
             &::after {
-              border-color: transparent transparent transparent #eb4f4f;
+              border-color: transparent transparent transparent var(--red);
             }
           }
 

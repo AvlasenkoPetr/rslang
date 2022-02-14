@@ -3,7 +3,8 @@ import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
-import { getUserInfo } from '../../Helpers/helpers'
+import { getUserInfo, isUserExists } from '../../Helpers/helpers'
+import { Router } from '../../router/router'
 
 export class LoginPage {
     MAIN_WRAPPER: HTMLElement
@@ -133,10 +134,15 @@ export class LoginPage {
     }
 
     redirectToMain = () => {
-        const loginNavButton: HTMLElement | null = document.querySelector('.active')
+        const loginNavButton: HTMLElement | null = document.querySelector('[data-navigation="login"]')
         if (loginNavButton) {
             loginNavButton.dataset.navigation = 'logout'
             loginNavButton.innerHTML = 'Выйти'
+            loginNavButton.classList.remove('active')
+
+            document.querySelector('[data-navigation="main"]')?.classList.add('active')
+            const router = new Router
+            router.renderPage()
         }
     }
 
@@ -180,7 +186,9 @@ export class LoginPage {
 
 // временная затычка для отрисовки залогиненного юзера
 window.addEventListener('load', () => {
-    if (localStorage.getItem('UserInfo')) {
-      (document.querySelector('[data-navigation="login"]') as HTMLElement).dataset.navigation = 'logout'
+    if (isUserExists()) {
+      const logoutButton = document.querySelector('[data-navigation="login"]') as HTMLElement
+      logoutButton.dataset.navigation = 'logout'
+      logoutButton.innerHTML = 'Выйти'
     }
 })

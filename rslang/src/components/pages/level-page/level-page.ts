@@ -3,6 +3,7 @@ import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
 import { Sprint } from '../games/sprint/sprint';
 import appendFooter from '../../Reusable-components/footer/footer';
+import { BookPage } from '../book-page/book-page';
 
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
@@ -40,16 +41,19 @@ class LevelPage {
 
           switch (targetAttr) {
             case 'book':
-              console.log(level);
-              // запускаем рендер книги
+              const bookPage = new BookPage(String(level))
+              bookPage.renderBookPage()
               break;
+
             case 'sprint':
               const sprintGame = new Sprint(level);
               sprintGame.startGame();
               break;
+
             case 'audiocall':
               // запускаем рендер аудиовызова
               break;
+
             default:
               break;
           }
