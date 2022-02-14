@@ -126,9 +126,11 @@ $button-nav-size: 30px;
       background-image: url(../../assets/images/navigation/book.svg);
       background-size: $button-nav-size calc($button-nav-size - 7px);
     }
-    &[data-navigation='games'] {
-      background-image: url(../../assets/images/navigation/games.svg);
-      background-size: $button-nav-size calc($button-nav-size - 5px);
+    &[data-navigation='sprint'] {
+      background-image: url(../../assets/images/navigation/sprint.svg);
+    }
+    &[data-navigation='audiocall'] {
+      background-image: url(../../assets/images/navigation/audiocall.svg);
     }
     &[data-navigation='stats'] {
       background-image: url(../../assets/images/navigation/stats.svg);

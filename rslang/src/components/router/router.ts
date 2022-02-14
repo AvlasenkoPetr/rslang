@@ -28,10 +28,10 @@ export class Router {
     }
 
     if (clickedButtonDataset === 'logout') {
-      localStorage.removeItem('UserInfo')
-      clickedButton.dataset.navigation = 'login'
-      clickedButton.innerHTML = 'Войти'
-      return
+      localStorage.removeItem('UserInfo');
+      clickedButton.dataset.navigation = 'login';
+      clickedButton.innerHTML = 'Войти';
+      return;
     }
 
     // вынести в отдельную ф-цию (снимаем класс эктив в нав блоке)
@@ -61,33 +61,33 @@ export class Router {
     this.NAV_BLOCK.querySelector('.button-open')?.classList.toggle('opened');
   };
 
-  setLastPageToLocalStorage(page:string){
-    localStorage.setItem('lastPage', page)
+  setLastPageToLocalStorage(page: string) {
+    localStorage.setItem('lastPage', page);
   }
 
-  setActivePage(currentPage:string){
-    const navigation = document.querySelector('.navigation') as HTMLElement
-    const pages = navigation.querySelectorAll('li') as NodeList
-    pages.forEach(item => {
-     if((item as HTMLElement).dataset.navigation === currentPage){
-      (item as HTMLElement).classList.add('active')
-     }else{
-      (item as HTMLElement).classList.remove('active')
-     }
-    })
+  setActivePage(currentPage: string) {
+    const navigation = document.querySelector('.navigation') as HTMLElement;
+    const pages = navigation.querySelectorAll('li') as NodeList;
+    pages.forEach((item) => {
+      if ((item as HTMLElement).dataset.navigation === currentPage) {
+        (item as HTMLElement).classList.add('active');
+      } else {
+        (item as HTMLElement).classList.remove('active');
+      }
+    });
   }
 
   renderPage = (buttonDataset: string = 'main'): void => {
     // Работает через дата-атрибуты
     // прим.: кнопка для переклчения на страницу книги имеет атрибут data-navigation='book', т.е.
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
-    this.setLastPageToLocalStorage(buttonDataset)
-    this.setActivePage(buttonDataset)
+    this.setLastPageToLocalStorage(buttonDataset);
+    this.setActivePage(buttonDataset);
 
     switch (buttonDataset) {
       case 'main':
-        const main = new MainPage()
-        main.renderMainPage()
+        const main = new MainPage();
+        main.renderMainPage();
         return;
 
       case 'book':
@@ -95,9 +95,14 @@ export class Router {
         levelPage.renderLevelPage();
         return;
 
-      case 'games':
-        const gameLevelPage = new LevelPage();
-        gameLevelPage.renderLevelPage();
+      case 'sprint':
+        const sprintLevelPage = new LevelPage();
+        sprintLevelPage.renderLevelPage();
+        return;
+
+      case 'audiocall':
+        const audiocallLevelPage = new LevelPage();
+        audiocallLevelPage.renderLevelPage();
         return;
 
       case 'stats':
@@ -107,9 +112,9 @@ export class Router {
         return;
 
       case 'login':
-        const loginPage = new LoginPage
-        loginPage.renderLoginPage()
-        return
+        const loginPage = new LoginPage();
+        loginPage.renderLoginPage();
+        return;
     }
   };
 }
