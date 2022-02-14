@@ -1,6 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
 import { getUserInfo } from '../../Helpers/helpers';
+import { Sprint } from '../games/sprint/sprint';
+import { AudioCall } from '../games/audiocall/audioCallGame';
 import appendFooter from '../../Reusable-components/footer/footer';
 import { BookPage } from '../book-page/book-page';
 
@@ -29,7 +31,7 @@ class LevelPage {
         if (clickedButton.className === 'label')
           clickedButton = clickedButton.offsetParent as HTMLElement;
 
-        const level = levelItems.indexOf(clickedButton);
+        const level = String(levelItems.indexOf(clickedButton));
 
         const target = document.querySelector(
           '.navigation .active'
@@ -40,16 +42,16 @@ class LevelPage {
 
           switch (targetAttr) {
             case 'book':
-              const bookPage = new BookPage(String(level))
-              bookPage.renderBookPage()
+              const bookPage = new BookPage(level);
+              bookPage.renderBookPage();
               break;
 
             case 'sprint':
-              // запускаем рендер спринта
+              new Sprint(level).startGame();
               break;
 
             case 'audiocall':
-              // запускаем рендер аудиовызова
+              new AudioCall().startGame();
               break;
 
             default:
@@ -123,10 +125,15 @@ class LevelPage {
         `
         );
       }
-      if (targetAttr === 'games') {
+      if (targetAttr === 'sprint') {
         const subtitle = document.querySelector('.subtitle') as HTMLElement;
         subtitle.innerHTML =
-          '<span>Играй</span> - для лучшего запоминания играй и делись результатами с другими';
+          '<span>Спринт</span> - выберите соответсвует ли перевод предложенному слову';
+      }
+      if (targetAttr === 'audiocall') {
+        const subtitle = document.querySelector('.subtitle') as HTMLElement;
+        subtitle.innerHTML =
+          '<span>Аудиовызов</span> - выберите из предложенных вариантов ответа правильный перевод слова, который услышите';
       }
     }
   }
