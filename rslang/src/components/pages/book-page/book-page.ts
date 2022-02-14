@@ -57,12 +57,8 @@ export class BookPage {
       case '6':
         if (clickedButton.classList.contains('active')) return
 
-        const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
-        pageCounter.value = '1'
-
         this.LEVEL = clickedButtonDataset
-        this.setActiveLevel()
-        this.renderWordsContainer()
+        this.renderBookPage()
         return
     }
   }
@@ -71,57 +67,41 @@ export class BookPage {
     this.MAIN_WRAPPER.innerHTML = ''
 
     this.BOOK_PAGE.innerHTML = this.bookMenuContent()
-    this.MAIN_WRAPPER.append(this.BOOK_PAGE)
-    
-    await this.renderWordsContainer()
     this.BOOK_PAGE.append(this.WORDS_CONTAINER)
-
     appendFooter(this.BOOK_PAGE)
+    
+    this.MAIN_WRAPPER.append(this.BOOK_PAGE)
+    await this.renderWordsContainer()
 
     this.setActiveLevel()
   }
 
+  // вот этот метод лучше не открывать)))
   renderWordsContainer = async (): Promise<void> => {
     this.WORDS_CONTAINER.innerHTML = ''
 
     const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
     const pageNum: string = String( Number(pageCounter.value) - 1 )
 
-    const wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
+    let wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
     console.log(wordsData)
-    
-    const userWordsData: Array<IUserWord> = await this.FETCH.GET_USER_WORDS()
-    console.log(userWordsData)
-    
-    
+
+    let userWordsData: Array<IUserWord> | undefined
+    if (isUserExists()) {
+      userWordsData = await this.FETCH.GET_USER_WORDS()
+      console.log(userWordsData)
+    } else {
+      userWordsData = undefined
+    }
+       
     for (let word of wordsData) {
+      // if (this.LEVEL === '6' && !userWordsData.find((userWord) => {userWord.id === word.id && userWord.difficulty === 'hard'})) continue
+
       const wordItem: HTMLElement = document.createElement('div')
       wordItem.className = `words-container__item ${this.LEVEL_NAMES[Number(this.LEVEL)]}`
-      wordItem.innerHTML = `
-      <div class="words-container__item_image-block">
-        <img src="https://rss21q3-rslang.herokuapp.com/${word.image}">
-      </div>
+      wordItem.innerHTML = `${this.wordItemContent(word)}`
 
-      <div class="words-container__item_info-block">
-        <div class="info-block_title">
-          ${word.word[0].toUpperCase()}${word.word.slice(1)} - ${word.transcription} - ${word.wordTranslate}
-        </div>
-
-        <div class="info-block_description">
-          ${word.textMeaning}<br>${word.textMeaningTranslate}
-        </div>
-
-        <div class="info-block_description">
-          ${word.textExample}<br>${word.textExampleTranslate}
-        </div>
-      </div>
-
-      <div class="words-container__item_controlls-block">
-        <button class="sound-button" data-word="play"></button>
-        ${isUserExists() ? this.wordControllsContent() : ''}
-      </div>   
-      `
-      const userWord = userWordsData.find((userWord) => userWord.wordId === word.id)
+      const userWord = userWordsData?.find((userWord) => userWord.wordId === word.id)
       if (userWord && userWord.difficulty !== "string") {
         wordItem.classList.add(`${userWord.difficulty}`)
       }
@@ -137,15 +117,16 @@ export class BookPage {
 
         switch(clickedButtonDataset) {
           case 'play':
-            if (clickedButton.classList.contains('playing')) {
+            const isThisAlreadyPlaying = clickedButton.classList.contains('playing')
+            if (isThisAlreadyPlaying) {
               clickedButton.classList.remove('playing')
               this.AUDIO.pause()
               return
             }
 
-            const currentlyPlaying: HTMLElement | null = document.querySelector('.playing')
-            if (currentlyPlaying) {
-              currentlyPlaying.classList.remove('playing')
+            const currentlyPlayingSomewhere: HTMLElement | null = document.querySelector('.playing')
+            if (currentlyPlayingSomewhere) {
+              currentlyPlayingSomewhere.classList.remove('playing')
               this.AUDIO.pause()
             }
 
@@ -233,7 +214,7 @@ export class BookPage {
 
       <div class="book-page__menu-row">
 
-        ${this.paginationBlockContent()}
+        ${this.LEVEL !== '6' ? this.paginationBlockContent() : '<div></div>'}
 
         <div class="book-page__level-container">
           <button class="book-page__level-container_button" data-book="0">A1</button>
@@ -271,6 +252,33 @@ export class BookPage {
       <input class="answers-counter__wrong" type="number" value="${wrongAnswers ? wrongAnswers : 0}" readonly>
       <input class="answers-counter__correct" type="number" value="${correctAnswers ? correctAnswers : 0}" readonly>
     </div>
+    `
+  }
+
+  wordItemContent = (word: IWord, userWord?: IUserWord): string => {
+    return `
+    <div class="words-container__item_image-block">
+      <img src="https://rss21q3-rslang.herokuapp.com/${word.image}">
+    </div>
+
+    <div class="words-container__item_info-block">
+      <div class="info-block_title">
+        ${word.word[0].toUpperCase()}${word.word.slice(1)} - ${word.transcription} - ${word.wordTranslate}
+      </div>
+
+      <div class="info-block_description">
+        ${word.textMeaning}<br>${word.textMeaningTranslate}
+      </div>
+
+      <div class="info-block_description">
+        ${word.textExample}<br>${word.textExampleTranslate}
+      </div>
+    </div>
+
+    <div class="words-container__item_controlls-block">
+      <button class="sound-button" data-word="play"></button>
+      ${isUserExists() ? this.wordControllsContent(/* userWord.wrong, userWord.correct */) : ''}
+    </div> 
     `
   }
 }
