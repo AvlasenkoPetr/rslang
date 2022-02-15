@@ -104,7 +104,7 @@ export class BookPage {
     
         const clickedButton: HTMLElement = e.target
         if (!clickedButton.dataset.word) return
-    
+
         const clickedButtonDataset: string = clickedButton.dataset.word
 
         switch(clickedButtonDataset) {
@@ -130,11 +130,10 @@ export class BookPage {
           case "easy":
             const wordItem: HTMLElement | null = clickedButton.closest('.words-container__item')
             if (!wordItem) return
-            // const wordId: string = word.id ? word.id : word._id
+            const wordId: string = word._id ? word._id : word.id
 
             if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: 'string'})
-              // await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: 'string'})
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: 'string'})
 
               if (this.LEVEL === '6') {
                 wordItem.remove()
@@ -145,8 +144,7 @@ export class BookPage {
             }
 
             if (wordItem.classList.contains('easy') || wordItem.classList.contains('hard')) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`})
-              // await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: `${clickedButtonDataset}`})
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: `${clickedButtonDataset}`})
 
               if (this.LEVEL === '6') {
                 wordItem.remove()
@@ -178,7 +176,7 @@ export class BookPage {
     } else {
       const hardWordsData: IAggregatedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"userWord.difficulty":"hard"}`})
       wordsData = hardWordsData[0].paginatedResults
-
+      console.log(hardWordsData)
     }
     console.log(wordsData)
     return wordsData

@@ -73,7 +73,12 @@ export interface IWord {
   textExampleTranslate: string;
   textMeaningTranslate: string;
   wordTranslate: string;
-  // _id: string
+  _id?: string
+}
+
+export interface IAggregatedWord extends IWord {
+  _id: string
+  userWord?: {difficulty: string, optional?: IOptionalBlock}
 }
 
 export interface IUserWord {
@@ -117,14 +122,11 @@ export interface IAnswer {
 export type IAggregatedWords = [{
   paginatedResults: Array<IAggregatedWord>,
   totalCount: [ {count: number} ]
-}] 
+}]
 
-export interface IAggregatedWord extends IWord {
-  userWord: {difficulty: string}
-  _id: string
+export interface IOptionalBlock {
+  correct?: number,
+  wrong?: number,
+  inRow?: number,
+  notNew?: true,
 }
-
-// export interface IAggregatedWord extends IWord {
-//   userWord: {difficulty: string}
-//   _id: string
-// }
