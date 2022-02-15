@@ -73,6 +73,12 @@ export interface IWord {
   textExampleTranslate: string;
   textMeaningTranslate: string;
   wordTranslate: string;
+  _id?: string
+}
+
+export interface IAggregatedWord extends IWord {
+  _id: string
+  userWord?: {difficulty: string, optional?: IOptionalBlock}
 }
 
 export interface IUserWord {
@@ -110,4 +116,17 @@ export interface INewState {
 export interface IAnswer {
   info: IWord;
   isRight: string;
+}
+
+// этот запрос возвращает какую то стремную хероту, будем еще менять этот тип
+export type IAggregatedWords = [{
+  paginatedResults: Array<IAggregatedWord>,
+  totalCount: [ {count: number} ]
+}]
+
+export interface IOptionalBlock {
+  correct?: number,
+  wrong?: number,
+  inRow?: number,
+  notNew?: true,
 }
