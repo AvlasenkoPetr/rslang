@@ -5,6 +5,7 @@ import { Sprint } from '../games/sprint/sprint';
 import { AudioCall } from '../games/audiocall/audioCallGame';
 import appendFooter from '../../Reusable-components/footer/footer';
 import { BookPage } from '../book-page/book-page';
+import { Spinner } from '../../Reusable-components/spinner/spinner';
 
 class LevelPage {
   MAIN_WRAPPER: HTMLElement;
@@ -39,6 +40,7 @@ class LevelPage {
 
         if (target.dataset.navigation) {
           const targetAttr: string = target.dataset.navigation;
+          const spinner = new Spinner();
 
           switch (targetAttr) {
             case 'book':
@@ -47,11 +49,15 @@ class LevelPage {
               break;
 
             case 'sprint':
-              new Sprint(level).startGame();
+              spinner.startTimer(() => {
+                new Sprint(level).startGame();
+              });
               break;
 
             case 'audiocall':
-              new AudioCall().startGame();
+              spinner.startTimer(() => {
+                new AudioCall().startGame();
+              });
               break;
 
             default:
