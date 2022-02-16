@@ -1,6 +1,6 @@
 import { Fetch } from "../../Fetch/fetch"
 import { isUserExists } from "../../Helpers/helpers"
-import { IUserWord, IWord } from "../../Interfaces/interfaces"
+import { IAggregatedWord, IAggregatedWords, IUserWord, IWord } from "../../Interfaces/interfaces"
 import appendFooter from "../../Reusable-components/footer/footer"
 import './book-page.scss'
 
@@ -80,20 +80,12 @@ export class BookPage {
   renderWordsContainer = async (): Promise<void> => {
     this.WORDS_CONTAINER.innerHTML = ''
 
-    const pageCounter: HTMLInputElement = document.getElementById('counter') as HTMLInputElement
-    const pageNum: string = String( Number(pageCounter.value) - 1 )
+    const pageCounter: HTMLInputElement | null = document.getElementById('counter') as HTMLInputElement
+    const pageNum: string = String( Number(pageCounter?.value) - 1 )
 
-    let wordsData: Array<IWord> = await this.FETCH.GET_WORDS( this.LEVEL, pageNum)
-    console.log(wordsData)
+    const wordsData: Array<IWord> | Array<IAggregatedWord> = await this.getWordsToRender(pageNum)
+    const userWordsData: Array<IUserWord> | undefined = await this.getUserWords()
 
-    let userWordsData: Array<IUserWord> | undefined
-    if (isUserExists()) {
-      userWordsData = await this.FETCH.GET_USER_WORDS()
-      console.log(userWordsData)
-    } else {
-      userWordsData = undefined
-    }
-       
     for (let word of wordsData) {
       // if (this.LEVEL === '6' && !userWordsData.find((userWord) => {userWord.id === word.id && userWord.difficulty === 'hard'})) continue
 
@@ -112,7 +104,7 @@ export class BookPage {
     
         const clickedButton: HTMLElement = e.target
         if (!clickedButton.dataset.word) return
-    
+
         const clickedButtonDataset: string = clickedButton.dataset.word
 
         switch(clickedButtonDataset) {
@@ -138,17 +130,26 @@ export class BookPage {
           case "easy":
             const wordItem: HTMLElement | null = clickedButton.closest('.words-container__item')
             if (!wordItem) return
+            const wordId: string = word._id ? word._id : word.id
 
             if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: 'string'})
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: 'string'})
 
+              if (this.LEVEL === '6') {
+                wordItem.remove()
+                return
+              } 
               wordItem.classList.remove(`${clickedButtonDataset}`)
               return
             }
 
-            if (wordItem.classList.length > 2) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`})
+            if (wordItem.classList.contains('easy') || wordItem.classList.contains('hard')) {
+              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: `${clickedButtonDataset}`})
 
+              if (this.LEVEL === '6') {
+                wordItem.remove()
+                return
+              }
               wordItem.classList.remove(`${wordItem.classList[wordItem.classList.length - 1]}`)
               wordItem.classList.add(`${clickedButtonDataset}`)
               return
@@ -166,6 +167,29 @@ export class BookPage {
       this.WORDS_CONTAINER.append(wordItem)      
     }
   }
+
+  getWordsToRender = async (pageNum?: string): Promise<IWord[] | IAggregatedWord[]> => {
+    let wordsData: Array<IWord> | Array<IAggregatedWord>
+    if (this.LEVEL !== '6') {
+      wordsData = await this.FETCH.GET_WORDS(this.LEVEL, pageNum)
+
+    } else {
+      const hardWordsData: IAggregatedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"userWord.difficulty":"hard"}`})
+      wordsData = hardWordsData[0].paginatedResults
+      console.log(hardWordsData)
+    }
+    console.log(wordsData)
+    return wordsData
+  }
+
+  getUserWords = async(): Promise<IUserWord[] | undefined> => {
+    let userWordsData: Array<IUserWord> | undefined
+    if (isUserExists()) {
+      userWordsData = await this.FETCH.GET_USER_WORDS()
+      console.log(userWordsData)
+    }
+    return userWordsData
+  } 
 
   toNextPage(button: HTMLElement): void {
     const pageCounter = button.previousElementSibling as HTMLInputElement
