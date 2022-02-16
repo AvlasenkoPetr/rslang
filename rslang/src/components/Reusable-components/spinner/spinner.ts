@@ -42,7 +42,7 @@ export class Spinner {
     `;
   }
 
-  startTimer(func: void) {
+  startTimer(func: { (): void; (): void }) {
     this.renderTimer();
     const baseTimer = document.getElementById(
       'base-timer-label'
@@ -56,7 +56,7 @@ export class Spinner {
 
       if (this.timeLeft === 0) {
         clearInterval(timerInterval);
-        func;
+        func();
       }
     }, 1000);
   }
