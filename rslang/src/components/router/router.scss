@@ -129,6 +129,9 @@ $button-nav-size: 30px;
     &[data-navigation='sprint'] {
       background-image: url(../../assets/images/navigation/sprint.svg);
     }
+    &[data-navigation='games'] {
+      background-image: url(../../assets/images/navigation/games.svg);
+    }
     &[data-navigation='audiocall'] {
       background-image: url(../../assets/images/navigation/audiocall.svg);
     }
