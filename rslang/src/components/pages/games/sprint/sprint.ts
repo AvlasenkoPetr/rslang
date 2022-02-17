@@ -3,6 +3,7 @@ import { setRandomNumber } from '../../../Helpers/helpers';
 import { IWord, IResult, IAnswer } from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
+import { Spinner } from '../../../Reusable-components/spinner/spinner';
 
 const fetch = new Fetch();
 export class Sprint {
