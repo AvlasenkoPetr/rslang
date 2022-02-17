@@ -2,6 +2,8 @@ import { MainPage } from './../pages/main-page/main-page';
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
+import { BookPage } from '../pages/book-page/book-page';
+import { isUserExists } from '../Helpers/helpers';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -11,7 +13,7 @@ export class Router {
   }
 
   setListener(): void {
-    window.addEventListener('click', this.processClick);
+    this.NAV_BLOCK.addEventListener('click', this.processClick);
   }
 
   processClick = (e: MouseEvent): void => {
@@ -95,6 +97,16 @@ export class Router {
         levelPage.renderLevelPage();
         return;
 
+      case 'book-hard': {
+        this.setActivePage('book')
+
+        if (!isUserExists) return /* потом здесь будет еррор пейдж */
+
+        const bookPage = new BookPage('6')
+        bookPage.renderBookPage()
+        return;
+      }
+
       case 'sprint':
         const sprintLevelPage = new LevelPage();
         sprintLevelPage.renderLevelPage();
@@ -104,6 +116,9 @@ export class Router {
         const audiocallLevelPage = new LevelPage();
         audiocallLevelPage.renderLevelPage();
         return;
+
+      case 'games':
+        return
 
       case 'stats':
         return;
