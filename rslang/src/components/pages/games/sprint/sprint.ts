@@ -18,12 +18,6 @@ interface IStats {
   accurancy: number;
   inrow: number;
 }
-
-const sprintStatistic: IStats = {
-  newWords: 0,
-  accurancy: 0,
-  inrow: 0,
-};
 export class Sprint {
   timerCount: number;
   words: Array<IWord>;
@@ -279,20 +273,6 @@ export class Sprint {
     );
   }
 
-  /*renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
-    const li = document.createElement('li');
-    li.className = 'answer';
-    li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
-    li.addEventListener('click', () => {
-      const audio = new Audio(
-        `https://rss21q3-rslang.herokuapp.com/${ans.audio}`
-      );
-      audio.play();
-    });
-
-    wrapper.append(li);
-  }*/
-
   game() {
     this.renderGame();
     const rightBtn = document.querySelector('.right') as HTMLElement;
@@ -367,7 +347,6 @@ export class Sprint {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
 
     gameArea.innerHTML = '';
-    console.log(this.words);
 
     const result: IResult = {
       group: this.group,
@@ -378,6 +357,20 @@ export class Sprint {
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
     };
+
+    let newWordsCount = 0;
+    this.words.forEach((wordInfo) => {
+      if (wordInfo.userWord.optional.notNew) newWordsCount += 1;
+    });
+
+    const sprintStatistic = {
+      words: this.words,
+      newWords: newWordsCount,
+      accurancy: Math.round((this.rightAnswers / this.answers) * 100),
+      inrow: this.maxrow,
+    };
+
+    console.log(sprintStatistic);
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }
