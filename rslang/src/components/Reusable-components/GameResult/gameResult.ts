@@ -1,8 +1,9 @@
-import { IResult } from './../../Interfaces/interfaces';
+import { IAggregatedWord, IAggregatedWords, IGET_AGGREGATED_WORDS, IResult, IWord } from './../../Interfaces/interfaces';
 import './gameResult.scss';
 import LevelPage from '../../pages/level-page/level-page';
 import { Sprint } from '../../pages/games/sprint/sprint';
 import { AudioCall } from '../../pages/games/audiocall/audioCallGame';
+import { Fetch } from '../../Fetch/fetch';
 
 class GameResult {
   private group;
@@ -33,6 +34,66 @@ class GameResult {
       (this.correctAnswersCounter / +this.total) * 100
     );
     document.body.style.setProperty('--p', `${this.accuracy}`);
+    this.checkIsNewWord(data)
+  }
+
+  async checkIsNewWord(data: IResult){
+    const dataAnswers = data.answersArr
+    const params: IGET_AGGREGATED_WORDS = {
+      wordsPerPage: '20',
+      filter:`{"$and":[{"group": ${data.group}, "page": ${data.page}}]}`
+      // filter:`{"$and":[{"group": ${data.group}, "page": ${0}}]}`
+    }
+    const response: IAggregatedWords = await new Fetch().GET_AGGREGATED_WORDS(params)
+    const paginatedResults: Array<IAggregatedWord> = response[0].paginatedResults
+    dataAnswers.forEach(item => {
+        const word = paginatedResults.filter(i => i._id === item.info.id)[0]
+        if(word.userWord){
+          if(word.userWord.optional){
+            if(item.isRight === 'true'){
+              word.userWord.optional.correct! += 1
+              word.userWord.optional.inRow! += 1
+              if( (word.userWord.difficulty === 'string' && word.userWord.optional.inRow === 3) || (word.userWord.difficulty === 'hard' && word.userWord.optional.inRow === 5)){
+                word.userWord.difficulty = 'easy'
+              }
+            }else{
+              word.userWord.optional.wrong! += 1
+              word.userWord.optional.inRow! = 0
+              if (word.userWord.difficulty === 'easy') word.userWord.difficulty = 'string'
+            }
+          }
+          else{
+            word.userWord.optional = {
+              correct: item.isRight === 'true' ? 1 : 0,
+              wrong: item.isRight  === 'true' ?  0 : 1,
+              inRow: item.isRight  === 'true' ? 1 : 0,
+              notNew: true
+            }
+          }
+          this.updateUserWord(word)
+        }else{
+          word.userWord = {
+            difficulty: 'string',
+            optional: {
+              correct: item.isRight === 'true' ? 1 : 0,
+              wrong: item.isRight === 'true' ? 0 : 1,
+              inRow: item.isRight === 'true' ? 1 : 0,
+              notNew: true
+            }
+          }
+          this.createNewUserWord(word)
+        }
+      })
+  }
+
+  async updateUserWord(word:IAggregatedWord){
+    const response = await new Fetch().UPDATE_USER_WORDS_BY_ID(word._id,word.userWord!)
+    console.log('update',response)
+  }
+
+  async createNewUserWord(word:IAggregatedWord){
+    const response = await new Fetch().CREATE_USER_WORDS(word._id,word.userWord!)
+    console.log('create',response)
   }
 
   async _initButtons() {
@@ -68,7 +129,7 @@ class GameResult {
         new Sprint(this.group).startGame();
       }
       if (targetAttr === 'audiocall') {
-        new AudioCall().startGame();
+        new AudioCall(this.group).startGame();
       }
     });
   }

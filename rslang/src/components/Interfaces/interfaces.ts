@@ -12,10 +12,13 @@ export interface IUSER_BODY {
 }
 
 export interface ICREATE_USER_WORD {
-  difficulty: 'hard' | 'easy' | 'string';
+  difficulty: string;
   optional?: {
-    name: string;
-  };
+    correct?: number,
+    wrong?: number,
+    inRow?: number,
+    notNew?: true,
+  }
 }
 
 export interface IUPDATE_STATISTICS {
@@ -50,6 +53,7 @@ export interface IGET_AGGREGATED_WORDS {
 
 export interface IResult {
   group: string;
+  page: string;
   points?: number;
   total: number;
   inRow: number;
@@ -91,6 +95,7 @@ export interface IUserWord {
 export interface IState {
   data: null | Array<IWord>;
   group: string;
+  page: string;
   currentPage: number;
   isAnswerHide: boolean;
   currentAnswers?: Array<IWord>;
@@ -104,6 +109,7 @@ export interface INewState {
   type: string;
   group?: string;
   data?: Array<IWord>;
+  page?: string;
   currentPage?: number;
   isAnswerHide?: boolean;
   currentAnswers?: Array<IWord>;
@@ -130,3 +136,4 @@ export interface IOptionalBlock {
   inRow?: number,
   notNew?: true,
 }
+

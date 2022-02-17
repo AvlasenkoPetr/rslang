@@ -28,7 +28,8 @@ enum Actions {
 class AudioCall {
   public state: IState = {
     data: null,
-    group: '4',
+    group: '0',
+    page: '0',
     currentPage: 0,
     isAnswerHide: true,
     currentAnswers: [],
@@ -39,6 +40,35 @@ class AudioCall {
   };
 
   public gamePage = new GamePage();
+  public group
+  public page
+
+  constructor(group:string,page?: string){
+    this.group = group
+    this.state.group = group
+    if(page) {
+      this.page = page
+      this.state.page = page
+    }
+  }
+
+  async startGame() {
+    let _page: string
+    if(this.page){
+      _page = this.page
+    }else{
+      _page = '' + setRandomNumber(PAGES)
+      this.state.page = _page
+    } 
+    const data: Array<IWord> = await new Fetch().GET_WORDS(this.group, _page);
+    // const data: Array<IWord> = await new Fetch().GET_WORDS(this.group, '0');
+    this.gamePage.render();
+    this.setDataActionCreator(data);
+    this.gamePage.renderWords(this.state);
+    this.setAnswers(data, this.state.currentPage);
+    this._initGamePage();
+  }
+
 
   async setFullScreen(e: Event) {
     const target = e.currentTarget as HTMLElement;
@@ -142,16 +172,6 @@ class AudioCall {
     }
   }
 
-  async startGame() {
-    const page = '' + setRandomNumber(PAGES);
-    const group = this.state.group;
-    const data: Array<IWord> = await new Fetch().GET_WORDS(group, page);
-    this.gamePage.render();
-    this.setDataActionCreator(data);
-    this.gamePage.renderWords(this.state);
-    this.setAnswers(data, this.state.currentPage);
-    this._initGamePage();
-  }
 
   setAnswers(data: Array<IWord>, currentPage: number) {
     const shuffleData = [...data]
@@ -197,6 +217,8 @@ class AudioCall {
       ) as HTMLElement;
       const result: IResult = {
         group: this.state.group,
+        page: this.state.page,
+        // page: '0',
         total: this.state.data!.length,
         inRow: this.state.inRow,
         answersArr: this.state.words,

@@ -51,7 +51,7 @@ class LevelPage {
               break;
 
             case 'audiocall':
-              new AudioCall().startGame();
+              new AudioCall(level).startGame();
               break;
 
             default:
