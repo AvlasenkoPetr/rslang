@@ -1,11 +1,29 @@
 import './sprint.scss';
 import { setRandomNumber } from '../../../Helpers/helpers';
-import { IWord, IResult, IAnswer } from '../../../Interfaces/interfaces';
+import {
+  IWord,
+  IResult,
+  IAnswer,
+  IAggregatedWord,
+  IAggregatedWords,
+} from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
-import { Spinner } from '../../../Reusable-components/spinner/spinner';
 
 const fetch = new Fetch();
+
+interface IStats {
+  words?: IAggregatedWords;
+  newWords: number;
+  accurancy: number;
+  inrow: number;
+}
+
+const sprintStatistic: IStats = {
+  newWords: 0,
+  accurancy: 0,
+  inrow: 0,
+};
 export class Sprint {
   timerCount: number;
   words: Array<IWord>;
@@ -24,12 +42,21 @@ export class Sprint {
   mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
+  page: string;
   audio: HTMLAudioElement;
+  fromBook: boolean;
 
-  constructor(group: string) {
+  constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
     this.group = group;
+    if (page) {
+      this.page = page;
+      this.fromBook = true;
+    } else {
+      this.page = String(setRandomNumber(29));
+      this.fromBook = false;
+    }
 
     this.timerCount = 60;
 
@@ -52,9 +79,32 @@ export class Sprint {
   }
 
   async startGame() {
-    const randomPage: string = String(setRandomNumber(29));
-    this.words = await fetch.GET_WORDS(this.group, randomPage);
+    if (this.fromBook) {
+      this.words = await fetch.GET_AGGREGATED_WORDS({
+        filter: `{"$and":[{"group": ${this.group}, "page": ${this.page}}]}`,
+        wordsPerPage: '20',
+      });
+      this.words = this.words[0].paginatedResults;
+    } else {
+      this.words = await fetch.GET_WORDS(this.group, this.page);
+    }
     this.MAIN_WRAPPER.innerHTML = '';
+    this.words.forEach((wordInfo) => {
+      if (!wordInfo.userWord) {
+        wordInfo.userWord = {
+          difficulty: 'string',
+        };
+      }
+      if (!wordInfo.userWord.optional) {
+        wordInfo.userWord.optional = {
+          correct: 0,
+          wrong: 0,
+          inRow: 0,
+          notNew: true,
+        };
+      }
+    });
+    console.log(this.words);
     this.game();
   }
 
@@ -135,11 +185,20 @@ export class Sprint {
     const progressItems =
       document.querySelectorAll<HTMLElement>('.progress-item');
 
+    const userWord = this.currentWord.userWord;
     if (state) {
       this.points += this.countPoints;
       this.progress += 1;
       this.rightAnswers += 1;
       this.inrow += 1;
+      userWord.optional.correct += 1;
+      userWord.optional.inRow += 1;
+
+      if (
+        (userWord.difficulty === 'string' && userWord.optional.inRow === 3) ||
+        (userWord.difficulty === 'hard' && userWord.optional.inRow === 5)
+      )
+        userWord.difficulty = 'easy';
 
       if (this.progress === 4) {
         this.progress = 0;
@@ -164,6 +223,11 @@ export class Sprint {
       this.progress = 0;
       this.mistakes += 1;
       this.inrow = 0;
+
+      userWord.optional.wrong += 1;
+      userWord.optional.inRow = 0;
+      if (userWord.difficulty === 'easy') userWord.difficulty = 'string';
+
       if (this.countPoints !== 10) {
         this.countPoints = 10;
         countPointsContainer.style.animation = `progress 1s linear forwards`;
@@ -215,7 +279,7 @@ export class Sprint {
     );
   }
 
-  renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
+  /*renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
     const li = document.createElement('li');
     li.className = 'answer';
     li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
@@ -227,7 +291,7 @@ export class Sprint {
     });
 
     wrapper.append(li);
-  }
+  }*/
 
   game() {
     this.renderGame();
@@ -303,6 +367,7 @@ export class Sprint {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
 
     gameArea.innerHTML = '';
+    console.log(this.words);
 
     const result: IResult = {
       group: this.group,
