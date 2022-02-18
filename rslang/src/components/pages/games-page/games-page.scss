@@ -41,8 +41,8 @@
     }
 
     &:hover {
-      border: 1px solid var(--blue-interactive);
-      color: var(--blue-interactive);
+      filter: invert(64%) sepia(27%) saturate(537%) hue-rotate(162deg)
+        brightness(90%) contrast(86%);
     }
   }
 }
