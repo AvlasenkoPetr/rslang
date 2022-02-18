@@ -82,8 +82,14 @@ class GameResult {
             }
           }
           this.createNewUserWord(word)
+          // this.updateStatistic()
         }
       })
+  }
+
+  async updateStatistic(){
+    const response = await new Fetch().GET_STATISTICS()
+    console.log(response)
   }
 
   async updateUserWord(word:IAggregatedWord){
@@ -122,6 +128,7 @@ class GameResult {
       modal.remove();
       const levelPage = new LevelPage();
       levelPage.renderLevelPage();
+      document.exitFullscreen()
     });
     restartGame.addEventListener('click', () => {
       modal.remove();

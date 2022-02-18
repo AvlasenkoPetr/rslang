@@ -60,6 +60,7 @@ export interface IResult {
   rightCount?: number;
   wrongCount?: number;
   answersArr: Array<IAnswer>;
+  gameName: string
 }
 
 export interface IWord {

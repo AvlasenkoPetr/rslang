@@ -321,6 +321,7 @@ export class Sprint {
       rightCount: this.rightAnswers,
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
+      gameName: 'sprint'
     };
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
