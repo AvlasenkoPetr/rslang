@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import './level-page.scss';
-import { getUserInfo } from '../../Helpers/helpers';
+import { getUserInfo, isUserExists } from '../../Helpers/helpers';
 import { Sprint } from '../games/sprint/sprint';
 import { AudioCall } from '../games/audiocall/audioCallGame';
 import appendFooter from '../../Reusable-components/footer/footer';
@@ -12,13 +12,18 @@ class LevelPage {
 
   LEVEL_PAGE: HTMLElement;
 
-  constructor() {
+  target: 'book' | 'sprint' | 'audiocall' 
+
+  constructor(target: 'book' | 'sprint' | 'audiocall') {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
+
     this.LEVEL_PAGE = document.createElement('section');
     this.LEVEL_PAGE.className = 'level-page page';
+
+    this.target = target
   }
 
-  processClick(e: MouseEvent): void {
+  processClick = (e: MouseEvent): void => {
     if (e.target instanceof HTMLElement) {
       let clickedButton = e.target as HTMLElement;
 
@@ -37,43 +42,48 @@ class LevelPage {
         const target = document.querySelector(
           '.navigation .active'
         ) as HTMLElement;
+        
+        this.renderPageByAttr(this.target, level)
+        // if (target.dataset.navigation) {
+        //   const targetAttr: string = target.dataset.navigation;
 
-        if (target.dataset.navigation) {
-          const targetAttr: string = target.dataset.navigation;
-          const spinner = new Spinner();
-
-          switch (targetAttr) {
-            case 'book':
-              const bookPage = new BookPage(level);
-              bookPage.renderBookPage();
-              break;
-
-            case 'sprint':
-              spinner.startTimer(() => {
-                new Sprint(level).startGame();
-              });
-              break;
-
-            case 'audiocall':
-              spinner.startTimer(() => {
-                new AudioCall().startGame();
-              });
-              break;
-
-            default:
-              break;
-          }
-        }
+        // }
       }
+    }
+  }
+
+  renderPageByAttr = (targetAttr: string, level: string): void => {
+    const spinner = new Spinner();
+
+    switch (targetAttr) {
+      case 'book':
+        const bookPage = new BookPage(level);
+        bookPage.renderBookPage();
+        break;
+
+      case 'sprint':
+        spinner.startTimer(() => {
+          new Sprint(level).startGame();
+        });
+        break;
+
+      case 'audiocall':
+        spinner.startTimer(() => {
+          new AudioCall().startGame();
+        });
+        break;
+
+      default:
+        break;
     }
   }
 
   renderLevelPage(): void {
     this.MAIN_WRAPPER.innerHTML = '';
+    // <h1 class="title">Выберите уровень сложности</h1>
     this.LEVEL_PAGE.innerHTML = `
       <div class="wrapper">
-      <h1 class="title">Выберите уровень сложности</h1>
-      <div class="level-page-content">
+      <div class="level-page__content">
         <div class="levels">
           <div class="level-item">
             <div class="label">A1</div>
@@ -100,12 +110,6 @@ class LevelPage {
             <span class="label-title">Proficiency</span>
           </div>
         </div>
-        <p class="subtitle"><span>Электронный учебник</span> - библиотека из 4000 часто встречающихся слов. Изучай в своем темпе</p>
-        <img
-          src="./assets/images/background-guys/man-reading-newspaper.svg"
-          class="level-img"
-          alt="img"
-        />
       </div>
       </div>`;
     this.MAIN_WRAPPER.append(this.LEVEL_PAGE);
@@ -114,12 +118,12 @@ class LevelPage {
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
 
     const target = document.querySelector('.navigation .active') as HTMLElement;
-    const userInfo = getUserInfo();
-    const auth = userInfo.token === '1' ? false : true;
+    // const userInfo = getUserInfo();
+    // const auth = userInfo.token === '1' ? false : true;
 
     if (target.dataset.navigation) {
       const targetAttr: string = target.dataset.navigation;
-      if (targetAttr === 'book' && auth === true) {
+      if (targetAttr === 'book' && isUserExists()) {
         const levelsWrapper = document.querySelector('.levels') as HTMLElement;
         levelsWrapper.insertAdjacentHTML(
           'beforeend',
@@ -130,17 +134,34 @@ class LevelPage {
         </div>
         `
         );
+
+        levelsWrapper.insertAdjacentHTML('afterend', `
+        <div class="level-page__description">
+          <p class="subtitle">
+          <span>Электронный учебник</span> - библиотека из 3600 часто встречающихся слов. 
+          Слова в коллекции отсортированы от более простых и известных к более сложным.
+          Авторизированные пользователи могут отмечать слова как "сложные" и "изученные"!
+          Сложные слова будут доступны в отдельном разделе, для отдельного их повторения. 
+          Изученные слова не будут участвовать в играх, запущенных со страниц учебника.
+          </p>
+          <img
+          src="./assets/images/background-guys/man-reading-newspaper.svg"
+          class="level-img"
+          alt="img"
+          />
+        </div>
+        `)
       }
-      if (targetAttr === 'sprint') {
-        const subtitle = document.querySelector('.subtitle') as HTMLElement;
-        subtitle.innerHTML =
-          '<span>Спринт</span> - выберите соответсвует ли перевод предложенному слову';
-      }
-      if (targetAttr === 'audiocall') {
-        const subtitle = document.querySelector('.subtitle') as HTMLElement;
-        subtitle.innerHTML =
-          '<span>Аудиовызов</span> - выберите из предложенных вариантов ответа правильный перевод слова, который услышите';
-      }
+      // if (targetAttr === 'sprint') {
+      //   const subtitle = document.querySelector('.subtitle') as HTMLElement;
+      //   subtitle.innerHTML =
+      //     '<span>Спринт</span> - выберите соответсвует ли перевод предложенному слову';
+      // }
+      // if (targetAttr === 'audiocall') {
+      //   const subtitle = document.querySelector('.subtitle') as HTMLElement;
+      //   subtitle.innerHTML =
+      //     '<span>Аудиовызов</span> - выберите из предложенных вариантов ответа правильный перевод слова, который услышите';
+      // }
     }
   }
 }
