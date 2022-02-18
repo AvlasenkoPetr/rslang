@@ -77,7 +77,7 @@ export interface IWord {
 }
 
 export interface IAggregatedWord extends IWord {
-  _id: string;
+  _id?: string;
   userWord?: { difficulty: string; optional?: IOptionalBlock };
 }
 

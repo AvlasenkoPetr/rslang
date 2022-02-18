@@ -6,6 +6,7 @@ import {
   IAnswer,
   IAggregatedWord,
   IAggregatedWords,
+  IUserWord,
 } from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
@@ -20,7 +21,7 @@ interface IStats {
 }
 export class Sprint {
   timerCount: number;
-  words: Array<IWord>;
+  words: any;
   points: number;
   countPoints: number;
   progress: number;
@@ -73,17 +74,51 @@ export class Sprint {
   }
 
   async startGame() {
+    let aggregatedWords: IAggregatedWords;
+    let aggregatedWordsResults: Array<IAggregatedWord>;
+    let extraPage: number = Number(this.page);
     if (this.fromBook) {
-      this.words = await fetch.GET_AGGREGATED_WORDS({
-        filter: `{"$and":[{"group": ${this.group}, "page": ${this.page}}]}`,
-        wordsPerPage: '20',
-      });
-      this.words = this.words[0].paginatedResults;
+      do {
+        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
+          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+          wordsPerPage: '20',
+        });
+
+        aggregatedWordsResults = aggregatedWords[0].paginatedResults.filter(
+          (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+        );
+
+        extraPage -= 1;
+        if (extraPage < 0) {
+          this.words = aggregatedWordsResults;
+          break;
+        }
+
+        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
+          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+          wordsPerPage: '20',
+        });
+
+        let extraAggregatedWordsResults: Array<IAggregatedWord> =
+          aggregatedWords[0].paginatedResults.filter(
+            (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+          );
+        if (this.words.length === 0) {
+          this.words = aggregatedWordsResults.concat(
+            extraAggregatedWordsResults
+          );
+        } else {
+          this.words = this.words.concat(extraAggregatedWordsResults);
+        }
+      } while (this.words.length < 20);
+      if (this.words.length > 20) {
+        this.words = this.words.reverse();
+        this.words.length = 20;
+      }
     } else {
       this.words = await fetch.GET_WORDS(this.group, this.page);
     }
-    this.MAIN_WRAPPER.innerHTML = '';
-    this.words.forEach((wordInfo) => {
+    this.words.forEach((wordInfo: IAggregatedWord) => {
       if (!wordInfo.userWord) {
         wordInfo.userWord = {
           difficulty: 'string',
@@ -99,6 +134,7 @@ export class Sprint {
       }
     });
     console.log(this.words);
+    this.MAIN_WRAPPER.innerHTML = '';
     this.game();
   }
 
@@ -311,7 +347,7 @@ export class Sprint {
 
     const right = () => {
       const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
       )?.wordTranslate;
       if (this.translate === rightTranslate) {
         rightAnswer();
@@ -323,7 +359,7 @@ export class Sprint {
 
     const wrong = () => {
       const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
       )?.wordTranslate;
       if (this.translate !== rightTranslate) {
         rightAnswer();
@@ -359,8 +395,8 @@ export class Sprint {
     };
 
     let newWordsCount = 0;
-    this.words.forEach((wordInfo) => {
-      if (wordInfo.userWord.optional.notNew) newWordsCount += 1;
+    this.words.forEach((wordInfo: IAggregatedWord) => {
+      if (wordInfo.userWord?.optional?.notNew) newWordsCount += 1;
     });
 
     const sprintStatistic = {
