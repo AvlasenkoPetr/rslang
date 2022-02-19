@@ -15,7 +15,9 @@ import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 
 const fetch = new Fetch();
 
-let sprintStatistic: IAudioCallStatistic = {};
+let sprintStatistic: IAudioCallStatistic = {
+  newWords: 0,
+};
 export class Sprint {
   timerCount: number;
   words: any;
@@ -128,7 +130,6 @@ export class Sprint {
           correct: 0,
           wrong: 0,
           inRow: 0,
-          notNew: true,
         };
       }
     });
@@ -216,6 +217,10 @@ export class Sprint {
       document.querySelectorAll<HTMLElement>('.progress-item');
 
     const userWord = this.currentWord.userWord;
+    if (userWord.optional.notNew === undefined) {
+      sprintStatistic.newWords! += 1;
+      userWord.optional.notNew = true;
+    }
     if (state) {
       this.points += this.countPoints;
       this.progress += 1;
@@ -446,9 +451,7 @@ export class Sprint {
     };
 
     if (this.fromBook) {
-      let newWordsCount = 0;
       this.words.forEach(async (wordInfo: IAggregatedWord) => {
-        if (wordInfo.userWord?.optional?.notNew) newWordsCount += 1;
         const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
         let getWord: Array<IAggregatedWord> =
           await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
@@ -458,16 +461,12 @@ export class Sprint {
           await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
         }
       });
-
-      sprintStatistic = {
-        newWords: newWordsCount,
-        correct: this.rightAnswers,
-        wrong: this.mistakes,
-        maxRow: this.maxrow,
-      };
-      this.updateStatistics();
     }
 
+    sprintStatistic.correct = this.rightAnswers;
+    sprintStatistic.wrong = this.mistakes;
+    sprintStatistic.maxRow = this.maxrow;
+    this.updateStatistics();
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }
