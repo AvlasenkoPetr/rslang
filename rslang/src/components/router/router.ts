@@ -5,6 +5,7 @@ import './router.scss';
 import { BookPage } from '../pages/book-page/book-page';
 import { isUserExists } from '../Helpers/helpers';
 import GamesPage from '../pages/games-page/games-page';
+import StatsPage from '../pages/stats-page/stats-page';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -114,6 +115,8 @@ export class Router {
         return
 
       case 'stats':
+        const statsPage = new StatsPage()
+        statsPage.renderStatsPage()
         return;
 
       case 'team':

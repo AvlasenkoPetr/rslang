@@ -1,0 +1,42 @@
+.stats-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__wrapper {
+        width: 50%;
+        // min-height: 500px;
+        padding: 5px;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        row-gap: 10%;
+        column-gap: 5%;
+    }
+
+    &__card {
+        width: 40%;
+        min-height: 270px;
+        margin-bottom: 50px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        border: 1px solid var(--font-color-main);
+        border-radius: 15px;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+        p {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 56px;
+        }
+    }
+}

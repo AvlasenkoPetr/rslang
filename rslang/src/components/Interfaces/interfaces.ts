@@ -130,3 +130,21 @@ export interface IOptionalBlock {
   inRow?: number,
   notNew?: true,
 }
+
+export interface IUserStats {
+  learnedWords: number,
+  optional: {
+    audiocall: {
+      newWords: number,
+      correct: number,
+      wrong: number,
+      maxRow: number,
+    },
+    sprint: {
+      newWords: number,
+      correct: number,
+      wrong: number,
+      maxRow: number,
+    },
+  }
+}
