@@ -16,13 +16,6 @@ import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 const fetch = new Fetch();
 
 let sprintStatistic: IAudioCallStatistic = {};
-
-interface IStats {
-  words?: IAggregatedWords;
-  newWords: number;
-  accurancy: number;
-  inrow: number;
-}
 export class Sprint {
   timerCount: number;
   words: any;
@@ -457,7 +450,8 @@ export class Sprint {
       this.words.forEach(async (wordInfo: IAggregatedWord) => {
         if (wordInfo.userWord?.optional?.notNew) newWordsCount += 1;
         const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
-        let getWord: any = await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
+        let getWord: Array<IAggregatedWord> =
+          await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
         if (getWord[0].userWord) {
           await fetch.UPDATE_USER_WORDS_BY_ID(wordId, wordInfo.userWord!);
         } else {
