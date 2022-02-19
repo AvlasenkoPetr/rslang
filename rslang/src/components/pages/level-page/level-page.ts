@@ -61,7 +61,7 @@ class LevelPage {
 
       case 'sprint':
         spinner.startTimer(() => {
-          new Sprint(level).startGame();
+          new Sprint(level, '1').startGame();
         });
         break;
 

@@ -7,11 +7,15 @@ import {
   IAggregatedWord,
   IAggregatedWords,
   IUserWord,
+  IAudioCallStatistic,
+  IStatisticResponse,
 } from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 
 const fetch = new Fetch();
+
+let sprintStatistic: IAudioCallStatistic = {};
 
 interface IStats {
   words?: IAggregatedWords;
@@ -53,7 +57,7 @@ export class Sprint {
       this.fromBook = false;
     }
 
-    this.timerCount = 60;
+    this.timerCount = 10;
 
     this.words = [];
     this.points = 0;
@@ -71,7 +75,7 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
-    if(page) this.page = page
+    if (page) this.page = page;
   }
 
   async startGame() {
@@ -119,6 +123,7 @@ export class Sprint {
     } else {
       this.words = await fetch.GET_WORDS(this.group, this.page);
     }
+
     this.words.forEach((wordInfo: IAggregatedWord) => {
       if (!wordInfo.userWord) {
         wordInfo.userWord = {
@@ -382,7 +387,56 @@ export class Sprint {
     });
   }
 
-  stopGame() {
+  async updateStatistics() {
+    try {
+      const response: IStatisticResponse = await new Fetch().GET_STATISTICS();
+      delete response.id;
+      if (response.optional) {
+        if (response.optional.sprint) {
+          response.optional.sprint.correct! += sprintStatistic.correct!;
+          response.optional.sprint.wrong! += sprintStatistic.wrong!;
+          response.optional.sprint.newWords! += sprintStatistic.newWords!;
+          response.optional.sprint.maxRow! = sprintStatistic.maxRow!;
+        } else {
+          Object.defineProperty(response.optional, 'sprint', {
+            value: {
+              correct: sprintStatistic.correct!,
+              wrong: sprintStatistic.wrong!,
+              newWords: sprintStatistic.newWords!,
+              maxRow: sprintStatistic.maxRow!,
+            },
+          });
+        }
+      } else {
+        Object.defineProperty(response, 'optional', {
+          value: {
+            sprint: {
+              correct: sprintStatistic.correct!,
+              wrong: sprintStatistic.wrong!,
+              newWords: sprintStatistic.newWords!,
+              maxRow: sprintStatistic.maxRow!,
+            },
+          },
+        });
+      }
+      await new Fetch().UPDATE_STATISTICS(response);
+    } catch {
+      const body: IStatisticResponse = {
+        learnedWords: 0,
+        optional: {
+          sprint: {
+            newWords: sprintStatistic.newWords!,
+            correct: sprintStatistic.correct!,
+            wrong: sprintStatistic.wrong!,
+            maxRow: sprintStatistic.maxRow!,
+          },
+        },
+      };
+      await new Fetch().UPDATE_STATISTICS(body);
+    }
+  }
+
+  async stopGame() {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
     gameArea.innerHTML = '';
 
@@ -395,22 +449,31 @@ export class Sprint {
       rightCount: this.rightAnswers,
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
-      gameName: 'sprint'
+      gameName: 'sprint',
     };
 
-    let newWordsCount = 0;
-    this.words.forEach((wordInfo: IAggregatedWord) => {
-      if (wordInfo.userWord?.optional?.notNew) newWordsCount += 1;
-    });
+    if (this.fromBook) {
+      let newWordsCount = 0;
+      this.words.forEach(async (wordInfo: IAggregatedWord) => {
+        if (wordInfo.userWord?.optional?.notNew) newWordsCount += 1;
+        const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
+        let getWord: any = await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
+        if (getWord[0].userWord) {
+          await fetch.UPDATE_USER_WORDS_BY_ID(wordId, wordInfo.userWord!);
+        } else {
+          await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
+        }
+      });
 
-    const sprintStatistic = {
-      words: this.words,
-      newWords: newWordsCount,
-      accurancy: Math.round((this.rightAnswers / this.answers) * 100),
-      inrow: this.maxrow,
-    };
+      sprintStatistic = {
+        newWords: newWordsCount,
+        correct: this.rightAnswers,
+        wrong: this.mistakes,
+        maxRow: this.maxrow,
+      };
+      this.updateStatistics();
+    }
 
-    console.log(sprintStatistic);
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }

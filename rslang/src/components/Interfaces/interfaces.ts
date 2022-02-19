@@ -14,11 +14,11 @@ export interface IUSER_BODY {
 export interface ICREATE_USER_WORD {
   difficulty: string;
   optional?: {
-    correct?: number,
-    wrong?: number,
-    inRow?: number,
-    notNew?: true,
-  }
+    correct?: number;
+    wrong?: number;
+    inRow?: number;
+    notNew?: true;
+  };
 }
 
 export interface IUPDATE_STATISTICS {
@@ -60,7 +60,7 @@ export interface IResult {
   rightCount?: number;
   wrongCount?: number;
   answersArr: Array<IAnswer>;
-  gameName: string
+  gameName: string;
 }
 
 export interface IWord {
@@ -134,32 +134,24 @@ export type IAggregatedWords = [
 ];
 
 export interface IOptionalBlock {
-<<<<<<< HEAD
   correct?: number;
   wrong?: number;
   inRow?: number;
   notNew?: true;
-=======
-  correct?: number,
-  wrong?: number,
-  inRow?: number,
-  notNew?: true,
 }
 
-export interface IAudioCallStatistic{
-  newWords?: number, 
-  correct?: number,
-  wrong?: number,
-  maxRow?: number
+export interface IAudioCallStatistic {
+  newWords?: number;
+  correct?: number;
+  wrong?: number;
+  maxRow?: number;
 }
 
-
-export interface IStatisticResponse{
-  id?:string,
-  learnedWords: number,
-  optional?:{
-    audioCall?: IAudioCallStatistic,
-    sprint?: IAudioCallStatistic
-  }
->>>>>>> 9896e033fc4c14f4cd5a0779cf8c869d92e457c0
+export interface IStatisticResponse {
+  id?: string;
+  learnedWords: number;
+  optional?: {
+    audioCall?: IAudioCallStatistic;
+    sprint?: IAudioCallStatistic;
+  };
 }
