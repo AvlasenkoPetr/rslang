@@ -345,10 +345,10 @@ export class BookPage {
   };
 
   wordControllsContent = (
-    userWord: IUserWord
+    userWord: IUserWord | undefined
   ): string => {
-    const wrongAnswers = userWord.optional?.wrong
-    const correctAnswers = userWord.optional?.correct
+    const wrongAnswers = userWord?.optional?.wrong
+    const correctAnswers = userWord?.optional?.correct
     return `
     <div class="difficulty-cotrolls__block">
       <button class="difficulty-cotrolls__button" data-word="hard" title="Пометить слово как сложное"></button>
@@ -391,7 +391,7 @@ export class BookPage {
     <div class="words-container__item_controlls-block">
       <button class="sound-button" data-word="play"></button>
       ${
-        userWord
+        isUserExists()
           ? this.wordControllsContent(userWord)
           : ''
       }
