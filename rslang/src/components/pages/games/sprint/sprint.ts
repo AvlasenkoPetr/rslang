@@ -30,7 +30,7 @@ export class Sprint {
   answers: number;
   rightAnswers: number;
   mistakes: number;
-  currentWord!: IWord;
+  currentWord!: any;
   word!: string;
   translate!: string;
   rightAnswersArr: Array<IAnswer>;
@@ -157,9 +157,10 @@ export class Sprint {
       '.translate-word'
     ) as HTMLElement;
 
-    const wordInfo = this.words[setRandomNumber(19)];
+    const wordInfo = this.words[setRandomNumber(this.words.length - 1)];
     let randomWord = wordInfo.word;
-    let randomTranslate = this.words[setRandomNumber(19)].wordTranslate;
+    let randomTranslate =
+      this.words[setRandomNumber(this.words.length - 1)].wordTranslate;
     const random = Boolean(setRandomNumber(2));
 
     if (random) {
@@ -371,10 +372,11 @@ export class Sprint {
 
     rightBtn.addEventListener('click', right);
     wrongBtn.addEventListener('click', wrong);
-    document.addEventListener('keyup', (e) => {
+
+    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowLeft') right();
     });
-    document.addEventListener('keyup', (e) => {
+    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowRight') wrong();
     });
   }
