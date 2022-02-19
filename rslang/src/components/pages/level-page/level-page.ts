@@ -47,7 +47,6 @@ class LevelPage {
         // if (target.dataset.navigation) {
         //   const targetAttr: string = target.dataset.navigation;
 
-        // }
       }
     }
   }
@@ -69,7 +68,7 @@ class LevelPage {
 
       case 'audiocall':
         spinner.startTimer(() => {
-          new AudioCall().startGame();
+          new AudioCall(level).startGame();
         });
         break;
 

@@ -28,7 +28,8 @@ enum Actions {
 class AudioCall {
   public state: IState = {
     data: null,
-    group: '4',
+    group: '0',
+    page: '0',
     currentPage: 0,
     isAnswerHide: true,
     currentAnswers: [],
@@ -39,23 +40,96 @@ class AudioCall {
   };
 
   public gamePage = new GamePage();
+  public group 
+  public page
 
-  async setFullScreen(e: Event) {
-    const target = e.currentTarget as HTMLElement;
-    const audioCallMainElement = document.querySelector(
-      '#audioCallMainElement'
+  constructor(group:string,page?: string){
+    this.group = group
+    this.state.group = group
+    if(page) {
+      this.page = page
+      this.state.page = page
+    }
+    window.addEventListener('removeEventListeners', this.remove.bind(this))
+    document.body.addEventListener('keyup', this.keyUp)
+  }
+
+  keyUp = async (e:KeyboardEvent) =>{
+    const answersWrapper = document.querySelector(
+      '#answersWrapper'
     ) as HTMLElement;
-    this.setFullScreenActionCreator();
-    if (this.state.fullScreen) {
-      await audioCallMainElement.requestFullscreen();
-      target.innerHTML =
-        ' <img src="../../../../assets/images/audioCall/fullScreen1.svg">';
-    } else {
-      await document.exitFullscreen();
-      target.innerHTML =
-        ' <img src="../../../../assets/images/audioCall/fullScreen.svg">';
+    const answers = answersWrapper.querySelectorAll('button')
+    if (!this.state.disabledButtons) {
+      if(e.key == '1' || e.key == '2' || e.key == '3' || e.key == '4'){
+        const target = answers[+(e.key as string) - 1] as HTMLElement
+        if (target.hasAttribute('isRight')) {
+          if (target.getAttribute('isRight') === 'true') {
+            this.state.inRow += 1;
+            target.classList.add('right-answer');
+            this.setWordActionCreator(
+              this.state.data![this.state.currentPage],
+              'true'
+            );
+          } else if (target.getAttribute('isRight') === 'false') {
+            target.classList.add('bad-answer');
+            this.state.inRow = 0;
+            this.setWordActionCreator(
+              this.state.data![this.state.currentPage],
+              'false'
+            );
+            (
+              (target.closest('.answers__wrapper') as HTMLElement).querySelector(
+                '[isRight="true"]'
+              ) as HTMLElement
+            ).classList.add('right-answer');
+          }
+        }
+      }
+    }
+    if(e.key == ' '){
+      console.log(this.state)
+      if(this.state.isAnswerHide){
+        this.showAnswer()
+      }else{
+        this.setNextPageActionCreator()
+      }
     }
   }
+
+  async setFullScreen(e:Event) {
+    const target = e.currentTarget as HTMLElement
+    target.blur()
+    this.setFullScreenActionCreator();
+    this.activateFullScreen()
+  }
+
+  async activateFullScreen(){
+    const target = document.querySelector('.main__wrapper') as HTMLElement;
+    if (document.fullscreenElement?.classList.contains('main__wrapper')) {
+      document.exitFullscreen();
+    } else {
+      target.requestFullscreen();
+    }
+  }
+
+  async startGame() {
+    let _page: string
+    if(this.page){
+      _page = this.page
+    }else{
+      _page = '' + setRandomNumber(PAGES)
+      this.state.page = _page
+    } 
+    const data: Array<IWord> = await new Fetch().GET_WORDS(this.group, _page);
+    this.gamePage.render();
+    this.setDataActionCreator(data);
+    this.gamePage.renderWords(this.state);
+    this.setAnswers(data, this.state.currentPage);
+    this._initGamePage();
+  }
+
+
+ 
 
   _initGamePage() {
     const nextPageButton = document.querySelector(
@@ -81,6 +155,10 @@ class AudioCall {
     );
     dontKnowButton.addEventListener('click', this.showAnswer.bind(this));
     this._initPlay();
+  }
+
+  remove(){
+    document.body.removeEventListener('keyup', this.keyUp, false)
   }
 
   showAnswer() {
@@ -140,17 +218,7 @@ class AudioCall {
         }
       }
     }
-  }
 
-  async startGame() {
-    const page = '' + setRandomNumber(PAGES);
-    const group = this.state.group;
-    const data: Array<IWord> = await new Fetch().GET_WORDS(group, page);
-    this.gamePage.render();
-    this.setDataActionCreator(data);
-    this.gamePage.renderWords(this.state);
-    this.setAnswers(data, this.state.currentPage);
-    this._initGamePage();
   }
 
   setAnswers(data: Array<IWord>, currentPage: number) {
@@ -185,23 +253,29 @@ class AudioCall {
       type: Actions.SET_NEXT_PAGE,
       currentPage: (this.state.currentPage += 1),
     };
-    if (this.state.currentPage < ROUNDS_AMOUNT) {
-      this.setState(action);
-      this.gamePage.renderWords(this.state);
-      this.setAnswers(this.state.data!, this.state.currentPage);
-      this.setDisabledButtons(false);
-      this._initPlay();
-    } else {
-      const audioCallMainElement = document.querySelector(
-        '#audioCallMainElement'
-      ) as HTMLElement;
-      const result: IResult = {
-        group: this.state.group,
-        total: this.state.data!.length,
-        inRow: this.state.inRow,
-        answersArr: this.state.words,
-      };
-      new GameResult(result).render(audioCallMainElement);
+    if(!this.state.isAnswerHide){
+      if (this.state.currentPage < ROUNDS_AMOUNT) {
+        this.setState(action);
+        this.gamePage.renderWords(this.state);
+        this.setAnswers(this.state.data!, this.state.currentPage);
+        this.setDisabledButtons(false);
+        this._initPlay();
+      } else {
+        const audioCallMainElement = document.querySelector(
+          '#audioCallMainElement'
+        ) as HTMLElement;
+        const result: IResult = {
+          group: this.state.group,
+          page: this.state.page,
+          // page: '0',
+          total: this.state.data!.length,
+          inRow: this.state.inRow,
+          answersArr: this.state.words,
+          gameName: 'audioCall'
+        };
+        this.remove()
+        new GameResult(result).render(audioCallMainElement);
+      }
     }
   }
 

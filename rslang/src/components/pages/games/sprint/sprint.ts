@@ -24,9 +24,12 @@ export class Sprint {
   mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
+  page:string
   audio: HTMLAudioElement;
 
-  constructor(group: string) {
+  constructor(group: string,page?: string) {
+    this.page = ''
+   
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
     this.group = group;
@@ -49,10 +52,17 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
+    if(page) this.page = page
   }
 
   async startGame() {
-    const randomPage: string = String(setRandomNumber(29));
+    let randomPage: string 
+    if(this.page){
+      randomPage = this.page
+    } else{
+      randomPage = String(setRandomNumber(29));
+      this.page = randomPage
+    } 
     this.words = await fetch.GET_WORDS(this.group, randomPage);
     this.MAIN_WRAPPER.innerHTML = '';
     this.game();
@@ -301,17 +311,18 @@ export class Sprint {
 
   stopGame() {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
-
     gameArea.innerHTML = '';
 
     const result: IResult = {
       group: this.group,
+      page: this.page,
       points: this.points,
       total: this.answers,
       inRow: this.maxrow,
       rightCount: this.rightAnswers,
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
+      gameName: 'sprint'
     };
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
