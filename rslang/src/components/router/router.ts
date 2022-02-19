@@ -2,6 +2,7 @@ import { MainPage } from './../pages/main-page/main-page';
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
+
 import { BookPage } from '../pages/book-page/book-page';
 import { isUserExists } from '../Helpers/helpers';
 import GamesPage from '../pages/games-page/games-page';
@@ -87,6 +88,9 @@ export class Router {
     // пишем: case 'book': ${метод рендера у класса страницы книги} return
     this.setLastPageToLocalStorage(buttonDataset);
     this.setActivePage(buttonDataset);
+
+    const EVENT = new CustomEvent('removeEventListeners')
+    window.dispatchEvent(EVENT)
 
     switch (buttonDataset) {
       case 'main':
