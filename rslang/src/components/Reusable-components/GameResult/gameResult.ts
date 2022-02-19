@@ -1,4 +1,13 @@
-import { IAggregatedWord, IAggregatedWords, IAudioCallStatistic, IGET_AGGREGATED_WORDS, IResult, IWord, IUPDATE_STATISTICS, IStatisticResponse } from './../../Interfaces/interfaces';
+import {
+  IAggregatedWord,
+  IAggregatedWords,
+  IAudioCallStatistic,
+  IGET_AGGREGATED_WORDS,
+  IResult,
+  IWord,
+  IUPDATE_STATISTICS,
+  IStatisticResponse,
+} from './../../Interfaces/interfaces';
 import './gameResult.scss';
 import LevelPage from '../../pages/level-page/level-page';
 import { Sprint } from '../../pages/games/sprint/sprint';
@@ -16,9 +25,9 @@ class GameResult {
   private wrongAnswers;
   private wrongAnswersCounter;
   private accuracy;
-  newWordCounter:number
+  newWordCounter: number;
   constructor(data: IResult) {
-    this.newWordCounter = 0
+    this.newWordCounter = 0;
     if (data.points) this.points = data.points;
     this.group = data.group;
     this.total = data.total;
@@ -36,124 +45,134 @@ class GameResult {
     this.accuracy = Math.round(
       (this.correctAnswersCounter / +this.total) * 100
     );
-    if(!this.accuracy) this.accuracy = 0
+    if (!this.accuracy) this.accuracy = 0;
     document.body.style.setProperty('--p', `${this.accuracy}`);
-    if(data.gameName == 'audioCall') {
-      this.checkIsNewWord(data)
+    if (data.gameName == 'audioCall') {
+      this.checkIsNewWord(data);
     }
   }
 
-  async updateStatistics(){
-    try{
-      const response:IStatisticResponse = await new Fetch().GET_STATISTICS()
-      delete(response.id)
-      if(response.optional){
-        if(response.optional.audioCall){
-          response.optional.audioCall.correct! += this.correctAnswersCounter
-          response.optional.audioCall.wrong! += this.wrongAnswersCounter
-          response.optional.audioCall.newWords! += this.newWordCounter
-          if(response.optional.audioCall.maxRow! <= this.inRow){
-            response.optional.audioCall.maxRow! = this.inRow
+  async updateStatistics() {
+    try {
+      const response: IStatisticResponse = await new Fetch().GET_STATISTICS();
+      delete response.id;
+      if (response.optional) {
+        if (response.optional.audioCall) {
+          response.optional.audioCall.correct! += this.correctAnswersCounter;
+          response.optional.audioCall.wrong! += this.wrongAnswersCounter;
+          response.optional.audioCall.newWords! += this.newWordCounter;
+          if (response.optional.audioCall.maxRow! <= this.inRow) {
+            response.optional.audioCall.maxRow! = this.inRow;
           }
-        }else{
-          Object.defineProperty(response.optional, 'audioCall',{
+        } else {
+          Object.defineProperty(response.optional, 'audioCall', {
             value: {
-              correct:this.correctAnswersCounter,
-              wrong:this.wrongAnswersCounter,
-              newWords:this.newWordCounter,
-              maxRow:this.inRow,
+              correct: this.correctAnswersCounter,
+              wrong: this.wrongAnswersCounter,
+              newWords: this.newWordCounter,
+              maxRow: this.inRow,
             },
-          })
+          });
         }
-      }else{
-        Object.defineProperty(response, 'optional',{
+      } else {
+        Object.defineProperty(response, 'optional', {
           value: {
-            audioCall:{
-              correct:this.correctAnswersCounter,
-              wrong:this.wrongAnswersCounter,
-              newWords:this.newWordCounter,
-              maxRow:this.inRow,
-            }
+            audioCall: {
+              correct: this.correctAnswersCounter,
+              wrong: this.wrongAnswersCounter,
+              newWords: this.newWordCounter,
+              maxRow: this.inRow,
+            },
           },
-        })
+        });
       }
-      await new Fetch().UPDATE_STATISTICS(response)
-    }
-    catch{
-      const body: IStatisticResponse ={
+      await new Fetch().UPDATE_STATISTICS(response);
+    } catch {
+      const body: IStatisticResponse = {
         learnedWords: 0,
         optional: {
           audioCall: {
             newWords: this.newWordCounter,
             correct: this.correctAnswersCounter,
             wrong: this.wrongAnswersCounter,
-            maxRow: this.inRow
-          }
-        }
-      }
-      await new Fetch().UPDATE_STATISTICS(body)
+            maxRow: this.inRow,
+          },
+        },
+      };
+      await new Fetch().UPDATE_STATISTICS(body);
     }
   }
 
-  async checkIsNewWord(data: IResult){
-    const dataAnswers = data.answersArr
+  async checkIsNewWord(data: IResult) {
+    const dataAnswers = data.answersArr;
     const params: IGET_AGGREGATED_WORDS = {
       wordsPerPage: '20',
-      filter:`{"$and":[{"group": ${data.group}, "page": ${data.page}}]}`
-    }
-    const response: IAggregatedWords = await new Fetch().GET_AGGREGATED_WORDS(params)
-    const paginatedResults: Array<IAggregatedWord> = response[0].paginatedResults
-    dataAnswers.forEach(item => {
-        const word = paginatedResults.filter(i => i._id === item.info.id)[0]
-        if(word.userWord){
-          if(word.userWord.optional){
-            if(item.isRight === 'true'){
-              word.userWord.optional.correct! += 1
-              word.userWord.optional.inRow! += 1
-              if( (word.userWord.difficulty === 'string' && word.userWord.optional.inRow === 3) || (word.userWord.difficulty === 'hard' && word.userWord.optional.inRow === 5)){
-                word.userWord.difficulty = 'easy'
-              }
-            }else{
-              word.userWord.optional.wrong! += 1
-              word.userWord.optional.inRow! = 0
-              if (word.userWord.difficulty === 'easy') word.userWord.difficulty = 'string'
+      filter: `{"$and":[{"group": ${data.group}, "page": ${data.page}}]}`,
+    };
+    const response: IAggregatedWords = await new Fetch().GET_AGGREGATED_WORDS(
+      params
+    );
+    const paginatedResults: Array<IAggregatedWord> =
+      response[0].paginatedResults;
+    dataAnswers.forEach((item) => {
+      const word = paginatedResults.filter((i) => i._id === item.info.id)[0];
+      if (word.userWord) {
+        if (word.userWord.optional) {
+          if (item.isRight === 'true') {
+            word.userWord.optional.correct! += 1;
+            word.userWord.optional.inRow! += 1;
+            if (
+              (word.userWord.difficulty === 'string' &&
+                word.userWord.optional.inRow === 3) ||
+              (word.userWord.difficulty === 'hard' &&
+                word.userWord.optional.inRow === 5)
+            ) {
+              word.userWord.difficulty = 'easy';
             }
+          } else {
+            word.userWord.optional.wrong! += 1;
+            word.userWord.optional.inRow! = 0;
+            if (word.userWord.difficulty === 'easy')
+              word.userWord.difficulty = 'string';
           }
-          else{
-            word.userWord.optional = {
-              correct: item.isRight === 'true' ? 1 : 0,
-              wrong: item.isRight  === 'true' ?  0 : 1,
-              inRow: item.isRight  === 'true' ? 1 : 0,
-              notNew: true
-            }
-          }
-          this.updateUserWord(word)
-         
-        }else{
-          word.userWord = {
-            difficulty: 'string',
-            optional: {
-              correct: item.isRight === 'true' ? 1 : 0,
-              wrong: item.isRight === 'true' ? 0 : 1,
-              inRow: item.isRight === 'true' ? 1 : 0,
-              notNew: true
-            }
-          }
-          this.newWordCounter += 1
-          this.createNewUserWord(word)
+        } else {
+          word.userWord.optional = {
+            correct: item.isRight === 'true' ? 1 : 0,
+            wrong: item.isRight === 'true' ? 0 : 1,
+            inRow: item.isRight === 'true' ? 1 : 0,
+            notNew: true,
+          };
         }
-      })
-    this.updateStatistics()
+        this.updateUserWord(word);
+      } else {
+        word.userWord = {
+          difficulty: 'string',
+          optional: {
+            correct: item.isRight === 'true' ? 1 : 0,
+            wrong: item.isRight === 'true' ? 0 : 1,
+            inRow: item.isRight === 'true' ? 1 : 0,
+            notNew: true,
+          },
+        };
+        this.newWordCounter += 1;
+        this.createNewUserWord(word);
+      }
+    });
+    this.updateStatistics();
   }
 
-  
-
-  async updateUserWord(word:IAggregatedWord){
-    const response = await new Fetch().UPDATE_USER_WORDS_BY_ID(word._id,word.userWord!)
+  async updateUserWord(word: IAggregatedWord) {
+    const response = await new Fetch().UPDATE_USER_WORDS_BY_ID(
+      word._id!,
+      word.userWord!
+    );
   }
 
-  async createNewUserWord(word:IAggregatedWord){
-    const response = await new Fetch().CREATE_USER_WORDS(word._id,word.userWord!)
+  async createNewUserWord(word: IAggregatedWord) {
+    const response = await new Fetch().CREATE_USER_WORDS(
+      word._id!,
+      word.userWord!
+    );
   }
 
   async _initButtons() {
@@ -176,7 +195,7 @@ class GameResult {
     closeWindowBtn.addEventListener('click', () => {
       modal.remove();
       const gamesPage = new GamesPage();
-      gamesPage.renderGamesPage()
+      gamesPage.renderGamesPage();
     });
     restartGame.addEventListener('click', () => {
       modal.remove();

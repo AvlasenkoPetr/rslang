@@ -12,7 +12,7 @@ class LevelPage {
 
   LEVEL_PAGE: HTMLElement;
 
-  target: 'book' | 'sprint' | 'audiocall' 
+  target: 'book' | 'sprint' | 'audiocall';
 
   constructor(target: 'book' | 'sprint' | 'audiocall') {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
@@ -43,14 +43,13 @@ class LevelPage {
         const target = document.querySelector(
           '.navigation .active'
         ) as HTMLElement;
-        
-        this.renderPageByAttr(this.target, level)
+
+        this.renderPageByAttr(this.target, level);
         // if (target.dataset.navigation) {
         //   const targetAttr: string = target.dataset.navigation;
-
       }
     }
-  }
+  };
 
   renderPageByAttr = (targetAttr: string, level: string): void => {
     const spinner = new Spinner();
@@ -76,7 +75,7 @@ class LevelPage {
       default:
         break;
     }
-  }
+  };
 
   renderLevelPage(): void {
     this.MAIN_WRAPPER.innerHTML = '';
@@ -125,7 +124,9 @@ class LevelPage {
       const targetAttr: string = target.dataset.navigation;
       if (targetAttr === 'book') {
         const levelsWrapper = document.querySelector('.levels') as HTMLElement;
-        levelsWrapper.insertAdjacentHTML('afterend', `
+        levelsWrapper.insertAdjacentHTML(
+          'afterend',
+          `
         <div class="level-page__description">
           <p class="subtitle">
           <span>Электронный учебник</span> - библиотека из 3600 часто встречающихся слов. 
@@ -140,7 +141,8 @@ class LevelPage {
           alt="img"
           />
         </div>
-        `)
+        `
+        );
 
         if (isUserExists()) {
           levelsWrapper.insertAdjacentHTML(
@@ -151,9 +153,8 @@ class LevelPage {
             <span class="label-title">Hard words</span>
             </div>
             `
-            );
+          );
         }
-
       }
       // if (targetAttr === 'sprint') {
       //   const subtitle = document.querySelector('.subtitle') as HTMLElement;
