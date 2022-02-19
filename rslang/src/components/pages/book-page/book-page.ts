@@ -3,6 +3,7 @@ import { isUserExists } from "../../Helpers/helpers"
 import { IAggregatedWord, IAggregatedWords, IUserWord, IWord } from "../../Interfaces/interfaces"
 import appendFooter from "../../Reusable-components/footer/footer"
 import { AudioCall } from "../games/audiocall/audioCallGame"
+import { Sprint } from "../games/sprint/sprint"
 import './book-page.scss'
 
 export class BookPage {
@@ -41,7 +42,7 @@ export class BookPage {
     const clickedButtonDataset: string = clickedButton.dataset.book
 
     const pageCounter: HTMLInputElement | null = document.getElementById('counter') as HTMLInputElement
-    const pageNum: string = String( Number(pageCounter?.value) - 1 )
+    const pageNum: string = pageCounter ? String( Number(pageCounter?.value) - 1 ) : ''
 
     switch(clickedButtonDataset) {
       case 'audiocall':
@@ -50,8 +51,8 @@ export class BookPage {
         return
 
       case 'sprint':
-        console.log('sprint');
-        
+        const sprint = new Sprint(this.LEVEL, pageNum)
+        sprint.startGame()
         return
 
       case 'prev':
