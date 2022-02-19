@@ -4,6 +4,7 @@ import LevelPage from '../../pages/level-page/level-page';
 import { Sprint } from '../../pages/games/sprint/sprint';
 import { AudioCall } from '../../pages/games/audiocall/audioCallGame';
 import { Fetch } from '../../Fetch/fetch';
+import GamesPage from '../../pages/games-page/games-page';
 
 class GameResult {
   private group;
@@ -179,9 +180,8 @@ class GameResult {
     });
     closeWindowBtn.addEventListener('click', () => {
       modal.remove();
-      const levelPage = new LevelPage();
-      levelPage.renderLevelPage();
-      document.exitFullscreen()
+      const gamesPage = new GamesPage();
+      gamesPage.renderGamesPage()
     });
     restartGame.addEventListener('click', () => {
       modal.remove();

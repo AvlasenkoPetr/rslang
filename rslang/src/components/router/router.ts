@@ -5,6 +5,7 @@ import './router.scss';
 
 import { BookPage } from '../pages/book-page/book-page';
 import { isUserExists } from '../Helpers/helpers';
+import GamesPage from '../pages/games-page/games-page';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -97,7 +98,7 @@ export class Router {
         return;
 
       case 'book':
-        const levelPage = new LevelPage();
+        const levelPage = new LevelPage(buttonDataset);
         levelPage.renderLevelPage();
         return;
 
@@ -111,17 +112,9 @@ export class Router {
         return;
       }
 
-      case 'sprint':
-        const sprintLevelPage = new LevelPage();
-        sprintLevelPage.renderLevelPage();
-        return;
-
-      case 'audiocall':
-        const audiocallLevelPage = new LevelPage();
-        audiocallLevelPage.renderLevelPage();
-        return;
-
       case 'games':
+        const gamesPage = new GamesPage()
+        gamesPage.renderGamesPage()
         return
 
       case 'stats':
