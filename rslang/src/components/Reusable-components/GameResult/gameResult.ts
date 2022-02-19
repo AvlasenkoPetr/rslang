@@ -184,12 +184,7 @@ class GameResult {
       '#closeWindowBtn'
     ) as HTMLElement;
     const restartGame = document.querySelector('#restartGame') as HTMLElement;
-
-    const target = document.querySelector('.navigation .active') as HTMLElement;
-    let targetAttr: string;
-    if (target.dataset.navigation) {
-      targetAttr = target.dataset.navigation;
-    }
+    const targetAttr = localStorage.getItem('currentGame')
 
     modalResults.addEventListener('click', (e) => {
       const audio = (e.target as HTMLElement).closest('button') as HTMLElement;

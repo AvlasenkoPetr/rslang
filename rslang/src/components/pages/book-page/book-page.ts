@@ -62,6 +62,7 @@ export class BookPage {
 
     switch (clickedButtonDataset) {
       case 'audiocall':
+
         spinner.startTimer(() => {
           new AudioCall(this.LEVEL, pageNum).startGame();
         });

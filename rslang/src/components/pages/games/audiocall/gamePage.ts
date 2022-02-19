@@ -17,6 +17,7 @@ class GamePage {
     const data = state.data!;
     const currentPage = state.currentPage;
     this.renderCurrentPage(currentPage);
+    this.renderAllPages(data.length);
     audioWrapper.innerHTML = `<img class="answer-img" src="https://rss21q3-rslang.herokuapp.com/${data[currentPage].image}">`;
     wordWrapper.innerHTML = this.pageContent(data[currentPage]);
     const hiddenWord = document.querySelector('#hiddenWord') as HTMLElement;
@@ -38,6 +39,13 @@ class GamePage {
       '#audioCallCurrentPage'
     ) as HTMLSpanElement;
     audioCallCurrentPage.innerHTML = `${(currentPage += 1)}`;
+  }
+
+  renderAllPages(pages:number){
+    const audioCallAllPages = document.querySelector(
+      '#audioCallAllPages'
+    ) as HTMLSpanElement;
+    audioCallAllPages.innerHTML = `${pages}`;
   }
 
   renderAnswers(data: Array<IWord>, currentPage: IWord) {
@@ -129,7 +137,7 @@ class GamePage {
       <main id="audioCallMainElement" class="audioCall-page page">
         <div class="container">
           <div class="audioCall__header">
-            <div class="current-answer"><span id="audioCallCurrentPage"></span> / 20</div>
+            <div class="current-answer"><span id="audioCallCurrentPage"></span> / <span id="audioCallAllPages"></span></div>
             <div class="fullScreen-btn__wrapper">
               <button id="fullscreenButton" class="fullScreen-btn">
                 <img src="../../../../assets/images/audioCall/fullScreen.svg">
