@@ -131,7 +131,7 @@ class AudioCall {
       let response: IAggregatedWords
       if(this.group === '6'){
         response = await new Fetch().GET_AGGREGATED_WORDS({
-          wordsPerPage: '20',
+          wordsPerPage: '3600',
           page: _page,
           filter:`{"userWord.difficulty":"hard"}`
         });
@@ -153,7 +153,6 @@ class AudioCall {
         }
       }
       data = response[0].paginatedResults.slice(0, 20)
-      console.log(data)
       data.forEach(item => {
         item.id = item._id!
         delete(item._id)
@@ -306,7 +305,6 @@ class AudioCall {
         const result: IResult = {
           group: this.state.group,
           page: this.state.page,
-          // page: '0',
           total: this.state.data!.length,
           inRow: this.state.inRow,
           answersArr: this.state.words,
