@@ -48,11 +48,13 @@ export class BookPage {
       case 'audiocall':
         const audiocall = new AudioCall(this.LEVEL, pageNum)
         audiocall.startGame()
+        localStorage.setItem('currentGame', 'audiocall')
         return
 
       case 'sprint':
         const sprint = new Sprint(this.LEVEL, pageNum)
         sprint.startGame()
+        localStorage.setItem('currentGame', 'sprint')
         return
 
       case 'prev':

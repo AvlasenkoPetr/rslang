@@ -1,5 +1,6 @@
 import { setRandomNumber } from './../../../Helpers/helpers';
 import {
+  IAggregatedWords,
   IAnswer,
   INewState,
   IState,
@@ -12,7 +13,7 @@ import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 import { IResult } from '../../../Interfaces/interfaces';
 
 const PAGES = 30;
-const ROUNDS_AMOUNT = 20;
+let ROUNDS_AMOUNT = 20;
 enum Actions {
   SET_GROUP_VALUE = 'SET-GROUP-VALUE',
   SET_DATA = 'SET-DATA',
@@ -46,6 +47,12 @@ class AudioCall {
   constructor(group:string,page?: string){
     this.group = group
     this.state.group = group
+    if(group === '6'){
+      if(!page){
+        this.page = '0  '
+        this.state.page = '0'
+      }
+    }
     if(page) {
       this.page = page
       this.state.page = page
@@ -87,7 +94,6 @@ class AudioCall {
       }
     }
     if(e.key == ' '){
-      console.log(this.state)
       if(this.state.isAnswerHide){
         this.showAnswer()
       }else{
@@ -120,16 +126,49 @@ class AudioCall {
       _page = '' + setRandomNumber(PAGES)
       this.state.page = _page
     } 
-    const data: Array<IWord> = await new Fetch().GET_WORDS(this.group, _page);
+    let data: Array<IWord>
+    try{
+      let response: IAggregatedWords
+      if(this.group === '6'){
+        response = await new Fetch().GET_AGGREGATED_WORDS({
+          wordsPerPage: '20',
+          page: _page,
+          filter:`{"userWord.difficulty":"hard"}`
+        });
+      }else{
+        response = await new Fetch().GET_AGGREGATED_WORDS({
+          wordsPerPage: '20',
+          filter:`{"$and":[{"group": ${this.group}, "page": ${_page}}]}`
+        });
+        response[0].paginatedResults = response[0].paginatedResults.filter(item => item.userWord?.difficulty !== 'easy')
+        while(response[0].paginatedResults.length < 20){
+          _page = '' + (+_page - 1)
+          if(+_page < 0) break
+          const response2:IAggregatedWords = await new Fetch().GET_AGGREGATED_WORDS({
+            wordsPerPage: '20',
+            filter:`{"$and":[{"group": ${this.group}, "page": ${(_page)}}]}`
+          });
+          response2[0].paginatedResults = response2[0].paginatedResults.filter(item => item.userWord?.difficulty !== 'easy')
+          response[0].paginatedResults.push(...response2[0].paginatedResults)
+        }
+      }
+      data = response[0].paginatedResults.slice(0, 20)
+      console.log(data)
+      data.forEach(item => {
+        item.id = item._id!
+        delete(item._id)
+      })
+    }
+    catch{
+      data = await new Fetch().GET_WORDS(this.group, _page);
+    }
+    ROUNDS_AMOUNT = data.length
     this.gamePage.render();
     this.setDataActionCreator(data);
     this.gamePage.renderWords(this.state);
     this.setAnswers(data, this.state.currentPage);
     this._initGamePage();
   }
-
-
- 
 
   _initGamePage() {
     const nextPageButton = document.querySelector(
