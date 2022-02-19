@@ -2,6 +2,8 @@ import { Fetch } from "../../Fetch/fetch"
 import { isUserExists } from "../../Helpers/helpers"
 import { IAggregatedWord, IAggregatedWords, IUserWord, IWord } from "../../Interfaces/interfaces"
 import appendFooter from "../../Reusable-components/footer/footer"
+import { AudioCall } from "../games/audiocall/audioCallGame"
+import { Sprint } from "../games/sprint/sprint"
 import './book-page.scss'
 
 export class BookPage {
@@ -39,7 +41,20 @@ export class BookPage {
 
     const clickedButtonDataset: string = clickedButton.dataset.book
 
+    const pageCounter: HTMLInputElement | null = document.getElementById('counter') as HTMLInputElement
+    const pageNum: string = pageCounter ? String( Number(pageCounter?.value) - 1 ) : ''
+
     switch(clickedButtonDataset) {
+      case 'audiocall':
+        const audiocall = new AudioCall(this.LEVEL, pageNum)
+        audiocall.startGame()
+        return
+
+      case 'sprint':
+        const sprint = new Sprint(this.LEVEL, pageNum)
+        sprint.startGame()
+        return
+
       case 'prev':
         this.toPrevPage(clickedButton)
         return
@@ -141,7 +156,6 @@ export class BookPage {
     this.setActiveLevel()
   }
 
-  // вот этот метод лучше не открывать)))
   renderWordsContainer = async (): Promise<void> => {
     this.WORDS_CONTAINER.innerHTML = ''
 
@@ -155,12 +169,13 @@ export class BookPage {
 
       const wordItem: HTMLElement = document.createElement('div')
       wordItem.className = `words-container__item ${this.LEVEL_NAMES[Number(this.LEVEL)]}`
-      wordItem.innerHTML = `${this.wordItemContent(word)}`
-
+      
       const userWord = userWordsData?.find((userWord) => userWord.wordId === word.id)
       if (userWord && userWord.difficulty !== "string") {
         wordItem.classList.add(`${userWord.difficulty}`)
       }
+
+      wordItem.innerHTML = `${this.wordItemContent(word)}`
       // я пока не знаю как вынести эту жесть, но она нужна чтобы замкнуть ссылки...
       wordItem.addEventListener('click', async (e: MouseEvent) => this.processWordClick(e, word))
 
@@ -232,8 +247,8 @@ export class BookPage {
       <h2>Электронный учебник</h2>
 
       <div class="book-page__games-menu">
-        <button class="book-page__games-menu_button">Audiocall</button>
-        <button class="book-page__games-menu_button">Sprint</button>
+        <button class="book-page__games-menu_button" data-book="audiocall">Audiocall</button>
+        <button class="book-page__games-menu_button" data-book="sprint">Sprint</button>
       </div>
 
       <div class="book-page__menu-row">
@@ -301,7 +316,7 @@ export class BookPage {
 
     <div class="words-container__item_controlls-block">
       <button class="sound-button" data-word="play"></button>
-      ${isUserExists() ? this.wordControllsContent(/* userWord.wrong, userWord.correct */) : ''}
+      ${isUserExists() ? this.wordControllsContent(/* userWord?.optional.wrong, userWord?.optional.correct */) : ''}
     </div> 
     `
   }

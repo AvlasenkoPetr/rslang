@@ -90,7 +90,7 @@ export interface IUserWord {
   id: string;
   wordId: string;
   difficulty: string;
-  optional?: {};
+  optional?: IOptionalBlock;
 }
 
 export interface IState {

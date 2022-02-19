@@ -121,18 +121,8 @@ class LevelPage {
 
     if (target.dataset.navigation) {
       const targetAttr: string = target.dataset.navigation;
-      if (targetAttr === 'book' && isUserExists()) {
+      if (targetAttr === 'book') {
         const levelsWrapper = document.querySelector('.levels') as HTMLElement;
-        levelsWrapper.insertAdjacentHTML(
-          'beforeend',
-          `
-        <div class="level-item">
-          <div class="label">HARD</div>
-          <span class="label-title">Hard words</span>
-        </div>
-        `
-        );
-
         levelsWrapper.insertAdjacentHTML(
           'afterend',
           `
@@ -152,6 +142,18 @@ class LevelPage {
         </div>
         `
         );
+
+        if (isUserExists()) {
+          levelsWrapper.insertAdjacentHTML(
+            'beforeend',
+            `
+            <div class="level-item">
+            <div class="label">HARD</div>
+            <span class="label-title">Hard words</span>
+            </div>
+            `
+          );
+        }
       }
       // if (targetAttr === 'sprint') {
       //   const subtitle = document.querySelector('.subtitle') as HTMLElement;
