@@ -138,3 +138,19 @@ export interface IOptionalBlock {
   notNew?: true,
 }
 
+export interface IAudioCallStatistic{
+  newWords?: number, 
+  correct?: number,
+  wrong?: number,
+  maxRow?: number
+}
+
+
+export interface IStatisticResponse{
+  id?:string,
+  learnedWords: number,
+  optional?:{
+    audioCall?: IAudioCallStatistic,
+    sprint?: IAudioCallStatistic
+  }
+}

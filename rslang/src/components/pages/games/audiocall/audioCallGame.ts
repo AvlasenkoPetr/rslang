@@ -30,7 +30,7 @@ class AudioCall {
     data: null,
     group: '0',
     page: '0',
-    currentPage: 15,
+    currentPage: 0,
     isAnswerHide: true,
     currentAnswers: [],
     words: [],
@@ -40,7 +40,7 @@ class AudioCall {
   };
 
   public gamePage = new GamePage();
-  public group
+  public group 
   public page
 
   constructor(group:string,page?: string){
