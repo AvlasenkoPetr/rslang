@@ -3,9 +3,9 @@ import { IAnswer, IState, IWord } from '../../../Interfaces/interfaces';
 
 class GamePage {
   public MAIN_WRAPPER: HTMLElement;
-
   constructor() {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
+
   }
 
   renderWords(state: IState) {
@@ -62,7 +62,6 @@ class GamePage {
 
   render() {
     this.MAIN_WRAPPER.innerHTML = this.gamePageContent();
-    appendFooter(this.MAIN_WRAPPER);
   }
 
   resultsContent(rightAnswers: Array<IAnswer>, worthAnswers: Array<IAnswer>) {
@@ -122,6 +121,8 @@ class GamePage {
       </div>
     `;
   }
+
+  
 
   gamePageContent() {
     return `

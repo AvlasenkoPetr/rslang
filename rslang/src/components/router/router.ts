@@ -2,8 +2,10 @@ import { MainPage } from './../pages/main-page/main-page';
 import { LoginPage } from '../pages/login-page/login-page';
 import LevelPage from '../pages/level-page/level-page';
 import './router.scss';
+
 import { BookPage } from '../pages/book-page/book-page';
 import { isUserExists } from '../Helpers/helpers';
+import GamesPage from '../pages/games-page/games-page';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -86,6 +88,9 @@ export class Router {
     this.setLastPageToLocalStorage(buttonDataset);
     this.setActivePage(buttonDataset);
 
+    const EVENT = new CustomEvent('removeEventListeners')
+    window.dispatchEvent(EVENT)
+
     switch (buttonDataset) {
       case 'main':
         const main = new MainPage();
@@ -93,7 +98,7 @@ export class Router {
         return;
 
       case 'book':
-        const levelPage = new LevelPage();
+        const levelPage = new LevelPage(buttonDataset);
         levelPage.renderLevelPage();
         return;
 
@@ -107,17 +112,9 @@ export class Router {
         return;
       }
 
-      case 'sprint':
-        const sprintLevelPage = new LevelPage();
-        sprintLevelPage.renderLevelPage();
-        return;
-
-      case 'audiocall':
-        const audiocallLevelPage = new LevelPage();
-        audiocallLevelPage.renderLevelPage();
-        return;
-
       case 'games':
+        const gamesPage = new GamesPage()
+        gamesPage.renderGamesPage()
         return
 
       case 'stats':

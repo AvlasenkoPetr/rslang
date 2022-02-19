@@ -71,6 +71,7 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
+    if(page) this.page = page
   }
 
   async startGame() {
@@ -383,17 +384,18 @@ export class Sprint {
 
   stopGame() {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
-
     gameArea.innerHTML = '';
 
     const result: IResult = {
       group: this.group,
+      page: this.page,
       points: this.points,
       total: this.answers,
       inRow: this.maxrow,
       rightCount: this.rightAnswers,
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
+      gameName: 'sprint'
     };
 
     let newWordsCount = 0;

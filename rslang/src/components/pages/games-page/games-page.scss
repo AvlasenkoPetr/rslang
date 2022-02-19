@@ -1,0 +1,48 @@
+.games {
+  &-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__container {
+      width: 70%;
+      padding: 5px;
+
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &-card {
+    min-height: 500px;
+    width: 30%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    cursor: pointer;
+    transition: 0.2s linear;
+
+    img {
+      height: 150px;
+    }
+
+    h2 {
+      font-size: 60px;
+      font-weight: lighter;
+      font-family: 'Source Sans Pro';
+    }
+
+    &:hover {
+      border: 1px solid var(--blue-interactive);
+      color: var(--blue-interactive);
+    }
+  }
+}

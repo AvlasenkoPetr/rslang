@@ -12,10 +12,13 @@ export interface IUSER_BODY {
 }
 
 export interface ICREATE_USER_WORD {
-  difficulty: 'hard' | 'easy' | 'string';
+  difficulty: string;
   optional?: {
-    name: string;
-  };
+    correct?: number,
+    wrong?: number,
+    inRow?: number,
+    notNew?: true,
+  }
 }
 
 export interface IUPDATE_STATISTICS {
@@ -50,12 +53,14 @@ export interface IGET_AGGREGATED_WORDS {
 
 export interface IResult {
   group: string;
+  page: string;
   points?: number;
   total: number;
   inRow: number;
   rightCount?: number;
   wrongCount?: number;
   answersArr: Array<IAnswer>;
+  gameName: string
 }
 
 export interface IWord {
@@ -91,6 +96,7 @@ export interface IUserWord {
 export interface IState {
   data: null | Array<IWord>;
   group: string;
+  page: string;
   currentPage: number;
   isAnswerHide: boolean;
   currentAnswers?: Array<IWord>;
@@ -104,6 +110,7 @@ export interface INewState {
   type: string;
   group?: string;
   data?: Array<IWord>;
+  page?: string;
   currentPage?: number;
   isAnswerHide?: boolean;
   currentAnswers?: Array<IWord>;
@@ -127,8 +134,32 @@ export type IAggregatedWords = [
 ];
 
 export interface IOptionalBlock {
+<<<<<<< HEAD
   correct?: number;
   wrong?: number;
   inRow?: number;
   notNew?: true;
+=======
+  correct?: number,
+  wrong?: number,
+  inRow?: number,
+  notNew?: true,
+}
+
+export interface IAudioCallStatistic{
+  newWords?: number, 
+  correct?: number,
+  wrong?: number,
+  maxRow?: number
+}
+
+
+export interface IStatisticResponse{
+  id?:string,
+  learnedWords: number,
+  optional?:{
+    audioCall?: IAudioCallStatistic,
+    sprint?: IAudioCallStatistic
+  }
+>>>>>>> 9896e033fc4c14f4cd5a0779cf8c869d92e457c0
 }

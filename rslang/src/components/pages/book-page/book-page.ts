@@ -63,6 +63,71 @@ export class BookPage {
     }
   }
 
+  processWordClick = async (e: MouseEvent, word: IWord | IAggregatedWord) => {
+    if (!(e.target instanceof HTMLElement)) return
+    
+    const clickedButton: HTMLElement = e.target
+    if (!clickedButton.dataset.word) return
+
+    const clickedButtonDataset: string = clickedButton.dataset.word
+
+    switch(clickedButtonDataset) {
+      case 'play':
+        const isThisAlreadyPlaying = clickedButton.classList.contains('playing')
+        if (isThisAlreadyPlaying) {
+          clickedButton.classList.remove('playing')
+          this.AUDIO.pause()
+          return
+        }
+
+        const currentlyPlayingSomewhere: HTMLElement | null = document.querySelector('.playing')
+        if (currentlyPlayingSomewhere) {
+          currentlyPlayingSomewhere.classList.remove('playing')
+          this.AUDIO.pause()
+        }
+
+        clickedButton.classList.add('playing')
+        this.playAudioChain(clickedButton, word.audio, word.audioMeaning, word.audioExample)
+        return
+      
+      case "hard":
+      case "easy":
+        const wordItem: HTMLElement | null = clickedButton.closest('.words-container__item')
+        if (!wordItem) return
+        const wordId: string = word._id ? word._id : word.id
+
+        if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
+          await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: 'string'})
+
+          if (this.LEVEL === '6') {
+            wordItem.remove()
+            return
+          } 
+          wordItem.classList.remove(`${clickedButtonDataset}`)
+          return
+        }
+
+        if (wordItem.classList.contains('easy') || wordItem.classList.contains('hard')) {
+          await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: `${clickedButtonDataset}`})
+
+          if (this.LEVEL === '6') {
+            wordItem.remove()
+            return
+          }
+          wordItem.classList.remove(`${wordItem.classList[wordItem.classList.length - 1]}`)
+          wordItem.classList.add(`${clickedButtonDataset}`)
+          return
+        }
+
+        await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
+        .then(() => this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`}))
+        .catch(() => this.FETCH.CREATE_USER_WORDS(word.id, {difficulty: `${clickedButtonDataset}`}))
+
+        wordItem.classList.add(`${clickedButtonDataset}`)
+        return
+    }
+  }
+
   renderBookPage = async () => {
     this.MAIN_WRAPPER.innerHTML = ''
 
@@ -87,7 +152,6 @@ export class BookPage {
     const userWordsData: Array<IUserWord> | undefined = await this.getUserWords()
 
     for (let word of wordsData) {
-      // if (this.LEVEL === '6' && !userWordsData.find((userWord) => {userWord.id === word.id && userWord.difficulty === 'hard'})) continue
 
       const wordItem: HTMLElement = document.createElement('div')
       wordItem.className = `words-container__item ${this.LEVEL_NAMES[Number(this.LEVEL)]}`
@@ -97,72 +161,8 @@ export class BookPage {
       if (userWord && userWord.difficulty !== "string") {
         wordItem.classList.add(`${userWord.difficulty}`)
       }
-
       // я пока не знаю как вынести эту жесть, но она нужна чтобы замкнуть ссылки...
-      wordItem.addEventListener('click', async (e: MouseEvent) => {
-        if (!(e.target instanceof HTMLElement)) return
-    
-        const clickedButton: HTMLElement = e.target
-        if (!clickedButton.dataset.word) return
-
-        const clickedButtonDataset: string = clickedButton.dataset.word
-
-        switch(clickedButtonDataset) {
-          case 'play':
-            const isThisAlreadyPlaying = clickedButton.classList.contains('playing')
-            if (isThisAlreadyPlaying) {
-              clickedButton.classList.remove('playing')
-              this.AUDIO.pause()
-              return
-            }
-
-            const currentlyPlayingSomewhere: HTMLElement | null = document.querySelector('.playing')
-            if (currentlyPlayingSomewhere) {
-              currentlyPlayingSomewhere.classList.remove('playing')
-              this.AUDIO.pause()
-            }
-
-            clickedButton.classList.add('playing')
-            this.playAudioChain(clickedButton, word.audio, word.audioMeaning, word.audioExample)
-            return
-          
-          case "hard":
-          case "easy":
-            const wordItem: HTMLElement | null = clickedButton.closest('.words-container__item')
-            if (!wordItem) return
-            const wordId: string = word._id ? word._id : word.id
-
-            if (wordItem.classList.contains(`${clickedButtonDataset}`) ) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: 'string'})
-
-              if (this.LEVEL === '6') {
-                wordItem.remove()
-                return
-              } 
-              wordItem.classList.remove(`${clickedButtonDataset}`)
-              return
-            }
-
-            if (wordItem.classList.contains('easy') || wordItem.classList.contains('hard')) {
-              await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {difficulty: `${clickedButtonDataset}`})
-
-              if (this.LEVEL === '6') {
-                wordItem.remove()
-                return
-              }
-              wordItem.classList.remove(`${wordItem.classList[wordItem.classList.length - 1]}`)
-              wordItem.classList.add(`${clickedButtonDataset}`)
-              return
-            }
-
-            await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
-            .then(() => this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {difficulty: `${clickedButtonDataset}`}))
-            .catch(() => this.FETCH.CREATE_USER_WORDS(word.id, {difficulty: `${clickedButtonDataset}`}))
-
-            wordItem.classList.add(`${clickedButtonDataset}`)
-            return
-        }
-      })
+      wordItem.addEventListener('click', async (e: MouseEvent) => this.processWordClick(e, word))
 
       this.WORDS_CONTAINER.append(wordItem)      
     }
