@@ -135,6 +135,7 @@ class AudioCall {
           page: _page,
           filter:`{"userWord.difficulty":"hard"}`
         });
+        data = response[0].paginatedResults
       }else{
         response = await new Fetch().GET_AGGREGATED_WORDS({
           wordsPerPage: '20',
@@ -151,8 +152,8 @@ class AudioCall {
           response2[0].paginatedResults = response2[0].paginatedResults.filter(item => item.userWord?.difficulty !== 'easy')
           response[0].paginatedResults.push(...response2[0].paginatedResults)
         }
+        data = response[0].paginatedResults.slice(0, 20)
       }
-      data = response[0].paginatedResults.slice(0, 20)
       data.forEach(item => {
         item.id = item._id!
         delete(item._id)
