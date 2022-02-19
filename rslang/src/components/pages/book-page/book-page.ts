@@ -226,8 +226,8 @@ export class BookPage {
         wordItem.classList.add(`${userWord.difficulty}`);
       }
 
-      wordItem.innerHTML = `${this.wordItemContent(word)}`;
-      // я пока не знаю как вынести эту жесть, но она нужна чтобы замкнуть ссылки...
+      wordItem.innerHTML = `${this.wordItemContent(word, userWord)}`;
+      
       wordItem.addEventListener('click', async (e: MouseEvent) =>
         this.processWordClick(e, word)
       );
@@ -345,9 +345,10 @@ export class BookPage {
   };
 
   wordControllsContent = (
-    wrongAnswers?: string,
-    correctAnswers?: string
+    userWord: IUserWord
   ): string => {
+    const wrongAnswers = userWord.optional?.wrong
+    const correctAnswers = userWord.optional?.correct
     return `
     <div class="difficulty-cotrolls__block">
       <button class="difficulty-cotrolls__button" data-word="hard" title="Пометить слово как сложное"></button>
@@ -373,9 +374,9 @@ export class BookPage {
 
     <div class="words-container__item_info-block">
       <div class="info-block_title">
-        ${word.word[0].toUpperCase()}${word.word.slice(1)} - ${
-      word.transcription
-    } - ${word.wordTranslate}
+        ${word.word[0].toUpperCase()}${word.word.slice(1)} -
+        ${word.transcription} - 
+        ${word.wordTranslate}
       </div>
 
       <div class="info-block_description">
@@ -390,8 +391,8 @@ export class BookPage {
     <div class="words-container__item_controlls-block">
       <button class="sound-button" data-word="play"></button>
       ${
-        isUserExists()
-          ? this.wordControllsContent(/* userWord?.optional.wrong, userWord?.optional.correct */)
+        userWord
+          ? this.wordControllsContent(userWord)
           : ''
       }
     </div> 
