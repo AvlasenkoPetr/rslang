@@ -14,11 +14,11 @@ export interface IUSER_BODY {
 export interface ICREATE_USER_WORD {
   difficulty: string;
   optional?: {
-    correct?: number,
-    wrong?: number,
-    inRow?: number,
-    notNew?: true,
-  }
+    correct?: number;
+    wrong?: number;
+    inRow?: number;
+    notNew?: true;
+  };
 }
 
 export interface IUPDATE_STATISTICS {
@@ -60,7 +60,7 @@ export interface IResult {
   rightCount?: number;
   wrongCount?: number;
   answersArr: Array<IAnswer>;
-  gameName: string
+  gameName: string;
 }
 
 export interface IWord {
@@ -78,12 +78,12 @@ export interface IWord {
   textExampleTranslate: string;
   textMeaningTranslate: string;
   wordTranslate: string;
-  _id?: string
+  _id?: string;
 }
 
 export interface IAggregatedWord extends IWord {
-  _id: string
-  userWord?: {difficulty: string, optional?: IOptionalBlock}
+  _id?: string;
+  userWord?: { difficulty: string; optional?: IOptionalBlock };
 }
 
 export interface IUserWord {
@@ -126,31 +126,32 @@ export interface IAnswer {
 }
 
 // этот запрос возвращает какую то стремную хероту, будем еще менять этот тип
-export type IAggregatedWords = [{
-  paginatedResults: Array<IAggregatedWord>,
-  totalCount: [ {count: number} ]
-}]
+export type IAggregatedWords = [
+  {
+    paginatedResults: Array<IAggregatedWord>;
+    totalCount: [{ count: number }];
+  }
+];
 
 export interface IOptionalBlock {
-  correct?: number,
-  wrong?: number,
-  inRow?: number,
-  notNew?: true,
+  correct?: number;
+  wrong?: number;
+  inRow?: number;
+  notNew?: true;
 }
 
-export interface IAudioCallStatistic{
-  newWords?: number, 
-  correct?: number,
-  wrong?: number,
-  maxRow?: number
+export interface IAudioCallStatistic {
+  newWords?: number;
+  correct?: number;
+  wrong?: number;
+  maxRow?: number;
 }
 
-
-export interface IStatisticResponse{
-  id?:string,
-  learnedWords: number,
-  optional?:{
-    audioCall?: IAudioCallStatistic,
-    sprint?: IAudioCallStatistic
-  }
+export interface IStatisticResponse {
+  id?: string;
+  learnedWords: number;
+  optional?: {
+    audioCall?: IAudioCallStatistic;
+    sprint?: IAudioCallStatistic;
+  };
 }

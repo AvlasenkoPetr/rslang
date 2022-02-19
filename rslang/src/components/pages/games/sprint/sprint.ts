@@ -1,14 +1,26 @@
 import './sprint.scss';
 import { setRandomNumber } from '../../../Helpers/helpers';
-import { IWord, IResult, IAnswer } from '../../../Interfaces/interfaces';
+import {
+  IWord,
+  IResult,
+  IAnswer,
+  IAggregatedWord,
+  IAggregatedWords,
+  IUserWord,
+  IAudioCallStatistic,
+  IStatisticResponse,
+} from '../../../Interfaces/interfaces';
 import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
-import { Spinner } from '../../../Reusable-components/spinner/spinner';
 
 const fetch = new Fetch();
+
+let sprintStatistic: IAudioCallStatistic = {
+  newWords: 0,
+};
 export class Sprint {
-  timerCount: number;
-  words: Array<IWord>;
+  TIMER_COUNT: number;
+  words: any;
   points: number;
   countPoints: number;
   progress: number;
@@ -17,24 +29,30 @@ export class Sprint {
   answers: number;
   rightAnswers: number;
   mistakes: number;
-  currentWord!: IWord;
+  currentWord!: any;
   word!: string;
   translate!: string;
   rightAnswersArr: Array<IAnswer>;
   mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
-  page:string
+  page: string;
   audio: HTMLAudioElement;
+  fromBook: boolean;
 
-  constructor(group: string,page?: string) {
-    this.page = ''
-   
+  constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
     this.group = group;
+    if (page) {
+      this.page = page;
+      this.fromBook = true;
+    } else {
+      this.page = String(setRandomNumber(29));
+      this.fromBook = false;
+    }
 
-    this.timerCount = 60;
+    this.TIMER_COUNT = 60;
 
     this.words = [];
     this.points = 0;
@@ -52,18 +70,70 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
-    if(page) this.page = page
+    if (page) this.page = page;
   }
 
   async startGame() {
-    let randomPage: string 
-    if(this.page){
-      randomPage = this.page
-    } else{
-      randomPage = String(setRandomNumber(29));
-      this.page = randomPage
-    } 
-    this.words = await fetch.GET_WORDS(this.group, randomPage);
+    let aggregatedWords: IAggregatedWords;
+    let aggregatedWordsResults: Array<IAggregatedWord>;
+    let extraPage: number = Number(this.page);
+    if (this.fromBook) {
+      do {
+        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
+          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+          wordsPerPage: '20',
+        });
+
+        aggregatedWordsResults = aggregatedWords[0].paginatedResults.filter(
+          (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+        );
+
+        extraPage -= 1;
+        if (extraPage < 0) {
+          this.words = aggregatedWordsResults;
+          break;
+        }
+
+        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
+          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+          wordsPerPage: '20',
+        });
+
+        let extraAggregatedWordsResults: Array<IAggregatedWord> =
+          aggregatedWords[0].paginatedResults.filter(
+            (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+          );
+        if (this.words.length === 0) {
+          this.words = aggregatedWordsResults.concat(
+            extraAggregatedWordsResults
+          );
+        } else {
+          this.words = this.words.concat(extraAggregatedWordsResults);
+        }
+      } while (this.words.length < 20);
+      if (this.words.length > 20) {
+        this.words = this.words.reverse();
+        this.words.length = 20;
+      }
+    } else {
+      this.words = await fetch.GET_WORDS(this.group, this.page);
+    }
+
+    this.words.forEach((wordInfo: IAggregatedWord) => {
+      if (!wordInfo.userWord) {
+        wordInfo.userWord = {
+          difficulty: 'string',
+        };
+      }
+      if (!wordInfo.userWord.optional) {
+        wordInfo.userWord.optional = {
+          correct: 0,
+          wrong: 0,
+          inRow: 0,
+        };
+      }
+    });
+    console.log(this.words);
     this.MAIN_WRAPPER.innerHTML = '';
     this.game();
   }
@@ -72,9 +142,9 @@ export class Sprint {
     const timerContainer = document.querySelector('.timer') as HTMLElement;
 
     const timerId = setInterval(() => {
-      this.timerCount -= 1;
-      timerContainer.innerHTML = String(this.timerCount);
-      if (this.timerCount === 0) {
+      this.TIMER_COUNT -= 1;
+      timerContainer.innerHTML = String(this.TIMER_COUNT);
+      if (this.TIMER_COUNT === 0) {
         clearInterval(timerId);
         this.stopGame();
       }
@@ -87,9 +157,10 @@ export class Sprint {
       '.translate-word'
     ) as HTMLElement;
 
-    const wordInfo = this.words[setRandomNumber(19)];
+    const wordInfo = this.words[setRandomNumber(this.words.length - 1)];
     let randomWord = wordInfo.word;
-    let randomTranslate = this.words[setRandomNumber(19)].wordTranslate;
+    let randomTranslate =
+      this.words[setRandomNumber(this.words.length - 1)].wordTranslate;
     const random = Boolean(setRandomNumber(2));
 
     if (random) {
@@ -145,11 +216,24 @@ export class Sprint {
     const progressItems =
       document.querySelectorAll<HTMLElement>('.progress-item');
 
+    const userWord = this.currentWord.userWord;
+    if (userWord.optional.notNew === undefined) {
+      sprintStatistic.newWords! += 1;
+      userWord.optional.notNew = true;
+    }
     if (state) {
       this.points += this.countPoints;
       this.progress += 1;
       this.rightAnswers += 1;
       this.inrow += 1;
+      userWord.optional.correct += 1;
+      userWord.optional.inRow += 1;
+
+      if (
+        (userWord.difficulty === 'string' && userWord.optional.inRow === 3) ||
+        (userWord.difficulty === 'hard' && userWord.optional.inRow === 5)
+      )
+        userWord.difficulty = 'easy';
 
       if (this.progress === 4) {
         this.progress = 0;
@@ -174,6 +258,11 @@ export class Sprint {
       this.progress = 0;
       this.mistakes += 1;
       this.inrow = 0;
+
+      userWord.optional.wrong += 1;
+      userWord.optional.inRow = 0;
+      if (userWord.difficulty === 'easy') userWord.difficulty = 'string';
+
       if (this.countPoints !== 10) {
         this.countPoints = 10;
         countPointsContainer.style.animation = `progress 1s linear forwards`;
@@ -201,7 +290,7 @@ export class Sprint {
         <div class="audio-btn"></div>
       </div>
       <div class="game-area">
-        <span class="timer">${this.timerCount}</span>
+        <span class="timer">${this.TIMER_COUNT}</span>
 
         <div class="main-window">
           <span class="points">0</span>
@@ -223,20 +312,6 @@ export class Sprint {
       </div>
     `
     );
-  }
-
-  renderResultsAnswer(ans: IWord, wrapper: HTMLElement) {
-    const li = document.createElement('li');
-    li.className = 'answer';
-    li.innerHTML = `${ans.word} - ${ans.wordTranslate}`;
-    li.addEventListener('click', () => {
-      const audio = new Audio(
-        `https://rss21q3-rslang.herokuapp.com/${ans.audio}`
-      );
-      audio.play();
-    });
-
-    wrapper.append(li);
   }
 
   game() {
@@ -277,7 +352,7 @@ export class Sprint {
 
     const right = () => {
       const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
       )?.wordTranslate;
       if (this.translate === rightTranslate) {
         rightAnswer();
@@ -289,7 +364,7 @@ export class Sprint {
 
     const wrong = () => {
       const rightTranslate = this.words.find(
-        (wordInfo) => wordInfo.word === this.word
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
       )?.wordTranslate;
       if (this.translate !== rightTranslate) {
         rightAnswer();
@@ -301,15 +376,67 @@ export class Sprint {
 
     rightBtn.addEventListener('click', right);
     wrongBtn.addEventListener('click', wrong);
-    document.addEventListener('keyup', (e) => {
+
+    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowLeft') right();
     });
-    document.addEventListener('keyup', (e) => {
+    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowRight') wrong();
     });
   }
 
-  stopGame() {
+  async updateStatistics() {
+    try {
+      const response: IStatisticResponse = await new Fetch().GET_STATISTICS();
+      delete response.id;
+      if (response.optional) {
+        if (response.optional.sprint) {
+          response.optional.sprint.correct! += sprintStatistic.correct!;
+          response.optional.sprint.wrong! += sprintStatistic.wrong!;
+          response.optional.sprint.newWords! += sprintStatistic.newWords!;
+          if (response.optional.sprint.maxRow! <= sprintStatistic.maxRow!) {
+            response.optional.sprint.maxRow! = sprintStatistic.maxRow!;
+          }
+        } else {
+          Object.defineProperty(response.optional, 'sprint', {
+            value: {
+              correct: sprintStatistic.correct!,
+              wrong: sprintStatistic.wrong!,
+              newWords: sprintStatistic.newWords!,
+              maxRow: sprintStatistic.maxRow!,
+            },
+          });
+        }
+      } else {
+        Object.defineProperty(response, 'optional', {
+          value: {
+            sprint: {
+              correct: sprintStatistic.correct!,
+              wrong: sprintStatistic.wrong!,
+              newWords: sprintStatistic.newWords!,
+              maxRow: sprintStatistic.maxRow!,
+            },
+          },
+        });
+      }
+      await new Fetch().UPDATE_STATISTICS(response);
+    } catch {
+      const body: IStatisticResponse = {
+        learnedWords: 0,
+        optional: {
+          sprint: {
+            newWords: sprintStatistic.newWords!,
+            correct: sprintStatistic.correct!,
+            wrong: sprintStatistic.wrong!,
+            maxRow: sprintStatistic.maxRow!,
+          },
+        },
+      };
+      await new Fetch().UPDATE_STATISTICS(body);
+    }
+  }
+
+  async stopGame() {
     const gameArea = document.querySelector('.game-area') as HTMLElement;
     gameArea.innerHTML = '';
 
@@ -322,8 +449,26 @@ export class Sprint {
       rightCount: this.rightAnswers,
       wrongCount: this.mistakes,
       answersArr: this.rightAnswersArr.concat(this.mistakesArr),
-      gameName: 'sprint'
+      gameName: 'sprint',
     };
+
+    if (this.fromBook) {
+      this.words.forEach(async (wordInfo: IAggregatedWord) => {
+        const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
+        let getWord: Array<IAggregatedWord> =
+          await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
+        if (getWord[0].userWord) {
+          await fetch.UPDATE_USER_WORDS_BY_ID(wordId, wordInfo.userWord!);
+        } else {
+          await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
+        }
+      });
+    }
+
+    sprintStatistic.correct = this.rightAnswers;
+    sprintStatistic.wrong = this.mistakes;
+    sprintStatistic.maxRow = this.maxrow;
+    this.updateStatistics();
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }
