@@ -19,7 +19,7 @@ let sprintStatistic: IAudioCallStatistic = {
   newWords: 0,
 };
 export class Sprint {
-  timerCount: number;
+  TIMER_COUNT: number;
   words: any;
   points: number;
   countPoints: number;
@@ -52,7 +52,7 @@ export class Sprint {
       this.fromBook = false;
     }
 
-    this.timerCount = 10;
+    this.TIMER_COUNT = 60;
 
     this.words = [];
     this.points = 0;
@@ -142,9 +142,9 @@ export class Sprint {
     const timerContainer = document.querySelector('.timer') as HTMLElement;
 
     const timerId = setInterval(() => {
-      this.timerCount -= 1;
-      timerContainer.innerHTML = String(this.timerCount);
-      if (this.timerCount === 0) {
+      this.TIMER_COUNT -= 1;
+      timerContainer.innerHTML = String(this.TIMER_COUNT);
+      if (this.TIMER_COUNT === 0) {
         clearInterval(timerId);
         this.stopGame();
       }
@@ -290,7 +290,7 @@ export class Sprint {
         <div class="audio-btn"></div>
       </div>
       <div class="game-area">
-        <span class="timer">${this.timerCount}</span>
+        <span class="timer">${this.TIMER_COUNT}</span>
 
         <div class="main-window">
           <span class="points">0</span>
@@ -394,7 +394,9 @@ export class Sprint {
           response.optional.sprint.correct! += sprintStatistic.correct!;
           response.optional.sprint.wrong! += sprintStatistic.wrong!;
           response.optional.sprint.newWords! += sprintStatistic.newWords!;
-          response.optional.sprint.maxRow! = sprintStatistic.maxRow!;
+          if (response.optional.sprint.maxRow! <= sprintStatistic.maxRow!) {
+            response.optional.sprint.maxRow! = sprintStatistic.maxRow!;
+          }
         } else {
           Object.defineProperty(response.optional, 'sprint', {
             value: {
