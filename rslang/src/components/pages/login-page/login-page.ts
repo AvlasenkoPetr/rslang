@@ -43,9 +43,13 @@ export class LoginPage {
                     const name = (document.querySelector('input[type="text"]') as HTMLInputElement).value
                     const email = (document.querySelector('input[type="email"]') as HTMLInputElement).value
                     const password = (document.querySelector('input[type="password"]') as HTMLInputElement).value
-
-                    this.signUp(name, email, password)
-
+                    if(this.validateEmail(email)){
+                      if(this.validatePassword(password)){
+                        this.signUp(name, email, password)
+                      }
+                    }else{
+                      this.dropError(464)
+                    }
                 } else {
                     this.dropError()
                 }
@@ -55,9 +59,14 @@ export class LoginPage {
                 if (!this.isFormsEmpty()) {
                     const email = (document.querySelector('input[type="email"]') as HTMLInputElement).value
                     const password = (document.querySelector('input[type="password"]') as HTMLInputElement).value
-
-                    this.login(email, password)
-
+                    if(this.validateEmail(email)){
+                      if(this.validatePassword(password)){
+                        this.login(email, password)
+                      }
+                    }else{
+                      this.dropError(464)
+                    }
+                   
                 } else {
                     this.dropError()
                 }
@@ -66,8 +75,42 @@ export class LoginPage {
         }
         return;
   };
+  
+  validateEmail = (email: string) =>{
+    var re = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    return re.test(String(email).toLowerCase());
+  }
 
-    renderLoginPage = (): void => {
+  validatePassword = (password: string) =>{
+    const beginWithoutDigit = /^\D.*$/
+    const withoutSpecialChars = /^[^-()=+/]*$/
+    const minimum8Chars = /^.{8,}$/
+    const withoutSpaces = /\s/
+    if(beginWithoutDigit.test(password)) {
+      if(withoutSpecialChars.test(password)) {
+        if(minimum8Chars.test(password)) {
+          if(!withoutSpaces.test(password)) {
+            return true
+          }else{
+            this.dropError(463)
+            return false
+          }
+        }else{
+          this.dropError(462)
+          return false
+        }
+      }else{
+        this.dropError(461)
+        return false
+      }
+    }else{
+      this.dropError(460)
+      return false
+    }
+  }
+
+
+  renderLoginPage = (): void => {
     this.MAIN_WRAPPER.innerHTML = '';
     this.LOGIN_PAGE.innerHTML = `
         <div class="login-page__title">
@@ -175,6 +218,21 @@ export class LoginPage {
                 break;
 
             case 417: error.innerHTML = 'Эта почта уже зарегистрирована!'
+                break;
+
+            case 460: error.innerHTML = 'Нельзя начинать пароль с числа!'
+                break;
+
+            case 461: error.innerHTML = 'Используйте числа, буквы и нижнее подчеркивание!'
+                break;
+
+            case 462: error.innerHTML = 'Используйте миним 8 символов!'
+                break;
+
+            case 463: error.innerHTML = 'Нельзя использовать пробелы!'
+                break;
+
+            case 464: error.innerHTML = 'Некоректный email!'
                 break;
             
             default: error.innerHTML = 'Нужно заполнить все поля!'
