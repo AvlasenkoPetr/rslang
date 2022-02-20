@@ -179,7 +179,7 @@ export class Sprint {
       randomWord = wordInfo.word;
       randomTranslate =
         this._words[setRandomNumber(this._words.length)].wordTranslate;
-      console.log(this._words);
+      this._words.splice(randNum, 1);
     } else {
       const randNum = setRandomNumber(this.words.length);
       wordInfo = this.words[randNum];
