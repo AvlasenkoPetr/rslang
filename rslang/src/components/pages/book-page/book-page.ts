@@ -191,10 +191,10 @@ export class BookPage {
     }
   };
 
-  renderBookPage = async () => {
+  renderBookPage = async (page?: string) => {
     this.MAIN_WRAPPER.innerHTML = '';
 
-    this.BOOK_PAGE.innerHTML = this.bookMenuContent();
+    this.BOOK_PAGE.innerHTML = this.bookMenuContent(page);
     this.BOOK_PAGE.append(this.WORDS_CONTAINER);
     appendFooter(this.BOOK_PAGE);
 
@@ -341,7 +341,7 @@ export class BookPage {
     this.AUDIO.onended = () => this.playAudioChain(button, ...args.slice(1));
   };
 
-  bookMenuContent = (): string => {
+  bookMenuContent = (page: string | undefined): string => {
     return ` 
     <div class="book-page__menu-wrapper">
       <h2>Электронный учебник</h2>
@@ -353,7 +353,7 @@ export class BookPage {
 
       <div class="book-page__menu-row">
 
-        ${this.LEVEL !== '6' ? this.paginationBlockContent() : '<div></div>'}
+        ${this.LEVEL !== '6' ? this.paginationBlockContent(page) : '<div></div>'}
 
         <div class="book-page__level-container">
           <button class="book-page__level-container_button" data-book="0">A1</button>
@@ -374,11 +374,11 @@ export class BookPage {
     `;
   };
 
-  paginationBlockContent = (): string => {
+  paginationBlockContent = (page: string | undefined): string => {
     return `
     <div class="book-page__pagination-container">
       <button class="book-page__pagination-container_button" data-book="prev"></button>
-      <input type="number" min="1" max="30" value="1" class="book-page__pagination-container_counter" id="counter" readonly></input>
+      <input type="number" min="1" max="30" value="${page ? page : 1}" class="book-page__pagination-container_counter" id="counter" readonly></input>
       <button class="book-page__pagination-container_button" data-book="next"></button>
     </div>
     `;
@@ -439,3 +439,18 @@ export class BookPage {
     `;
   };
 }
+
+window.addEventListener('beforeunload', () => {
+  const pageCounter: HTMLInputElement | null = document.getElementById(
+    'counter'
+  ) as HTMLInputElement;
+  const pageNum: string = pageCounter?.value;
+  localStorage.setItem('lastBookPage', pageNum)
+
+  const levels = document.querySelectorAll('.book-page__level-container_button')
+  levels.forEach((level, index) => {
+    if (level.classList.contains('active')) {
+      localStorage.setItem('lastBookLevel', String(index))
+    }
+  })
+})
