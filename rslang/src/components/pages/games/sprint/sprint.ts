@@ -39,6 +39,7 @@ export class Sprint {
   page!: string;
   audio: HTMLAudioElement;
   fromBook!: boolean;
+  private _words: any;
 
   constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
@@ -160,10 +161,34 @@ export class Sprint {
       '.translate-word'
     ) as HTMLElement;
 
-    const wordInfo = this.words[setRandomNumber(this.words.length)];
-    let randomWord = wordInfo.word;
-    let randomTranslate =
-      this.words[setRandomNumber(this.words.length)].wordTranslate;
+    let wordInfo: IWord;
+    let randomWord: string;
+    let randomTranslate: string;
+
+    if (this.words.length < 20) {
+      if (this._words === undefined) {
+        this._words = this.words.slice();
+      }
+
+      if (this._words.length === 0) {
+        this.TIMER_COUNT = 1;
+      }
+      const randNum = setRandomNumber(this._words.length);
+      wordInfo = this._words[randNum];
+
+      randomWord = wordInfo.word;
+      randomTranslate =
+        this._words[setRandomNumber(this._words.length)].wordTranslate;
+      this._words.splice(randNum, 1);
+    } else {
+      const randNum = setRandomNumber(this.words.length);
+      wordInfo = this.words[randNum];
+
+      randomWord = wordInfo.word;
+      randomTranslate =
+        this.words[setRandomNumber(this.words.length)].wordTranslate;
+    }
+
     const random = Boolean(setRandomNumber(2));
 
     if (random) {
@@ -380,10 +405,10 @@ export class Sprint {
     rightBtn.addEventListener('click', right);
     wrongBtn.addEventListener('click', wrong);
 
-    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
+    document.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowLeft') right();
     });
-    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
+    document.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowRight') wrong();
     });
   }
