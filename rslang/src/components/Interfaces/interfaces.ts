@@ -138,6 +138,7 @@ export interface IOptionalBlock {
   wrong?: number;
   inRow?: number;
   notNew?: true;
+  learnDate?: string;
 }
 
 export interface IAudioCallStatistic {

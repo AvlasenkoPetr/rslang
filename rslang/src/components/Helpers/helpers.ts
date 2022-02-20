@@ -29,12 +29,10 @@ export const isUserExists = (): boolean => {
 function getTodayDate(): string {
   const date = new Date()
   const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
-  console.log(dateStr);
   return dateStr
 }
 
 export async function makeEmptyStats() {
-  console.log('makeemptystats');
   const date = getTodayDate()
 
   const body: IStatisticResponse = {
@@ -59,8 +57,6 @@ export async function makeEmptyStats() {
 }
 
 export async function checkStatsDay() {
-  console.log('checstats');
-  
   const fetch = new Fetch()
   try {
     const oldStats: IStatisticResponse = await fetch.GET_STATISTICS()

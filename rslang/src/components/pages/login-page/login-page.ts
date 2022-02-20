@@ -117,8 +117,6 @@ export class LoginPage {
         try {
             await this.FETCH.CREATE_USER(createUserBody)
             await this.login(email, password)
-            // .then(() => this.login(email, password))
-            // .catch((error) => this.dropError(error.status));
         } catch(error: any) {
             this.dropError(error.status)
         }
@@ -130,21 +128,14 @@ export class LoginPage {
             password: password  
         }
 
-        await this.FETCH.SIGN_IN(signInBody)
-        .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
-        .then(async () => await checkStatsDay())
-        .then(() => this.redirectToMain())
-        .catch((err) => this.dropError(err.status))
-
-        // localStorage.setItem('UserInfo', JSON.stringify(res))
-        // this.redirectToMain()
-
-        // .then(async () => {
-        // })
-        // .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
-        // .then(() => this.redirectToMain())
-        // .catch((error) => this.dropError(error.status));
-        
+        try {
+            const res = await this.FETCH.SIGN_IN(signInBody)
+            localStorage.setItem('UserInfo', JSON.stringify(res))
+            await checkStatsDay()
+            this.redirectToMain()
+        } catch(err: any) {
+            this.dropError(err.status)
+        }
     }
 
     redirectToMain = () => {
