@@ -77,7 +77,74 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
+    window.addEventListener('removeEventListeners', this.remove.bind(this));
+    document.body.addEventListener('keyup', this.keyUp);
   }
+
+  remove() {
+    document.body.removeEventListener('keyup', this.keyUp, false);
+  }
+
+  keyUp = async (e: KeyboardEvent) => {
+    const rightBtn = document.querySelector('.right') as HTMLElement;
+    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
+
+    const rightAnswer = () => {
+      this.updatePointsInfo(true);
+      this.audio.src = '../../../../assets/sounds/correct.mp3';
+      this.audio.play();
+      if (
+        this.rightAnswersArr.find(
+          (wordInfo) => wordInfo.info === this.currentWord
+        ) === undefined
+      ) {
+        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
+      }
+    };
+
+    const wrongAnswer = () => {
+      this.updatePointsInfo(false);
+      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+      this.audio.play();
+      if (
+        this.mistakesArr.find(
+          (wordInfo) => wordInfo.info === this.currentWord
+        ) === undefined
+      ) {
+        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
+      }
+    };
+
+    const right = () => {
+      const rightTranslate = this.words.find(
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+      )?.wordTranslate;
+      if (this.translate === rightTranslate) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
+      this.round();
+    };
+
+    const wrong = () => {
+      const rightTranslate = this.words.find(
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+      )?.wordTranslate;
+      if (this.translate !== rightTranslate) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
+      this.round();
+    };
+
+    if (e.key === 'ArrowLeft') right();
+    if (e.key === 'ArrowRight') wrong();
+
+    rightBtn.addEventListener('click', right);
+    wrongBtn.addEventListener('click', wrong);
+  };
 
   async startGame() {
     let extraPage: string = this.page;
@@ -344,73 +411,10 @@ export class Sprint {
 
   game() {
     this.renderGame();
-    const rightBtn = document.querySelector('.right') as HTMLElement;
-    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
-
     this.timer();
     this.round();
     this.fullscreen();
     this.volume();
-
-    const rightAnswer = () => {
-      this.updatePointsInfo(true);
-      this.audio.src = '../../../../assets/sounds/correct.mp3';
-      this.audio.play();
-      if (
-        this.rightAnswersArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
-      }
-    };
-
-    const wrongAnswer = () => {
-      this.updatePointsInfo(false);
-      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
-      this.audio.play();
-      if (
-        this.mistakesArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
-      }
-    };
-
-    const right = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate === rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    const wrong = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate !== rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    rightBtn.addEventListener('click', right);
-    wrongBtn.addEventListener('click', wrong);
-
-    document.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowLeft') right();
-    });
-    document.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowRight') wrong();
-    });
   }
 
   async updateStatistics() {
@@ -496,6 +500,7 @@ export class Sprint {
     sprintStatistic.correct = this.rightAnswers;
     sprintStatistic.wrong = this.mistakes;
     sprintStatistic.maxRow = this.maxrow;
+    this.remove();
     this.updateStatistics();
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
