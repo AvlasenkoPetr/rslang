@@ -57,6 +57,8 @@ class StatsPage {
         const accuracyTotal: number = Math.round(((audiocallCorrect + sprintCorrect) / totalAnswers) * 100)
         const newWordsTotal: number = (audiocallNewWords + sprintNewWords)
 
+        document.body.style.setProperty('--p1', `${accuracyTotal}`);
+
 
         this.STATS_WRAPPER.innerHTML = `
         <div class="stats-page__card words">

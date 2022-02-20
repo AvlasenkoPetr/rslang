@@ -27,11 +27,13 @@ class GameResult {
   private accuracy;
   newWordCounter: number;
   gameName: string;
+  page: string;
   constructor(data: IResult) {
     this.gameName = data.gameName
     this.newWordCounter = 0;
     if (data.points) this.points = data.points;
     this.group = data.group;
+    this.page = data.page
     this.total = data.total;
     this.inRow = data.inRow;
     this.correctAnswers = data.answersArr.filter(
@@ -200,10 +202,10 @@ class GameResult {
     restartGame.addEventListener('click', () => {
       modal.remove();
       if (this.gameName === 'sprint') {
-        new Sprint(this.group).startGame();
+        new Sprint(this.group,this.page).startGame();
       }
       if (this.gameName === 'audioCall') {
-        new AudioCall(this.group).startGame();
+        new AudioCall(this.group, this.page).startGame();
       }
     });
   }

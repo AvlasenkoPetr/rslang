@@ -71,6 +71,8 @@
         border-radius: 50%;
         margin-bottom: 2vh;
         .answer-img {
+          object-fit: cover;
+          object-position: center center;
           height: 100%;
         }
         .audioCall__audio-button {
@@ -128,6 +130,7 @@
       }
     }
     .btn__wrapper {
+      padding: 5px;
       .next-page__btn {
       }
       .dont-know__button {
