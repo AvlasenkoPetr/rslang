@@ -79,28 +79,32 @@ class StatsPage {
         this.STATS_PAGE.innerHTML = `
         <div class="stats-page__wrapper">
 
-            <div class="stats-page__card">
+            <div class="stats-page__card words">
                 <p>Новых слов сегодня</p>
-                <h2>${newWordsTotal}</h2>
+                <h1>${newWordsTotal}</h1>
             </div>
 
-            <div class="stats-page__card">
+            <div class="stats-page__card accuracy">
+                <div class="accuracy-percentage">${accuracyTotal}%</div>
                 <p>Ваша точность</p>
-                <h2>${accuracyTotal}%</h2>
             </div>
 
-            <div class="stats-page__card">
-                <h2>Аудиовызов</h2>
-                <p>Новые слова: ${audiocallNewWords}</p>
-                <p>Точность: ${audiocallAccuracy}%</p>
-                <p>Лучший стрик: ${statsData.optional?.audioCall?.maxRow || 0}</p>
+            <div class="stats-page__card game">
+                <h3>Спринт</h3>
+                <div class="game-stats__wrapper">
+                    <p><span class="words">${sprintNewWords}</span> - новые слова</p>
+                    <p><span class="accuracy">${sprintAccuracy}%</span> - точность</p>
+                    <p><span class="row">${statsData.optional?.sprint?.maxRow || 0}</span> - лучшая серия</p>
+                </div>
             </div>
-                
-            <div class="stats-page__card">
-                <h2>Спринт</h2>
-                <p>Новые слова: ${sprintNewWords}</p>
-                <p>Точность: ${sprintAccuracy}%</p>
-                <p>Лучший стрик: ${statsData.optional?.sprint?.maxRow || 0}</p>
+
+            <div class="stats-page__card game">
+                <h3>Аудиовызов</h3>
+                <div class="game-stats__wrapper">
+                    <p><span class="words">${audiocallNewWords}</span> - новые слова</p>
+                    <p><span class="accuracy">${audiocallAccuracy}%</span> - точность</p>
+                    <p><span class="row">${statsData.optional?.audioCall?.maxRow || 0}</span> - лучшая серия</p>
+                </div>
             </div>
 
         </div>

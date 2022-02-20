@@ -20,24 +20,107 @@
     width: 40%;
     min-height: 270px;
     margin-bottom: 50px;
+    padding: 5%;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
 
     border: 1px solid var(--font-color-main);
     border-radius: 15px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-    p {
-      font-size: 36px;
+    & .game-stats__wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      align-items: flex-start;
+      align-self: start;
     }
 
-    h2 {
-      font-size: 56px;
-      font-family: 'Source Sans Pro';
+    &.words {
+      justify-content: center;
+      gap: 20px;
+    }
+
+    &.accuracy {
+      padding: 1% 0;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    &.game {
+      padding: 3% 5% 5%;
+    }
+  }
+
+  & .accuracy-percentage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    font-size: 68px;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      inset: 0;
+      // background: radial-gradient(farthest-side, var(--c) 98%, #0000) top/var(--b) var(--b) no-repeat, conic-gradient(var(--c) calc(var(--p) * 1%), #0000 0);
+      // -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
+      // mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
+    }
+  }
+
+  p {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Source Sans Pro';
+    font-weight: lighter;
+  }
+
+  h1 {
+    font-size: 88px;
+  }
+  h2 {
+    font-size: 68px;
+  }
+  h3 {
+    font-size: 42px;
+  }
+  h4 {
+    font-size: 36px;
+  }
+
+  span {
+    display: inline-block;
+    min-width: 60px;
+    padding: 0 8px;
+    margin-right: 10px;
+
+    text-align: center;
+
+    border-radius: 8px;
+    &.words {
+      background-color: var(--purple-light);
+    }
+    &.accuracy {
+      background-color: var(--purple-accuracy-stats);
+    }
+    &.row {
+      background-color: var(--easy);
     }
   }
 }
