@@ -63,7 +63,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="book-hard">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/0.png" alt="" />
+              <img src="./assets/images/mainPage/1.png" alt="" />
             </div>
             <h3 class="card__title">Запоминай</h3>
             <p class="card__text">
@@ -73,7 +73,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="games">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/0.png" alt="" />
+              <img src="./assets/images/mainPage/2.png" alt="" />
             </div>
             <h3 class="card__title">Играй</h3>
             <p class="card__text">
@@ -82,7 +82,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="stats">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/0.png" alt="" />
+              <img src="./assets/images/mainPage/3.png" alt="" />
             </div>
             <h3 class="card__title">Анализируй</h3>
             <p class="card__text">
