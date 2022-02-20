@@ -138,6 +138,7 @@ export interface IOptionalBlock {
   wrong?: number;
   inRow?: number;
   notNew?: true;
+  learnDate?: string;
 }
 
 export interface IAudioCallStatistic {
@@ -153,5 +154,6 @@ export interface IStatisticResponse {
   optional?: {
     audioCall?: IAudioCallStatistic;
     sprint?: IAudioCallStatistic;
+    date?: string;
   };
 }

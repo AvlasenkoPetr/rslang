@@ -61,35 +61,36 @@ class StatsPage {
 
 
         this.STATS_WRAPPER.innerHTML = `
+        <h2 class="stats-page__title">Статистика за сегодня</h2>
         <div class="stats-page__card words">
-                <p>Новых слов сегодня</p>
-                <h1>${newWordsTotal}</h1>
-            </div>
+            <p>Новых слов сегодня</p>
+            <h1>${newWordsTotal}</h1>
+        </div>
 
-            <div class="stats-page__card accuracy">
-                <div class="accuracy-percentage">${accuracyTotal}%</div>
-                <p>Ваша точность</p>
-            </div>
+        <div class="stats-page__card accuracy">
+            <div class="accuracy-percentage">${isNaN(accuracyTotal) ? 0 : accuracyTotal}%</div>
+            <p>Ваша точность</p>
+        </div>
 
-            <div class="stats-page__card game">
-                <h3>Спринт</h3>
-                <div class="game-stats__wrapper">
-                    <p><span class="words">${sprintNewWords}</span> - новые слова</p>
-                    <p><span class="accuracy">${sprintAccuracy}%</span> - точность</p>
-                    <p><span class="row">${statsData.optional?.sprint?.maxRow || 0}</span> - лучшая серия</p>
-                </div>
+        <div class="stats-page__card game">
+            <h3>Спринт</h3>
+            <div class="game-stats__wrapper">
+                <p><span class="words">${sprintNewWords}</span> - новые слова</p>
+                <p><span class="accuracy">${sprintAccuracy}%</span> - точность</p>
+                <p><span class="row">${statsData.optional?.sprint?.maxRow || 0}</span> - лучшая серия</p>
             </div>
+        </div>
 
-            <div class="stats-page__card game">
-                <h3>Аудиовызов</h3>
-                <div class="game-stats__wrapper">
-                    <p><span class="words">${audiocallNewWords}</span> - новые слова</p>
-                    <p><span class="accuracy">${audiocallAccuracy}%</span> - точность</p>
-                    <p><span class="row">${statsData.optional?.audioCall?.maxRow || 0}</span> - лучшая серия</p>
-                </div>
+        <div class="stats-page__card game">
+            <h3>Аудиовызов</h3>
+            <div class="game-stats__wrapper">
+                <p><span class="words">${audiocallNewWords}</span> - новые слова</p>
+                <p><span class="accuracy">${audiocallAccuracy}%</span> - точность</p>
+                <p><span class="row">${statsData.optional?.audioCall?.maxRow || 0}</span> - лучшая серия</p>
             </div>
-            `
-            this.STATS_PAGE.append(this.STATS_WRAPPER)
+        </div>
+        `
+        this.STATS_PAGE.append(this.STATS_WRAPPER)
 
     }
 }

@@ -3,7 +3,7 @@ import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
-import { getUserInfo, isUserExists } from '../../Helpers/helpers'
+import { checkStatsDay, getUserInfo, isUserExists, makeEmptyStats } from '../../Helpers/helpers'
 import { Router } from '../../router/router'
 
 export class LoginPage {
@@ -114,10 +114,12 @@ export class LoginPage {
             email: email,
             password: password
         }
-
-        await this.FETCH.CREATE_USER(createUserBody)
-        .then(() => this.login(email, password))
-        .catch((error) => this.dropError(error.status));
+        try {
+            await this.FETCH.CREATE_USER(createUserBody)
+            await this.login(email, password)
+        } catch(error: any) {
+            this.dropError(error.status)
+        }
     }
 
     login = async(email: string, password: string) => {
@@ -126,11 +128,14 @@ export class LoginPage {
             password: password  
         }
 
-        await this.FETCH.SIGN_IN(signInBody)
-        .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
-        .then(() => this.redirectToMain())
-        .catch((error) => this.dropError(error.status));
-        
+        try {
+            const res = await this.FETCH.SIGN_IN(signInBody)
+            localStorage.setItem('UserInfo', JSON.stringify(res))
+            await checkStatsDay()
+            this.redirectToMain()
+        } catch(err: any) {
+            this.dropError(err.status)
+        }
     }
 
     redirectToMain = () => {
