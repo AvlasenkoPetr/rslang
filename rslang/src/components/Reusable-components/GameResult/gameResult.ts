@@ -14,6 +14,7 @@ import { Sprint } from '../../pages/games/sprint/sprint';
 import { AudioCall } from '../../pages/games/audiocall/audioCallGame';
 import { Fetch } from '../../Fetch/fetch';
 import GamesPage from '../../pages/games-page/games-page';
+import { renderBookWithLS } from '../../Helpers/helpers';
 
 class GameResult {
   private group;
@@ -194,8 +195,15 @@ class GameResult {
     });
     closeWindowBtn.addEventListener('click', () => {
       modal.remove();
-      const gamesPage = new GamesPage();
-      gamesPage.renderGamesPage();
+      const nav: HTMLElement = document.querySelector('.aside') as HTMLElement
+      const activePage: HTMLElement = nav.querySelector('.active') as HTMLElement
+
+      if (activePage.dataset.navigation === 'book') {
+        renderBookWithLS()
+      } else {
+        const gamesPage = new GamesPage();
+        gamesPage.renderGamesPage();
+      }
     });
     restartGame.addEventListener('click', () => {
       modal.remove();

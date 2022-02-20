@@ -3,7 +3,7 @@ import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
-import { getUserInfo, isUserExists } from '../../Helpers/helpers'
+import { getUserInfo, isUserExists, makeEmptyStats } from '../../Helpers/helpers'
 import { Router } from '../../router/router'
 
 export class LoginPage {
@@ -44,7 +44,8 @@ export class LoginPage {
                     const email = (document.querySelector('input[type="email"]') as HTMLInputElement).value
                     const password = (document.querySelector('input[type="password"]') as HTMLInputElement).value
 
-                    this.signUp(name, email, password)
+                    await this.signUp(name, email, password)
+                    await makeEmptyStats()
 
                 } else {
                     this.dropError()

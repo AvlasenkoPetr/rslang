@@ -62,13 +62,14 @@ export class BookPage {
 
     switch (clickedButtonDataset) {
       case 'audiocall':
-
+        savePageData()
         spinner.startTimer(() => {
           new AudioCall(this.LEVEL, pageNum).startGame();
         });
         return;
 
       case 'sprint':
+        savePageData()
         spinner.startTimer(() => {
           new Sprint(this.LEVEL, pageNum).startGame();
         });
@@ -441,6 +442,16 @@ export class BookPage {
 }
 
 window.addEventListener('beforeunload', () => {
+  if (document.querySelector('.book-page')) {
+    savePageData()
+
+  } else {
+    localStorage.removeItem('lastBookLevel')
+    localStorage.removeItem('lastBookPage')
+  }
+})
+
+function savePageData() {
   const pageCounter: HTMLInputElement | null = document.getElementById(
     'counter'
   ) as HTMLInputElement;
@@ -453,4 +464,4 @@ window.addEventListener('beforeunload', () => {
       localStorage.setItem('lastBookLevel', String(index))
     }
   })
-})
+}
