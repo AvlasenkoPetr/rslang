@@ -39,6 +39,7 @@ export class Sprint {
   page!: string;
   audio: HTMLAudioElement;
   fromBook!: boolean;
+  private _words: any;
 
   constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
@@ -76,7 +77,74 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
+    window.addEventListener('removeEventListeners', this.remove.bind(this));
+    document.body.addEventListener('keyup', this.keyUp);
   }
+
+  remove() {
+    document.body.removeEventListener('keyup', this.keyUp, false);
+  }
+
+  keyUp = async (e: KeyboardEvent) => {
+    const rightBtn = document.querySelector('.right') as HTMLElement;
+    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
+
+    const rightAnswer = () => {
+      this.updatePointsInfo(true);
+      this.audio.src = '../../../../assets/sounds/correct.mp3';
+      this.audio.play();
+      if (
+        this.rightAnswersArr.find(
+          (wordInfo) => wordInfo.info === this.currentWord
+        ) === undefined
+      ) {
+        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
+      }
+    };
+
+    const wrongAnswer = () => {
+      this.updatePointsInfo(false);
+      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+      this.audio.play();
+      if (
+        this.mistakesArr.find(
+          (wordInfo) => wordInfo.info === this.currentWord
+        ) === undefined
+      ) {
+        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
+      }
+    };
+
+    const right = () => {
+      const rightTranslate = this.words.find(
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+      )?.wordTranslate;
+      if (this.translate === rightTranslate) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
+      this.round();
+    };
+
+    const wrong = () => {
+      const rightTranslate = this.words.find(
+        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+      )?.wordTranslate;
+      if (this.translate !== rightTranslate) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
+      this.round();
+    };
+
+    if (e.key === 'ArrowLeft') right();
+    if (e.key === 'ArrowRight') wrong();
+
+    rightBtn.addEventListener('click', right);
+    wrongBtn.addEventListener('click', wrong);
+  };
 
   async startGame() {
     let extraPage: string = this.page;
@@ -160,10 +228,34 @@ export class Sprint {
       '.translate-word'
     ) as HTMLElement;
 
-    const wordInfo = this.words[setRandomNumber(this.words.length)];
-    let randomWord = wordInfo.word;
-    let randomTranslate =
-      this.words[setRandomNumber(this.words.length)].wordTranslate;
+    let wordInfo: IWord;
+    let randomWord: string;
+    let randomTranslate: string;
+
+    if (this.words.length < 20) {
+      if (this._words === undefined) {
+        this._words = this.words.slice();
+      }
+
+      if (this._words.length === 0) {
+        this.TIMER_COUNT = 1;
+      }
+      const randNum = setRandomNumber(this._words.length);
+      wordInfo = this._words[randNum];
+
+      randomWord = wordInfo.word;
+      randomTranslate =
+        this._words[setRandomNumber(this._words.length)].wordTranslate;
+      this._words.splice(randNum, 1);
+    } else {
+      const randNum = setRandomNumber(this.words.length);
+      wordInfo = this.words[randNum];
+
+      randomWord = wordInfo.word;
+      randomTranslate =
+        this.words[setRandomNumber(this.words.length)].wordTranslate;
+    }
+
     const random = Boolean(setRandomNumber(2));
 
     if (random) {
@@ -319,73 +411,10 @@ export class Sprint {
 
   game() {
     this.renderGame();
-    const rightBtn = document.querySelector('.right') as HTMLElement;
-    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
-
     this.timer();
     this.round();
     this.fullscreen();
     this.volume();
-
-    const rightAnswer = () => {
-      this.updatePointsInfo(true);
-      this.audio.src = '../../../../assets/sounds/correct.mp3';
-      this.audio.play();
-      if (
-        this.rightAnswersArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
-      }
-    };
-
-    const wrongAnswer = () => {
-      this.updatePointsInfo(false);
-      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
-      this.audio.play();
-      if (
-        this.mistakesArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
-      }
-    };
-
-    const right = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate === rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    const wrong = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate !== rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    rightBtn.addEventListener('click', right);
-    wrongBtn.addEventListener('click', wrong);
-
-    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowLeft') right();
-    });
-    this.MAIN_WRAPPER.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowRight') wrong();
-    });
   }
 
   async updateStatistics() {
@@ -471,6 +500,7 @@ export class Sprint {
     sprintStatistic.correct = this.rightAnswers;
     sprintStatistic.wrong = this.mistakes;
     sprintStatistic.maxRow = this.maxrow;
+    this.remove();
     this.updateStatistics();
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
