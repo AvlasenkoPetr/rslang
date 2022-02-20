@@ -26,7 +26,7 @@ export const isUserExists = (): boolean => {
   return localStorage.getItem('UserInfo') ? true : false
 }
 
-function getTodayDate(): string {
+export function getTodayDate(): string {
   const date = new Date()
   const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
   return dateStr
