@@ -100,7 +100,7 @@ export class BookPage {
     if (!(e.target instanceof HTMLElement)) return;
 
     const clickedButton: HTMLElement = e.target;
-    if (!clickedButton.dataset.word) return;
+    if (!clickedButton.dataset.word || clickedButton.classList.contains('disabled')) return;
 
     const clickedButtonDataset: string = clickedButton.dataset.word;
 
@@ -148,6 +148,7 @@ export class BookPage {
             return;
           }
           wordItem.classList.remove(`${clickedButtonDataset}`);
+          this.isPageLearned()
           return;
         }
 
@@ -167,6 +168,7 @@ export class BookPage {
             `${wordItem.classList[wordItem.classList.length - 1]}`
           );
           wordItem.classList.add(`${clickedButtonDataset}`);
+          this.isPageLearned()
           return;
         }
 
@@ -183,6 +185,7 @@ export class BookPage {
           );
 
         wordItem.classList.add(`${clickedButtonDataset}`);
+        this.isPageLearned()
         return;
     }
   };
@@ -234,6 +237,7 @@ export class BookPage {
 
       this.WORDS_CONTAINER.append(wordItem);
     }
+    this.isPageLearned()
   };
 
   getWordsToRender = async (
@@ -263,18 +267,37 @@ export class BookPage {
     return userWordsData;
   };
 
-  toNextPage(button: HTMLElement): void {
+  async toNextPage(button: HTMLElement): Promise<void> {
     const pageCounter = button.previousElementSibling as HTMLInputElement;
     if (pageCounter.value === '30') return;
+
+    this.toggleDisabled('.book-page__pagination-container_button')
     pageCounter.stepUp();
-    this.renderWordsContainer();
+
+    await this.renderWordsContainer();
+    this.toggleDisabled('.book-page__pagination-container_button')
   }
 
-  toPrevPage(button: HTMLElement): void {
+  async toPrevPage(button: HTMLElement): Promise<void> {
     const pageCounter = button.nextElementSibling as HTMLInputElement;
     if (pageCounter.value === '1') return;
+
+    this.toggleDisabled('.book-page__pagination-container_button')
     pageCounter.stepDown();
-    this.renderWordsContainer();
+
+    await this.renderWordsContainer();
+    this.toggleDisabled('.book-page__pagination-container_button')
+  }
+
+  toggleDisabled = (selector: string, func?: string) => {
+    const elements = document.querySelectorAll(`${selector}`)
+    if (func === 'add') {
+      elements.forEach((el) => el.classList.add('disabled'))
+    } else if (func === 'remove') {
+      elements.forEach((el) => el.classList.remove('disabled'))
+    } else {
+      elements.forEach((el) => el.classList.toggle('disabled'))
+    }
   }
 
   setActiveLevel = (): void => {
@@ -288,6 +311,22 @@ export class BookPage {
     }
     currentLevelButton?.classList.add('active');
   };
+
+  isPageLearned = () => {
+    const learnedWords = this.WORDS_CONTAINER.querySelectorAll('.easy')
+    const hardWords = this.WORDS_CONTAINER.querySelectorAll('.hard')
+    const words = this.WORDS_CONTAINER.querySelectorAll('.words-container__item')
+
+    if (learnedWords.length > 0 && 
+    (learnedWords.length + hardWords.length) === words.length) {
+      this.BOOK_PAGE.classList.add('learned')
+      this.toggleDisabled('.book-page__games-menu_button', 'add')
+      
+    } else {
+      this.BOOK_PAGE.classList.remove('learned')
+      this.toggleDisabled('.book-page__games-menu_button', 'remove')
+    }
+  }
 
   playAudioChain = (button: HTMLElement, ...args: Array<string>): void => {
     if (args.length === 0) {
@@ -307,8 +346,8 @@ export class BookPage {
       <h2>Электронный учебник</h2>
 
       <div class="book-page__games-menu">
-        <button class="book-page__games-menu_button" data-book="audiocall">Audiocall</button>
-        <button class="book-page__games-menu_button" data-book="sprint">Sprint</button>
+        <button class="book-page__games-menu_button" data-book="sprint">Спринт</button>
+        <button class="book-page__games-menu_button" data-book="audiocall">Аудиовызов</button>
       </div>
 
       <div class="book-page__menu-row">
