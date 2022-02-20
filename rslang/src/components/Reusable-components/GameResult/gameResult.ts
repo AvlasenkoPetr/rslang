@@ -26,7 +26,9 @@ class GameResult {
   private wrongAnswersCounter;
   private accuracy;
   newWordCounter: number;
+  gameName: string;
   constructor(data: IResult) {
+    this.gameName = data.gameName
     this.newWordCounter = 0;
     if (data.points) this.points = data.points;
     this.group = data.group;
@@ -184,8 +186,6 @@ class GameResult {
       '#closeWindowBtn'
     ) as HTMLElement;
     const restartGame = document.querySelector('#restartGame') as HTMLElement;
-    const targetAttr = localStorage.getItem('currentGame')
-
     modalResults.addEventListener('click', (e) => {
       const audio = (e.target as HTMLElement).closest('button') as HTMLElement;
       if (audio) {
@@ -199,10 +199,10 @@ class GameResult {
     });
     restartGame.addEventListener('click', () => {
       modal.remove();
-      if (targetAttr === 'sprint') {
+      if (this.gameName === 'sprint') {
         new Sprint(this.group).startGame();
       }
-      if (targetAttr === 'audiocall') {
+      if (this.gameName === 'audioCall') {
         new AudioCall(this.group).startGame();
       }
     });

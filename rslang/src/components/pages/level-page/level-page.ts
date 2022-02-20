@@ -21,7 +21,6 @@ class LevelPage {
     this.LEVEL_PAGE.className = 'level-page page';
 
     this.target = target
-    localStorage.setItem('currentGame', this.target)
   }
 
   processClick = (e: MouseEvent): void => {
