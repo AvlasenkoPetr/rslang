@@ -7,7 +7,9 @@ import { IStatisticResponse } from '../../Interfaces/interfaces';
 class StatsPage {
     MAIN_WRAPPER: HTMLElement;
   
-    STATS_PAGE: HTMLElement; 
+    STATS_PAGE: HTMLElement;
+
+    STATS_WRAPPER: HTMLElement
 
     FETCH
   
@@ -16,6 +18,9 @@ class StatsPage {
   
       this.STATS_PAGE = document.createElement('main');
       this.STATS_PAGE.className = 'stats-page page';
+
+      this.STATS_WRAPPER = document.createElement('div');
+      this.STATS_WRAPPER.className = 'stats-page__wrapper';
     
       this.FETCH = new Fetch
     }
@@ -28,35 +33,11 @@ class StatsPage {
             return
         }
 
+        this.MAIN_WRAPPER.append(this.STATS_PAGE)
+        appendFooter(this.MAIN_WRAPPER)
+
         let statsData: IStatisticResponse
         statsData = await this.FETCH.GET_STATISTICS()
-
-        // try {
-        //     statsData = await this.FETCH.GET_STATISTICS()
-        //     console.log(statsData);
-            
-        // } catch {
-        //     const basicStats: IStatisticResponse = {
-        //         learnedWords: 0,
-        //         optional: {
-        //             audiocall: {
-        //                 newWords: 0,
-        //                 correct: 0,
-        //                 wrong: 0,
-        //                 maxRow: 0,
-        //             },
-        //             sprint: {
-        //                 newWords: 0,
-        //                 correct: 0,
-        //                 wrong: 0,
-        //                 maxRow: 0
-        //             }
-        //         }
-        //     }
-        //     await this.FETCH.UPDATE_STATISTICS(basicStats)
-        //     statsData = await this.FETCH.GET_STATISTICS()
-        //     console.log(statsData);
-        // }
 
         console.log(statsData);
         
@@ -76,10 +57,9 @@ class StatsPage {
         const accuracyTotal: number = Math.round(((audiocallCorrect + sprintCorrect) / totalAnswers) * 100)
         const newWordsTotal: number = (audiocallNewWords + sprintNewWords)
 
-        this.STATS_PAGE.innerHTML = `
-        <div class="stats-page__wrapper">
 
-            <div class="stats-page__card words">
+        this.STATS_WRAPPER.innerHTML = `
+        <div class="stats-page__card words">
                 <p>Новых слов сегодня</p>
                 <h1>${newWordsTotal}</h1>
             </div>
@@ -106,12 +86,8 @@ class StatsPage {
                     <p><span class="row">${statsData.optional?.audioCall?.maxRow || 0}</span> - лучшая серия</p>
                 </div>
             </div>
-
-        </div>
-        `
-
-        this.MAIN_WRAPPER.append(this.STATS_PAGE)
-        appendFooter(this.MAIN_WRAPPER)
+            `
+            this.STATS_PAGE.append(this.STATS_WRAPPER)
 
     }
 }

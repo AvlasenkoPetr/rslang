@@ -7,6 +7,7 @@ import { BookPage } from '../pages/book-page/book-page';
 import { isUserExists } from '../Helpers/helpers';
 import GamesPage from '../pages/games-page/games-page';
 import StatsPage from '../pages/stats-page/stats-page';
+import TeamPage from '../pages/team-page/team-page';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -124,6 +125,8 @@ export class Router {
         return;
 
       case 'team':
+        const teamPage = new TeamPage()
+        teamPage.renderTeamPage()
         return;
 
       case 'login':

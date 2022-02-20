@@ -14,6 +14,11 @@
         right no-repeat;
   }
 
+  &__title {
+    position: absolute;
+    top: 10px;
+  }
+
   &__wrapper {
     width: 50%;
     // min-height: 500px;
