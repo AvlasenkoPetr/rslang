@@ -36,15 +36,21 @@ export class Sprint {
   mistakesArr: Array<IAnswer>;
   MAIN_WRAPPER: HTMLElement;
   group: string;
-  page: string;
+  page!: string;
   audio: HTMLAudioElement;
-  fromBook: boolean;
+  fromBook!: boolean;
 
   constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
 
     this.group = group;
-    if (page) {
+
+    if (group === '6') {
+      this.fromBook = true;
+      if (!page) {
+        this.page = '0';
+      }
+    } else if (page) {
       this.page = page;
       this.fromBook = true;
     } else {
@@ -70,54 +76,51 @@ export class Sprint {
     this.mistakesArr = [];
 
     this.audio = new Audio();
-    if (page) this.page = page;
   }
 
   async startGame() {
-    let aggregatedWords: IAggregatedWords;
-    let aggregatedWordsResults: Array<IAggregatedWord>;
-    let extraPage: number = Number(this.page);
-    if (this.fromBook) {
-      do {
-        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
-          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
-          wordsPerPage: '20',
+    let extraPage: string = this.page;
+    let data: Array<IWord>;
+    try {
+      let res: IAggregatedWords;
+      if (this.group === '6') {
+        res = await fetch.GET_AGGREGATED_WORDS({
+          wordsPerPage: '3600',
+          page: extraPage,
+          filter: `{"userWord.difficulty":"hard"}`,
         });
-
-        aggregatedWordsResults = aggregatedWords[0].paginatedResults.filter(
-          (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+        data = res[0].paginatedResults;
+      } else {
+        res = await fetch.GET_AGGREGATED_WORDS({
+          wordsPerPage: '20',
+          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+        });
+        res[0].paginatedResults = res[0].paginatedResults.filter(
+          (item) => item.userWord?.difficulty !== 'easy'
         );
-
-        extraPage -= 1;
-        if (extraPage < 0) {
-          this.words = aggregatedWordsResults;
-          break;
-        }
-
-        aggregatedWords = await fetch.GET_AGGREGATED_WORDS({
-          filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
-          wordsPerPage: '20',
-        });
-
-        let extraAggregatedWordsResults: Array<IAggregatedWord> =
-          aggregatedWords[0].paginatedResults.filter(
-            (wordInfo) => wordInfo.userWord?.difficulty !== 'easy'
+        while (res[0].paginatedResults.length < 20) {
+          extraPage = '' + (+extraPage - 1);
+          if (+extraPage < 0) break;
+          const res2: IAggregatedWords = await fetch.GET_AGGREGATED_WORDS({
+            wordsPerPage: '20',
+            filter: `{"$and":[{"group": ${this.group}, "page": ${extraPage}}]}`,
+          });
+          res2[0].paginatedResults = res2[0].paginatedResults.filter(
+            (item) => item.userWord?.difficulty !== 'easy'
           );
-        if (this.words.length === 0) {
-          this.words = aggregatedWordsResults.concat(
-            extraAggregatedWordsResults
-          );
-        } else {
-          this.words = this.words.concat(extraAggregatedWordsResults);
+          res[0].paginatedResults.push(...res2[0].paginatedResults);
         }
-      } while (this.words.length < 20);
-      if (this.words.length > 20) {
-        this.words = this.words.reverse();
-        this.words.length = 20;
+        data = res[0].paginatedResults.slice(0, 20);
       }
-    } else {
-      this.words = await fetch.GET_WORDS(this.group, this.page);
+      data.forEach((item) => {
+        item.id = item._id!;
+        delete item._id;
+      });
+    } catch {
+      data = await fetch.GET_WORDS(this.group, extraPage);
     }
+
+    this.words = data;
 
     this.words.forEach((wordInfo: IAggregatedWord) => {
       if (!wordInfo.userWord) {
@@ -157,10 +160,10 @@ export class Sprint {
       '.translate-word'
     ) as HTMLElement;
 
-    const wordInfo = this.words[setRandomNumber(this.words.length - 1)];
+    const wordInfo = this.words[setRandomNumber(this.words.length)];
     let randomWord = wordInfo.word;
     let randomTranslate =
-      this.words[setRandomNumber(this.words.length - 1)].wordTranslate;
+      this.words[setRandomNumber(this.words.length)].wordTranslate;
     const random = Boolean(setRandomNumber(2));
 
     if (random) {
