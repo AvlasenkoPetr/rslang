@@ -1,5 +1,5 @@
 import './sprint.scss';
-import { setRandomNumber } from '../../../Helpers/helpers';
+import { getTodayDate, setRandomNumber } from '../../../Helpers/helpers';
 import {
   IWord,
   IResult,
@@ -204,7 +204,6 @@ export class Sprint {
         };
       }
     });
-    console.log(this.words);
     this.MAIN_WRAPPER.innerHTML = '';
     this.game();
   }
@@ -236,17 +235,17 @@ export class Sprint {
       if (this._words === undefined) {
         this._words = this.words.slice();
       }
-
-      if (this._words.length === 0) {
-        this.TIMER_COUNT = 1;
-      }
       const randNum = setRandomNumber(this._words.length);
-      wordInfo = this._words[randNum];
+      if (this._words.length === 0) {
+        this.stopGame();
+      } else {
+        wordInfo = this._words[randNum];
 
-      randomWord = wordInfo.word;
-      randomTranslate =
-        this._words[setRandomNumber(this._words.length)].wordTranslate;
-      this._words.splice(randNum, 1);
+        randomWord = wordInfo.word;
+        randomTranslate =
+          this._words[setRandomNumber(this._words.length)].wordTranslate;
+        this._words.splice(randNum, 1);
+      }
     } else {
       const randNum = setRandomNumber(this.words.length);
       wordInfo = this.words[randNum];
@@ -254,19 +253,19 @@ export class Sprint {
       randomWord = wordInfo.word;
       randomTranslate =
         this.words[setRandomNumber(this.words.length)].wordTranslate;
+
+      const random = Boolean(setRandomNumber(2));
+
+      if (random) {
+        randomWord = wordInfo!.word;
+        randomTranslate = wordInfo!.wordTranslate;
+      }
     }
 
-    const random = Boolean(setRandomNumber(2));
+    this.currentWord = wordInfo!;
 
-    if (random) {
-      randomWord = wordInfo.word;
-      randomTranslate = wordInfo.wordTranslate;
-    }
-
-    this.currentWord = wordInfo;
-
-    wordContainer.innerHTML = randomWord;
-    translateContainer.innerHTML = randomTranslate;
+    wordContainer.innerHTML = randomWord!;
+    translateContainer.innerHTML = randomTranslate!;
 
     this.word = wordContainer.innerText;
     this.translate = translateContainer.innerText;
@@ -327,8 +326,10 @@ export class Sprint {
       if (
         (userWord.difficulty === 'string' && userWord.optional.inRow === 3) ||
         (userWord.difficulty === 'hard' && userWord.optional.inRow === 5)
-      )
+      ) {
         userWord.difficulty = 'easy';
+        userWord.optional.learnDate = getTodayDate();
+      }
 
       if (this.progress === 4) {
         this.progress = 0;
@@ -356,7 +357,10 @@ export class Sprint {
 
       userWord.optional.wrong += 1;
       userWord.optional.inRow = 0;
-      if (userWord.difficulty === 'easy') userWord.difficulty = 'string';
+      if (userWord.difficulty === 'easy') {
+        userWord.difficulty = 'string';
+        userWord.optional.learnDate = getTodayDate();
+      }
 
       if (this.countPoints !== 10) {
         this.countPoints = 10;
