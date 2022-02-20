@@ -7,9 +7,30 @@
     margin: 0;
   }
 
+  .main__wrapper & {
+    background: url(../../../assets/images/background-waves/book-page-bottom-wave.svg)
+        bottom left no-repeat,
+      url(../../../assets/images/background-waves/book-page-top-wave.svg) top
+        right no-repeat,
+      url(../../../assets/images/background-guys/book-page-top-guy.svg) top 5%
+        left 5% no-repeat,
+      url(../../../assets/images/background-guys/book-page-bottom-guy.svg)
+        bottom 20% right 5% no-repeat;
+  }
+
   &.learned {
     .book-page__pagination-container_counter {
       background-color: var(--easy);
+    }
+    .main__wrapper & {
+      background: url(../../../assets/images/background-waves/book-page-bottom-wave-learned.svg)
+          bottom left no-repeat,
+        url(../../../assets/images/background-waves/book-page-top-wave-learned.svg)
+          top right no-repeat,
+        url(../../../assets/images/background-guys/book-page-top-guy.svg) top 5%
+          left 5% no-repeat,
+        url(../../../assets/images/background-guys/book-page-bottom-guy.svg)
+          bottom 20% right 5% no-repeat;
     }
   }
 
