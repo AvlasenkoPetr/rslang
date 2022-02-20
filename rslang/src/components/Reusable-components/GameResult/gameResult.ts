@@ -14,7 +14,7 @@ import { Sprint } from '../../pages/games/sprint/sprint';
 import { AudioCall } from '../../pages/games/audiocall/audioCallGame';
 import { Fetch } from '../../Fetch/fetch';
 import GamesPage from '../../pages/games-page/games-page';
-import { renderBookWithLS } from '../../Helpers/helpers';
+import { getTodayDate, renderBookWithLS } from '../../Helpers/helpers';
 
 class GameResult {
   private group;
@@ -133,12 +133,15 @@ class GameResult {
                 word.userWord.optional.inRow === 5)
             ) {
               word.userWord.difficulty = 'easy';
+              word.userWord.optional.learnDate = getTodayDate()
             }
           } else {
             word.userWord.optional.wrong! += 1;
             word.userWord.optional.inRow! = 0;
-            if (word.userWord.difficulty === 'easy')
+            if (word.userWord.difficulty === 'easy'){
               word.userWord.difficulty = 'string';
+              word.userWord.optional.learnDate = getTodayDate()
+            }
           }
         } else {
           word.userWord.optional = {
@@ -196,6 +199,7 @@ class GameResult {
       }
     });
     closeWindowBtn.addEventListener('click', () => {
+      document.exitFullscreen()
       modal.remove();
       const nav: HTMLElement = document.querySelector('.aside') as HTMLElement
       const activePage: HTMLElement = nav.querySelector('.active') as HTMLElement
