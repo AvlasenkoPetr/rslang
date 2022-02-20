@@ -37,6 +37,7 @@ export class Router {
       localStorage.removeItem('UserInfo');
       clickedButton.dataset.navigation = 'login';
       clickedButton.innerHTML = 'Войти';
+      window.location.reload()
       return;
     }
 

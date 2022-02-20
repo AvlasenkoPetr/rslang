@@ -3,7 +3,7 @@ import { IData, IUSER_BODY } from '../../Interfaces/interfaces'
 import appendFooter from '../../Reusable-components/footer/footer'
 
 import './login-page.scss'
-import { getUserInfo, isUserExists, makeEmptyStats } from '../../Helpers/helpers'
+import { checkStatsDay, getUserInfo, isUserExists, makeEmptyStats } from '../../Helpers/helpers'
 import { Router } from '../../router/router'
 
 export class LoginPage {
@@ -44,8 +44,7 @@ export class LoginPage {
                     const email = (document.querySelector('input[type="email"]') as HTMLInputElement).value
                     const password = (document.querySelector('input[type="password"]') as HTMLInputElement).value
 
-                    await this.signUp(name, email, password)
-                    await makeEmptyStats()
+                    this.signUp(name, email, password)
 
                 } else {
                     this.dropError()
@@ -115,10 +114,14 @@ export class LoginPage {
             email: email,
             password: password
         }
-
-        await this.FETCH.CREATE_USER(createUserBody)
-        .then(() => this.login(email, password))
-        .catch((error) => this.dropError(error.status));
+        try {
+            await this.FETCH.CREATE_USER(createUserBody)
+            await this.login(email, password)
+            // .then(() => this.login(email, password))
+            // .catch((error) => this.dropError(error.status));
+        } catch(error: any) {
+            this.dropError(error.status)
+        }
     }
 
     login = async(email: string, password: string) => {
@@ -129,8 +132,18 @@ export class LoginPage {
 
         await this.FETCH.SIGN_IN(signInBody)
         .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
+        .then(async () => await checkStatsDay())
         .then(() => this.redirectToMain())
-        .catch((error) => this.dropError(error.status));
+        .catch((err) => this.dropError(err.status))
+
+        // localStorage.setItem('UserInfo', JSON.stringify(res))
+        // this.redirectToMain()
+
+        // .then(async () => {
+        // })
+        // .then((res) => localStorage.setItem('UserInfo', JSON.stringify(res)))
+        // .then(() => this.redirectToMain())
+        // .catch((error) => this.dropError(error.status));
         
     }
 

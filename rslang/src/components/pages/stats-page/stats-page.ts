@@ -68,7 +68,7 @@ class StatsPage {
         </div>
 
         <div class="stats-page__card accuracy">
-            <div class="accuracy-percentage">${accuracyTotal}%</div>
+            <div class="accuracy-percentage">${isNaN(accuracyTotal) ? 0 : accuracyTotal}%</div>
             <p>Ваша точность</p>
         </div>
 

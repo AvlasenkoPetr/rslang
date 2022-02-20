@@ -153,5 +153,6 @@ export interface IStatisticResponse {
   optional?: {
     audioCall?: IAudioCallStatistic;
     sprint?: IAudioCallStatistic;
+    date?: string;
   };
 }
