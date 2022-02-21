@@ -1,3 +1,5 @@
+import sprintBlack from '../../../assets/images/navigation/sprint-black.svg';
+import audiocallBlack from '../../../assets/images/navigation/audiocall-black.svg';
 import appendFooter from '../../Reusable-components/footer/footer';
 import LevelPage from '../level-page/level-page';
 import './games-page.scss';
@@ -46,13 +48,13 @@ class GamesPage {
       <div class="games-page__container">
 
         <div class="games-card" data-games="sprint">
-          <img src="../../../assets/images/navigation/sprint-black.svg">
+          <img src="${sprintBlack}">
           <h2>Спринт</h2>
           <p>Угадайте как можно больше слов за отведенное время!</p>
         </div>
 
         <div class="games-card" data-games="audiocall">
-          <img src="../../../assets/images/navigation/audiocall-black.svg">
+          <img src="${audiocallBlack}">
           <h2>Аудиовызов</h2>
           <p>Определите правильное слово по его произношению!</p>
         </div>

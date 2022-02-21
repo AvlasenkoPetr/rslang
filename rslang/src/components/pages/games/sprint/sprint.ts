@@ -1,3 +1,7 @@
+import audioOn from '../../../../assets/images/sprint/audio-on.svg';
+import audioOff from '../../../../assets/images/sprint/audio-off.svg';
+import correctSound from '../../../../assets/sounds/correct.mp3';
+import wrongSound from '../../../../assets/sounds/incorrect.mp3';
 import './sprint.scss';
 import {
   getTodayDate,
@@ -93,7 +97,7 @@ export class Sprint {
 
   rightAnswer = () => {
     this.updatePointsInfo(true);
-    this.audio.src = '../../../../assets/sounds/correct.mp3';
+    this.audio.src = correctSound;
     this.audio.play();
     if (
       this.rightAnswersArr.find(
@@ -106,7 +110,7 @@ export class Sprint {
 
   wrongAnswer = () => {
     this.updatePointsInfo(false);
-    this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+    this.audio.src = wrongSound;
     this.audio.play();
     if (
       this.mistakesArr.find(
@@ -285,19 +289,17 @@ export class Sprint {
   }
 
   volume() {
-    const btn = document.querySelector('.audio-btn') as HTMLElement;
+    const btn = document.querySelector('.audio-btn') as HTMLImageElement;
 
     btn.addEventListener('click', () => {
       if (btn.classList.contains('active')) {
         btn.classList.remove('active');
         this.audio.muted = false;
-        btn.style.background =
-          "url('../../../../assets/images/sprint/audio-on.svg')";
+        btn.src = audioOn;
       } else {
         btn.classList.add('active');
         this.audio.muted = true;
-        btn.style.background =
-          "url('../../../../assets/images/sprint/audio-off.svg')";
+        btn.src = audioOff;
       }
     });
   }
@@ -387,7 +389,7 @@ export class Sprint {
       <div class="sprint-wrapper">
       <div class="game-buttons">
         <div class="fullscreen-btn"></div>
-        <div class="audio-btn"></div>
+        <img src="${audioOn}" class="audio-btn"></img>
       </div>
       <div class="game-area">
         <span class="timer">${this.TIMER_COUNT}</span>
