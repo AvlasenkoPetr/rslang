@@ -1,8 +1,10 @@
 import { Fetch } from '../../Fetch/fetch';
-import { isUserExists } from '../../Helpers/helpers';
+import { getTodayDate, isUserExists } from '../../Helpers/helpers';
 import {
   IAggregatedWord,
   IAggregatedWords,
+  IOptionalBlock,
+  IStatisticResponse,
   IUserWord,
   IWord,
 } from '../../Interfaces/interfaces';
@@ -140,6 +142,16 @@ export class BookPage {
         if (!wordItem) return;
         const wordId: string = word._id ? word._id : word.id;
 
+        // const userStats: IStatisticResponse = await this.FETCH.GET_STATISTICS()
+        // if (clickedButtonDataset === 'easy') {
+        //   if (clickedButton.classList.contains('easy')) {
+        //     userStats.learnedWords -= 1
+        //   } else {
+        //     userStats.learnedWords += 1
+        //   }
+        //   await this.FETCH.UPDATE_STATISTICS(userStats)
+        // }
+
         if (wordItem.classList.contains(`${clickedButtonDataset}`)) {
           await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {
             difficulty: 'string',
@@ -174,17 +186,16 @@ export class BookPage {
           return;
         }
 
-        await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
-          .then(() =>
-            this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {
-              difficulty: `${clickedButtonDataset}`,
-            })
-          )
-          .catch(() =>
-            this.FETCH.CREATE_USER_WORDS(word.id, {
-              difficulty: `${clickedButtonDataset}`,
-            })
-          );
+        try {
+          await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
+          await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {
+            difficulty: `${clickedButtonDataset}`,
+          })
+        } catch {
+          this.FETCH.CREATE_USER_WORDS(word.id, {
+            difficulty: `${clickedButtonDataset}`,
+          })
+        }
 
         wordItem.classList.add(`${clickedButtonDataset}`);
         this.isPageLearned()
