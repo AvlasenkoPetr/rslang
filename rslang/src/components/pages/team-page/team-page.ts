@@ -31,7 +31,7 @@ class TeamPage {
         <div class="info">
           <h2 class="info__name"><a class="info__name_link" href="https://github.com/AvlasenkoPetr" target="_blink"></a>Avlasenko Petr</h2>
           <p class="info__contribution">
-            Сделал что-то
+            Навигация, авторизация, электронный учебник, страница статистики, страница выбора игр, главная страница (навигация), страница "ошибки".
           </p>
         </div>
       </div>
@@ -43,7 +43,7 @@ class TeamPage {
         <div class="info">
           <h2 class="info__name"><a class="info__name_link" href="https://github.com/rakyt4gin" target="_blink"></a>Andrei Skrinnik</h2>
           <p class="info__contribution">
-            Сделал что-то
+            Игра "Аудиовызов", интерфейс взаимодействия с сервером, модальное окно для результатов игр, главная страница (верстка). 
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@ class TeamPage {
         <div class="info">
           <h2 class="info__name"><a class="info__name_link" href="https://github.com/Prizzz" target="_blink"></a>Robert Arakelyan</h2>
           <p class="info__contribution">
-            Сделал что-то
+            Игра "Спринт", дизайн, страница выбора уровня сложности, предзагрузочный экран для миниигр.
           </p>
         </div>
       </div>
