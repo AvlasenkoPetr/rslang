@@ -3,6 +3,7 @@ import { isUserExists } from "../../Helpers/helpers";
 import appendFooter from "../../Reusable-components/footer/footer";
 import { Fetch } from '../../Fetch/fetch';
 import { IStatisticResponse } from '../../Interfaces/interfaces';
+import ErrorPage from '../error-page/error-page';
 
 class StatsPage {
     MAIN_WRAPPER: HTMLElement;
@@ -29,7 +30,8 @@ class StatsPage {
         this.MAIN_WRAPPER.innerHTML = ''
 
         if (!isUserExists()) {
-            // здесь будет еррор пейдж
+            const errorPage = new ErrorPage()
+            errorPage.renderErrorPage()
             return
         }
 

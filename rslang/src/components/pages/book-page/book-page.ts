@@ -200,9 +200,11 @@ export class BookPage {
     appendFooter(this.BOOK_PAGE);
 
     this.MAIN_WRAPPER.append(this.BOOK_PAGE);
-    await this.renderWordsContainer();
-
     this.setActiveLevel();
+    this.toggleDisabled('.book-page__pagination-container_button')
+
+    await this.renderWordsContainer();
+    this.toggleDisabled('.book-page__pagination-container_button')
   };
 
   renderWordsContainer = async (): Promise<void> => {

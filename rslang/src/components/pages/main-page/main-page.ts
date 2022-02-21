@@ -36,7 +36,7 @@ export class MainPage {
       clickedButtonDataset = clickedButton.dataset.main
     } else {
       const closestDataset: HTMLElement = clickedButton.closest('[data-main]') as HTMLElement
-      clickedButtonDataset = closestDataset.dataset.main || 'main' /*здесь можно вставить еррор страницу потом*/
+      clickedButtonDataset = closestDataset.dataset.main || 'main'
     }
     
     const router = new Router

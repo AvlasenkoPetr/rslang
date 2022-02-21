@@ -1,4 +1,5 @@
 import './assets/styles/default.scss'
+import './assets/styles/alternative.scss'
 import { checkStatsDay, getLastPage, isUserExists, renderBookWithLS } from './components/Helpers/helpers';
 import { BookPage } from './components/pages/book-page/book-page';
 import './components/pages/main-page/main-page.scss'
