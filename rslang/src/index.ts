@@ -15,5 +15,3 @@ if (isUserExists()) {
   checkStatsDay()
   isTokenAlive()
 }
-
-console.log('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMDJhNTY5ZmJhZDk3MDAxNmQ3YzVmOCIsImlhdCI6MTY0NTQ4NjI4NCwiZXhwIjoxNjQ1NTAwNjg0fQ.DhNfqQiksvWDttmmlg03W8wL35s4VGApBv4hkwdwYGI');
