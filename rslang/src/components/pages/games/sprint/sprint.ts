@@ -65,7 +65,7 @@ export class Sprint {
       this.fromBook = false;
     }
 
-    this.TIMER_COUNT = 5;
+    this.TIMER_COUNT = 30;
 
     this.words = [];
     this.points = 0;
@@ -142,14 +142,8 @@ export class Sprint {
   };
 
   keyUp = async (e: KeyboardEvent) => {
-    const rightBtn = document.querySelector('.right') as HTMLElement;
-    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
-
     if (e.key === 'ArrowLeft') this.right();
     if (e.key === 'ArrowRight') this.wrong();
-
-    rightBtn.addEventListener('click', this.right);
-    wrongBtn.addEventListener('click', this.wrong);
   };
 
   async startGame() {
@@ -422,9 +416,14 @@ export class Sprint {
   game() {
     this.renderGame();
     this.timer();
-    this.round();
     this.fullscreen();
     this.volume();
+    this.round();
+    const rightBtn = document.querySelector('.right') as HTMLElement;
+    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
+
+    rightBtn.addEventListener('click', this.right);
+    wrongBtn.addEventListener('click', this.wrong);
   }
 
   async updateStatistics() {
