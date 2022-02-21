@@ -150,6 +150,7 @@ class GameResult {
             inRow: item.isRight === 'true' ? 1 : 0,
             notNew: true,
           };
+          this.newWordCounter += 1;
         }
         this.updateUserWord(word);
       } else {
