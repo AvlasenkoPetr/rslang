@@ -153,8 +153,12 @@ $button-nav-size: 30px;
       transition: 0s;
     }
     &[data-navigation='alter'] {
-      background-image: url(../../assets/images/navigation/logout.svg);
-      background-size: $button-nav-size calc($button-nav-size - 2px);
+      background-image: url(../../assets/images/navigation/alter.svg);
+      background-size: calc($button-nav-size + 6px);
+      background-position: calc(
+          (($aside-closed-width - $button-nav-size) / 2) - 3px
+        )
+        center;
       transition: 0s;
     }
   }

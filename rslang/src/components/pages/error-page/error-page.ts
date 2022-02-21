@@ -20,7 +20,7 @@ class ErrorPage {
     this.ERROR_PAGE.innerHTML = `
     <h1>Упс...</h1>
     <h2>Похоже этот раздел вам недоступен</h2>
-    <h3>Может, попробуете <span data-error="login">авторизироваться</span>?</h3>
+    <h3>Попробуйте <span data-error="login">авторизироваться</span> и проверьте еще раз</h3>
     `
     this.ERROR_PAGE.addEventListener('click', this.processClick)
 

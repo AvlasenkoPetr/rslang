@@ -1,5 +1,5 @@
 import './stats-page.scss'
-import { isUserExists } from "../../Helpers/helpers";
+import { getTodayDate, isUserExists } from "../../Helpers/helpers";
 import appendFooter from "../../Reusable-components/footer/footer";
 import { Fetch } from '../../Fetch/fetch';
 import { IStatisticResponse } from '../../Interfaces/interfaces';
@@ -41,7 +41,7 @@ class StatsPage {
         let statsData: IStatisticResponse
         statsData = await this.FETCH.GET_STATISTICS()
 
-        console.log(statsData);
+        let todayLearnedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"$and":[{"userWord.difficulty":"easy", "userWord.optional.date":"${getTodayDate()}"}]}`})
         
         const audiocallCorrect: number = statsData.optional?.audioCall?.correct || 0
         const audiocallWrong: number = statsData.optional?.audioCall?.wrong || 0
