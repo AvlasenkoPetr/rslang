@@ -13,11 +13,11 @@
     flex-direction: column;
     align-items: center;
     p {
-      font-size: 24px;
+      font-size: 28px;
     }
     h1 {
       color: var(--purple-dark);
-      font-size: 130px;
+      font-size: 140px;
       span {
         color: var(--blue-interactive);
       }
@@ -55,7 +55,7 @@
       margin-top: 20px;
     }
     .card__title {
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 10px;
     }
     .card__text {

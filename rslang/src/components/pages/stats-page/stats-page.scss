@@ -58,8 +58,10 @@
     }
 
     &.words {
+      padding: 0;
+
       justify-content: center;
-      gap: 20px;
+      gap: 0;
     }
 
     &.accuracy {
@@ -125,7 +127,7 @@
   }
 
   h1 {
-    font-size: 88px;
+    font-size: 78px;
   }
   h2 {
     font-size: 68px;

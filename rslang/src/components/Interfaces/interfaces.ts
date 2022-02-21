@@ -18,6 +18,7 @@ export interface ICREATE_USER_WORD {
     wrong?: number;
     inRow?: number;
     notNew?: true;
+    learnDate?: string;
   };
 }
 

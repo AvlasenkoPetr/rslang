@@ -1,8 +1,9 @@
 import './stats-page.scss'
-import { isUserExists } from "../../Helpers/helpers";
+import { getTodayDate, isUserExists } from "../../Helpers/helpers";
 import appendFooter from "../../Reusable-components/footer/footer";
 import { Fetch } from '../../Fetch/fetch';
-import { IStatisticResponse } from '../../Interfaces/interfaces';
+import { IAggregatedWords, IStatisticResponse } from '../../Interfaces/interfaces';
+import ErrorPage from '../error-page/error-page';
 
 class StatsPage {
     MAIN_WRAPPER: HTMLElement;
@@ -29,7 +30,8 @@ class StatsPage {
         this.MAIN_WRAPPER.innerHTML = ''
 
         if (!isUserExists()) {
-            // здесь будет еррор пейдж
+            const errorPage = new ErrorPage()
+            errorPage.renderErrorPage()
             return
         }
 
@@ -38,9 +40,16 @@ class StatsPage {
 
         let statsData: IStatisticResponse
         statsData = await this.FETCH.GET_STATISTICS()
-
         console.log(statsData);
         
+        // let learnderWordsCount: number
+        // try {
+        //     const todayLearnedWords: IAggregatedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"$and":[{"userWord.difficulty":"easy", "userWord.optional.learnDate":"${getTodayDate()}"}]}`})
+        //     learnderWordsCount = todayLearnedWords[0].totalCount[0].count + statsData.learnedWords
+        // } catch {
+        //     learnderWordsCount = 0
+        // }
+
         const audiocallCorrect: number = statsData.optional?.audioCall?.correct || 0
         const audiocallWrong: number = statsData.optional?.audioCall?.wrong || 0
         const audiocallNewWords: number = statsData.optional?.audioCall?.newWords || 0
@@ -64,7 +73,7 @@ class StatsPage {
         <h2 class="stats-page__title">Статистика за сегодня</h2>
         <div class="stats-page__card words">
             <p>Новых слов сегодня</p>
-            <h1>${newWordsTotal}</h1>
+            <h2>${newWordsTotal}</h2>
         </div>
 
         <div class="stats-page__card accuracy">

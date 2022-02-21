@@ -8,6 +8,7 @@ import { isUserExists } from '../Helpers/helpers';
 import GamesPage from '../pages/games-page/games-page';
 import StatsPage from '../pages/stats-page/stats-page';
 import TeamPage from '../pages/team-page/team-page';
+import ErrorPage from '../pages/error-page/error-page';
 
 export class Router {
   NAV_BLOCK: HTMLElement;
@@ -31,6 +32,12 @@ export class Router {
     if (clickedButtonDataset === 'open') {
       this.openMenu();
       return;
+    }
+
+    if (clickedButtonDataset === 'alter') {
+      const body = document.body
+      body.classList.toggle('alter')
+      return
     }
 
     if (clickedButtonDataset === 'logout') {
@@ -108,7 +115,11 @@ export class Router {
       case 'book-hard': {
         this.setActivePage('book')
 
-        if (!isUserExists) return /* потом здесь будет еррор пейдж */
+        if (!isUserExists()) {
+          const errorPage = new ErrorPage()
+          errorPage.renderErrorPage()
+          return
+        }
 
         const bookPage = new BookPage('6')
         bookPage.renderBookPage()
