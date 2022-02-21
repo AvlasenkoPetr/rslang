@@ -315,7 +315,6 @@ export class Sprint {
     if (userWord.optional.notNew === undefined) {
       this.sprintStatistic.newWords! += 1;
       userWord.optional.notNew = true;
-      console.log(this.sprintStatistic.newWords);
     }
     if (state) {
       this.points += this.countPoints;

@@ -20,7 +20,7 @@ class LevelPage {
     this.LEVEL_PAGE = document.createElement('section');
     this.LEVEL_PAGE.className = 'level-page page';
 
-    this.target = target
+    this.target = target;
   }
 
   processClick = (e: MouseEvent): void => {
@@ -116,8 +116,6 @@ class LevelPage {
     this.LEVEL_PAGE.addEventListener('click', this.processClick);
 
     const target = document.querySelector('.navigation .active') as HTMLElement;
-    // const userInfo = getUserInfo();
-    // const auth = userInfo.token === '1' ? false : true;
 
     if (target.dataset.navigation) {
       const targetAttr: string = target.dataset.navigation;
