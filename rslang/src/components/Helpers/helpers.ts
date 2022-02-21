@@ -7,10 +7,12 @@ export const getUserInfo = (): IUserInfo => {
   let userInfo: IUserInfo;
   if (localStorage.getItem('UserInfo') !== null) {
     userInfo = JSON.parse(localStorage.getItem('UserInfo')!);
+    
   } else {
     userInfo = {
       token: '1',
       userId: '1',
+      refreshToken: '1',
     };
   }
   return userInfo;
@@ -23,6 +25,25 @@ export const setRandomNumber = (number: number): number => {
 export const isUserExists = (): boolean => {
   return localStorage.getItem('UserInfo') ? true : false;
 };
+
+export const isTokenAlive = async () => {
+  const fetch = new Fetch()
+  try {
+    const oldUserInfo: IUserInfo = JSON.parse(localStorage.getItem('UserInfo')!)
+    const newUserInfo: IUserInfo = await fetch.GET_USER_TOKENS()
+    oldUserInfo.token = newUserInfo.token
+    oldUserInfo.refreshToken = newUserInfo.refreshToken
+
+    localStorage.setItem('UserInfo', JSON.stringify(oldUserInfo))
+    
+  } catch {
+    localStorage.removeItem('UserInfo');
+    const loginButton = document.querySelector('[data-navigation="logout"]') as HTMLElement
+    loginButton.dataset.navigation = 'login';
+    loginButton.innerHTML = 'Войти';
+    window.location.reload()   
+  }
+} 
 
 export function getTodayDate(): string {
   const date = new Date();

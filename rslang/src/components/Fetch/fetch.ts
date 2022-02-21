@@ -74,7 +74,7 @@ class Fetch {
     const data: IData = {
       url: `users/${getUserInfo().userId}/tokens`,
       method: 'GET',
-      token: getUserInfo().token
+      token: getUserInfo().refreshToken
     }
     return await this.sendRequest(data)
   }

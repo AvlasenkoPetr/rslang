@@ -33,6 +33,7 @@ export interface IUPDATE_SETTINGS {
 }
 
 export interface IUserInfo {
+  refreshToken: string;
   token: string;
   userId: string;
 }
