@@ -47,15 +47,15 @@ class GamesPage {
       <div class="games-page__container">
 
         <div class="games-card" data-games="sprint">
-        <img src="../../../assets/images/navigation/sprint-black.svg">
-        <h2>Спринт</h2>
-        <p>Угадайте как можно больше слов за отведенное время!</p>
+          <img src="../../../assets/images/navigation/sprint-black.svg">
+          <h2>Спринт</h2>
+          <p>Угадайте как можно больше слов за отведенное время!</p>
         </div>
 
         <div class="games-card" data-games="audiocall">
-        <img src="../../../assets/images/navigation/audiocall-black.svg">
-        <h2>Аудиовызов</h2>
-        <p>Определите правильное слово на слух!</p>
+          <img src="../../../assets/images/navigation/audiocall-black.svg">
+          <h2>Аудиовызов</h2>
+          <p>Определите правильное слово по его произношению!</p>
         </div>
 
       </div>

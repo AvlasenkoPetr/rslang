@@ -24,9 +24,41 @@ class TeamPage {
   teamPageContent = (): string => {
     return `
     <div class="team__wrapper">
-      <div class="team__card"></div>
-      <div class="team__card"></div>
-      <div class="team__card"></div>
+      <div class="team__card">
+        <div class="img-border">
+          <div class="img avlasenko"></div>
+        </div>
+        <div class="info">
+          <h2 class="info__name"><a class="info__name_link" href="https://github.com/AvlasenkoPetr" target="_blink"></a>Avlasenko Petr</h2>
+          <p class="info__contribution">
+            Сделал что-то
+          </p>
+        </div>
+      </div>
+      
+      <div class="team__card">
+        <div class="img-border">
+          <div class="img skrinnik"></div>
+        </div>
+        <div class="info">
+          <h2 class="info__name"><a class="info__name_link" href="https://github.com/rakyt4gin" target="_blink"></a>Andrei Skrinnik</h2>
+          <p class="info__contribution">
+            Сделал что-то
+          </p>
+        </div>
+      </div>
+      
+      <div class="team__card">
+        <div class="img-border">
+          <div class="img arakelyan"></div>
+        </div>
+        <div class="info">
+          <h2 class="info__name"><a class="info__name_link" href="https://github.com/Prizzz" target="_blink"></a>Robert Arakelyan</h2>
+          <p class="info__contribution">
+            Сделал что-то
+          </p>
+        </div>
+      </div>
     </div>
     `
   }
