@@ -3,37 +3,35 @@ import { BookPage } from '../pages/book-page/book-page';
 import { Router } from '../router/router';
 import { IStatisticResponse, IUserInfo } from './../Interfaces/interfaces';
 
-
 export const getUserInfo = (): IUserInfo => {
-  let userInfo: IUserInfo
+  let userInfo: IUserInfo;
   if (localStorage.getItem('UserInfo') !== null) {
-    userInfo = JSON.parse(localStorage.getItem('UserInfo')!)
-  }
-  else {
+    userInfo = JSON.parse(localStorage.getItem('UserInfo')!);
+  } else {
     userInfo = {
       token: '1',
-      userId: '1'
-    }
+      userId: '1',
+    };
   }
-  return userInfo
-}
+  return userInfo;
+};
 
 export const setRandomNumber = (number: number): number => {
-  return Math.floor(Math.random() * number)
-}
+  return Math.floor(Math.random() * number);
+};
 
 export const isUserExists = (): boolean => {
-  return localStorage.getItem('UserInfo') ? true : false
-}
+  return localStorage.getItem('UserInfo') ? true : false;
+};
 
 export function getTodayDate(): string {
-  const date = new Date()
-  const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
-  return dateStr
+  const date = new Date();
+  const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+  return dateStr;
 }
 
 export async function makeEmptyStats() {
-  const date = getTodayDate()
+  const date = getTodayDate();
 
   const body: IStatisticResponse = {
     learnedWords: 0,
@@ -50,46 +48,47 @@ export async function makeEmptyStats() {
         wrong: 0,
         maxRow: 0,
       },
-      date: date
+      date: date,
     },
   };
   await new Fetch().UPDATE_STATISTICS(body);
 }
 
 export async function checkStatsDay() {
-  const fetch = new Fetch()
+  const fetch = new Fetch();
   try {
-    const oldStats: IStatisticResponse = await fetch.GET_STATISTICS()
+    const oldStats: IStatisticResponse = await fetch.GET_STATISTICS();
     if (oldStats?.optional?.date !== getTodayDate()) {
-      await makeEmptyStats()
+      await makeEmptyStats();
     }
   } catch {
-    await makeEmptyStats()
+    await makeEmptyStats();
   }
-  return
+  return;
 }
 
 export function renderBookWithLS() {
-  if (localStorage.getItem('lastBookLevel') && localStorage.getItem('lastBookPage')) {
-    const lastBookLevel = localStorage.getItem('lastBookLevel') || '0'
-    const lastBookPage = localStorage.getItem('lastBookPage') || '0'
-    const bookPage = new BookPage(lastBookLevel)
-    bookPage.renderBookPage(lastBookPage)
+  if (
+    localStorage.getItem('lastBookLevel') &&
+    localStorage.getItem('lastBookPage')
+  ) {
+    const lastBookLevel = localStorage.getItem('lastBookLevel') || '0';
+    const lastBookPage = localStorage.getItem('lastBookPage') || '0';
+    const bookPage = new BookPage(lastBookLevel);
+    bookPage.renderBookPage(lastBookPage);
   }
 }
 
 export function getLastPage() {
-  const router = new Router()
+  const router = new Router();
   const page = localStorage.getItem('lastPage');
   if (page) {
-    if (page === 'book') { 
+    if (page === 'book') {
       router.renderPage(page);
-      renderBookWithLS()
-
+      renderBookWithLS();
     } else {
       router.renderPage(page);
     }
-
   } else {
     router.renderPage();
   }
