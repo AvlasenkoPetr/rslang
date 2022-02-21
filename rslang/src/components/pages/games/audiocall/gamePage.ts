@@ -1,3 +1,5 @@
+import fullScreen from '../../../../assets/images/audioCall/fullScreen.svg';
+import audioButton from '../../../../assets/images/audioCall/audio-button.svg';
 import appendFooter from '../../../Reusable-components/footer/footer';
 import { IAnswer, IState, IWord } from '../../../Interfaces/interfaces';
 
@@ -5,7 +7,6 @@ class GamePage {
   public MAIN_WRAPPER: HTMLElement;
   constructor() {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
-
   }
 
   renderWords(state: IState) {
@@ -41,7 +42,7 @@ class GamePage {
     audioCallCurrentPage.innerHTML = `${(currentPage += 1)}`;
   }
 
-  renderAllPages(pages:number){
+  renderAllPages(pages: number) {
     const audioCallAllPages = document.querySelector(
       '#audioCallAllPages'
     ) as HTMLSpanElement;
@@ -112,7 +113,7 @@ class GamePage {
     return `
     <button class="audioCall__audio-button">
       <span class="internal-img">
-        <img src="../../../../assets/images/audioCall/audio-button.svg" alt="audio-button">
+        <img src="${audioButton}" alt="audio-button">
       </span>
     </button>
     <audio ${
@@ -130,8 +131,6 @@ class GamePage {
     `;
   }
 
-  
-
   gamePageContent() {
     return `
       <main id="audioCallMainElement" class="audioCall-page page">
@@ -140,7 +139,7 @@ class GamePage {
             <div class="current-answer"><span id="audioCallCurrentPage"></span> / <span id="audioCallAllPages"></span></div>
             <div class="fullScreen-btn__wrapper">
               <button id="fullscreenButton" class="fullScreen-btn">
-                <img src="../../../../assets/images/audioCall/fullScreen.svg">
+                <img src="${fullScreen}">
               </button>
             </div>
           </div>  
