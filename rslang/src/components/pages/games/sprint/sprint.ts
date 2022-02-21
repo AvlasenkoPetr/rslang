@@ -507,25 +507,24 @@ export class Sprint {
       gameName: 'sprint',
     };
 
-    if (this.auth) {
-      this.words.forEach(async (wordInfo: IAggregatedWord) => {
-        const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
-        let getWord: Array<IAggregatedWord> =
-          await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
-        if (getWord[0].userWord) {
-          await fetch.UPDATE_USER_WORDS_BY_ID(wordId, wordInfo.userWord!);
-        } else {
-          await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
-        }
-      });
-      this.sprintStatistic.correct = this.rightAnswers;
-      this.sprintStatistic.wrong = this.mistakes;
-      this.sprintStatistic.maxRow = this.maxrow;
-      this.updateStatistics();
-    }
-
     this.remove();
     if (wrapper) {
+      if (this.auth) {
+        this.words.forEach(async (wordInfo: IAggregatedWord) => {
+          const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
+          let getWord: Array<IAggregatedWord> =
+            await fetch.GET_AGGREGATED_WORDS_BY_ID(wordId);
+          if (getWord[0].userWord) {
+            await fetch.UPDATE_USER_WORDS_BY_ID(wordId, wordInfo.userWord!);
+          } else {
+            await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
+          }
+        });
+        this.sprintStatistic.correct = this.rightAnswers;
+        this.sprintStatistic.wrong = this.mistakes;
+        this.sprintStatistic.maxRow = this.maxrow;
+        this.updateStatistics();
+      }
       new GameResult(result).render(this.MAIN_WRAPPER);
     }
   }
