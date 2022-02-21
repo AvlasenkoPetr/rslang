@@ -1,0 +1,29 @@
+:root {
+  --alt-green: #1cfdc3;
+  --alt-yellow: #ffec61;
+  --alt-red: #ff4569;
+  --alt-purple: #8066ff;
+  --alt-black: #000000;
+  --alt-border-2px: 2px solid var(--alt-black);
+}
+
+.alter {
+  .aside {
+    background-color: var(--alt-purple);
+    border: 2px solid var(--alt-black);
+
+    li:hover {
+      background-color: #6647ff;
+    }
+  }
+
+  .footer {
+    background-color: var(--alt-yellow);
+    border: var(--alt-border-2px);
+    border-left: none;
+    color: var(--alt-black);
+    .team a {
+      color: var(--alt-black);
+    }
+  }
+}

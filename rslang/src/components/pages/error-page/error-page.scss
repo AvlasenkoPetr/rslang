@@ -1,0 +1,39 @@
+.error-page {
+  padding-top: 60px;
+
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  background: url(../../../assets/images/background-guys/error-page-guy.svg)
+      center bottom 17% no-repeat,
+    url(../../../assets/images/background-waves/stats-page-bottom-wave.svg)
+      bottom -7vh left no-repeat,
+    url(../../../assets/images/background-waves/stats-page-top-wave.svg) top
+      right no-repeat;
+
+  h1,
+  h2,
+  h3 {
+    font-size: 90px;
+    font-family: 'Source Sans Pro';
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: 50px;
+  }
+  h3 {
+    font-size: 34px;
+  }
+  [data-error='login'] {
+    color: var(--purple-main);
+    cursor: pointer;
+    transition: 0.2s linear;
+    &:hover {
+      color: var(--blue-interactive-light);
+    }
+  }
+}
