@@ -40,15 +40,11 @@ class StatsPage {
 
         let statsData: IStatisticResponse
         statsData = await this.FETCH.GET_STATISTICS()
-        console.log(statsData);
         
-        // let learnderWordsCount: number
-        // try {
-        //     const todayLearnedWords: IAggregatedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"$and":[{"userWord.difficulty":"easy", "userWord.optional.learnDate":"${getTodayDate()}"}]}`})
-        //     learnderWordsCount = todayLearnedWords[0].totalCount[0].count + statsData.learnedWords
-        // } catch {
-        //     learnderWordsCount = 0
-        // }
+        let learnderWordsCount: number
+        const todayLearnedWords: IAggregatedWords = await this.FETCH.GET_AGGREGATED_WORDS({filter: `{"$and":[{"userWord.difficulty":"easy", "userWord.optional.learnDate":"${getTodayDate()}"}]}`})
+        const learnedInGames = todayLearnedWords[0].totalCount[0]?.count || 0
+        learnderWordsCount = learnedInGames + statsData.learnedWords
 
         const audiocallCorrect: number = statsData.optional?.audioCall?.correct || 0
         const audiocallWrong: number = statsData.optional?.audioCall?.wrong || 0
@@ -74,6 +70,8 @@ class StatsPage {
         <div class="stats-page__card words">
             <p>Новых слов сегодня</p>
             <h2>${newWordsTotal}</h2>
+            <p>Изучено слов сегодня</p>
+            <h2>${learnderWordsCount}</h2>
         </div>
 
         <div class="stats-page__card accuracy">

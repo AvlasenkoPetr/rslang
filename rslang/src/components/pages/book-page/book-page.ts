@@ -136,21 +136,30 @@ export class BookPage {
 
       case 'hard':
       case 'easy':
+        
         const wordItem: HTMLElement | null = clickedButton.closest(
           '.words-container__item'
-        );
-        if (!wordItem) return;
+          );
+        if (!wordItem || wordItem.getAttribute('disabled')) return;
+
+        wordItem.setAttribute('disabled', 'true')
+        
         const wordId: string = word._id ? word._id : word.id;
 
-        // const userStats: IStatisticResponse = await this.FETCH.GET_STATISTICS()
-        // if (clickedButtonDataset === 'easy') {
-        //   if (clickedButton.classList.contains('easy')) {
-        //     userStats.learnedWords -= 1
-        //   } else {
-        //     userStats.learnedWords += 1
-        //   }
-        //   await this.FETCH.UPDATE_STATISTICS(userStats)
-        // }
+        const userStats: IStatisticResponse = await this.FETCH.GET_STATISTICS()
+        delete(userStats.id)
+        
+        const isDeleteEasy = wordItem.classList.contains('easy') && clickedButtonDataset === 'easy'
+        const isToggleToHard = wordItem.classList.contains('easy') && clickedButtonDataset === 'hard'
+        const isAddEasy = (wordItem.classList.length < 3) && clickedButtonDataset === 'easy'
+        const isToggleToEasy = wordItem.classList.contains('hard') && clickedButtonDataset === 'easy'
+
+        if (isDeleteEasy || isToggleToHard) {
+          userStats.learnedWords -= 1
+        } else if (isAddEasy || isToggleToEasy) {
+          userStats.learnedWords += 1
+        }
+        await this.FETCH.UPDATE_STATISTICS(userStats)
 
         if (wordItem.classList.contains(`${clickedButtonDataset}`)) {
           await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {
@@ -159,10 +168,12 @@ export class BookPage {
 
           if (this.LEVEL === '6') {
             wordItem.remove();
+            wordItem.removeAttribute('disabled')
             return;
           }
           wordItem.classList.remove(`${clickedButtonDataset}`);
           this.isPageLearned()
+          wordItem.removeAttribute('disabled')
           return;
         }
 
@@ -176,6 +187,7 @@ export class BookPage {
 
           if (this.LEVEL === '6') {
             wordItem.remove();
+            wordItem.removeAttribute('disabled')
             return;
           }
           wordItem.classList.remove(
@@ -183,6 +195,7 @@ export class BookPage {
           );
           wordItem.classList.add(`${clickedButtonDataset}`);
           this.isPageLearned()
+          wordItem.removeAttribute('disabled')
           return;
         }
 
@@ -199,6 +212,7 @@ export class BookPage {
 
         wordItem.classList.add(`${clickedButtonDataset}`);
         this.isPageLearned()
+        wordItem.removeAttribute('disabled')
         return;
     }
   };
@@ -267,9 +281,7 @@ export class BookPage {
           filter: `{"userWord.difficulty":"hard"}`,
         });
       wordsData = hardWordsData[0].paginatedResults;
-      console.log(hardWordsData);
     }
-    console.log(wordsData);
     return wordsData;
   };
 
@@ -277,7 +289,6 @@ export class BookPage {
     let userWordsData: Array<IUserWord> | undefined;
     if (isUserExists()) {
       userWordsData = await this.FETCH.GET_USER_WORDS();
-      console.log(userWordsData);
     }
     return userWordsData;
   };
