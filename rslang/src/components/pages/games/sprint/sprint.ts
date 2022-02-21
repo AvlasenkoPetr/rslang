@@ -1,5 +1,9 @@
 import './sprint.scss';
-import { getTodayDate, setRandomNumber } from '../../../Helpers/helpers';
+import {
+  getTodayDate,
+  getUserInfo,
+  setRandomNumber,
+} from '../../../Helpers/helpers';
 import {
   IWord,
   IResult,
@@ -40,9 +44,11 @@ export class Sprint {
   audio: HTMLAudioElement;
   fromBook!: boolean;
   private _words: any;
+  auth: boolean;
 
   constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
+    this.auth = getUserInfo().token === '1' ? false : true;
 
     this.group = group;
 
@@ -59,7 +65,7 @@ export class Sprint {
       this.fromBook = false;
     }
 
-    this.TIMER_COUNT = 60;
+    this.TIMER_COUNT = 30;
 
     this.words = [];
     this.points = 0;
@@ -85,71 +91,65 @@ export class Sprint {
     document.body.removeEventListener('keyup', this.keyUp, false);
   }
 
+  rightAnswer = () => {
+    this.updatePointsInfo(true);
+    this.audio.src = '../../../../assets/sounds/correct.mp3';
+    this.audio.play();
+    if (
+      this.rightAnswersArr.find(
+        (wordInfo) => wordInfo.info === this.currentWord
+      ) === undefined
+    ) {
+      this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
+    }
+  };
+
+  wrongAnswer = () => {
+    this.updatePointsInfo(false);
+    this.audio.src = '../../../../assets/sounds/incorrect.mp3';
+    this.audio.play();
+    if (
+      this.mistakesArr.find(
+        (wordInfo) => wordInfo.info === this.currentWord
+      ) === undefined
+    ) {
+      this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
+    }
+  };
+
+  right = () => {
+    const rightTranslate = this.words.find(
+      (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+    )?.wordTranslate;
+    if (this.translate === rightTranslate) {
+      this.rightAnswer();
+    } else {
+      this.wrongAnswer();
+    }
+    this.round();
+  };
+
+  wrong = () => {
+    const rightTranslate = this.words.find(
+      (wordInfo: IAggregatedWord) => wordInfo.word === this.word
+    )?.wordTranslate;
+    if (this.translate !== rightTranslate) {
+      this.rightAnswer();
+    } else {
+      this.wrongAnswer();
+    }
+    this.round();
+  };
+
   keyUp = async (e: KeyboardEvent) => {
-    const rightBtn = document.querySelector('.right') as HTMLElement;
-    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
-
-    const rightAnswer = () => {
-      this.updatePointsInfo(true);
-      this.audio.src = '../../../../assets/sounds/correct.mp3';
-      this.audio.play();
-      if (
-        this.rightAnswersArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.rightAnswersArr.push({ info: this.currentWord, isRight: 'true' });
-      }
-    };
-
-    const wrongAnswer = () => {
-      this.updatePointsInfo(false);
-      this.audio.src = '../../../../assets/sounds/incorrect.mp3';
-      this.audio.play();
-      if (
-        this.mistakesArr.find(
-          (wordInfo) => wordInfo.info === this.currentWord
-        ) === undefined
-      ) {
-        this.mistakesArr.push({ info: this.currentWord, isRight: 'false' });
-      }
-    };
-
-    const right = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate === rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    const wrong = () => {
-      const rightTranslate = this.words.find(
-        (wordInfo: IAggregatedWord) => wordInfo.word === this.word
-      )?.wordTranslate;
-      if (this.translate !== rightTranslate) {
-        rightAnswer();
-      } else {
-        wrongAnswer();
-      }
-      this.round();
-    };
-
-    if (e.key === 'ArrowLeft') right();
-    if (e.key === 'ArrowRight') wrong();
-
-    rightBtn.addEventListener('click', right);
-    wrongBtn.addEventListener('click', wrong);
+    if (e.key === 'ArrowLeft') this.right();
+    if (e.key === 'ArrowRight') this.wrong();
   };
 
   async startGame() {
     let extraPage: string = this.page;
     let data: Array<IWord>;
-    try {
+    if (this.auth) {
       let res: IAggregatedWords;
       if (this.group === '6') {
         res = await fetch.GET_AGGREGATED_WORDS({
@@ -184,7 +184,7 @@ export class Sprint {
         item.id = item._id!;
         delete item._id;
       });
-    } catch {
+    } else {
       data = await fetch.GET_WORDS(this.group, extraPage);
     }
 
@@ -237,6 +237,7 @@ export class Sprint {
       }
       const randNum = setRandomNumber(this._words.length);
       if (this._words.length === 0) {
+        this.TIMER_COUNT = 0;
         this.stopGame();
       } else {
         wordInfo = this._words[randNum];
@@ -390,7 +391,6 @@ export class Sprint {
       </div>
       <div class="game-area">
         <span class="timer">${this.TIMER_COUNT}</span>
-
         <div class="main-window">
           <span class="points">0</span>
           <span class="count-points">+10 points</span>
@@ -416,9 +416,14 @@ export class Sprint {
   game() {
     this.renderGame();
     this.timer();
-    this.round();
     this.fullscreen();
     this.volume();
+    this.round();
+    const rightBtn = document.querySelector('.right') as HTMLElement;
+    const wrongBtn = document.querySelector('.wrong') as HTMLElement;
+
+    rightBtn.addEventListener('click', this.right);
+    wrongBtn.addEventListener('click', this.wrong);
   }
 
   async updateStatistics() {
@@ -488,7 +493,7 @@ export class Sprint {
       gameName: 'sprint',
     };
 
-    if (this.fromBook) {
+    if (this.auth) {
       this.words.forEach(async (wordInfo: IAggregatedWord) => {
         const wordId = wordInfo._id ? wordInfo._id : wordInfo.id;
         let getWord: Array<IAggregatedWord> =
@@ -499,13 +504,13 @@ export class Sprint {
           await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
         }
       });
+      sprintStatistic.correct = this.rightAnswers;
+      sprintStatistic.wrong = this.mistakes;
+      sprintStatistic.maxRow = this.maxrow;
+      this.updateStatistics();
     }
 
-    sprintStatistic.correct = this.rightAnswers;
-    sprintStatistic.wrong = this.mistakes;
-    sprintStatistic.maxRow = this.maxrow;
     this.remove();
-    this.updateStatistics();
     new GameResult(result).render(this.MAIN_WRAPPER);
   }
 }
