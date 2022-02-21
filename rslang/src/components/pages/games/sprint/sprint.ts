@@ -18,10 +18,6 @@ import { Fetch } from '../../../Fetch/fetch';
 import { GameResult } from '../../../Reusable-components/GameResult/gameResult';
 
 const fetch = new Fetch();
-
-let sprintStatistic: IAudioCallStatistic = {
-  newWords: 0,
-};
 export class Sprint {
   TIMER_COUNT: number;
   words: any;
@@ -45,10 +41,14 @@ export class Sprint {
   fromBook!: boolean;
   private _words: any;
   auth: boolean;
+  sprintStatistic: IAudioCallStatistic;
 
   constructor(group: string, page?: string) {
     this.MAIN_WRAPPER = document.querySelector('.main__wrapper') as HTMLElement;
     this.auth = getUserInfo().token === '1' ? false : true;
+    this.sprintStatistic = {
+      newWords: 0,
+    };
 
     this.group = group;
 
@@ -313,8 +313,9 @@ export class Sprint {
 
     const userWord = this.currentWord.userWord;
     if (userWord.optional.notNew === undefined) {
-      sprintStatistic.newWords! += 1;
+      this.sprintStatistic.newWords! += 1;
       userWord.optional.notNew = true;
+      console.log(this.sprintStatistic.newWords);
     }
     if (state) {
       this.points += this.countPoints;
@@ -442,19 +443,21 @@ export class Sprint {
       delete response.id;
       if (response.optional) {
         if (response.optional.sprint) {
-          response.optional.sprint.correct! += sprintStatistic.correct!;
-          response.optional.sprint.wrong! += sprintStatistic.wrong!;
-          response.optional.sprint.newWords! += sprintStatistic.newWords!;
-          if (response.optional.sprint.maxRow! <= sprintStatistic.maxRow!) {
-            response.optional.sprint.maxRow! = sprintStatistic.maxRow!;
+          response.optional.sprint.correct! += this.sprintStatistic.correct!;
+          response.optional.sprint.wrong! += this.sprintStatistic.wrong!;
+          response.optional.sprint.newWords! += this.sprintStatistic.newWords!;
+          if (
+            response.optional.sprint.maxRow! <= this.sprintStatistic.maxRow!
+          ) {
+            response.optional.sprint.maxRow! = this.sprintStatistic.maxRow!;
           }
         } else {
           Object.defineProperty(response.optional, 'sprint', {
             value: {
-              correct: sprintStatistic.correct!,
-              wrong: sprintStatistic.wrong!,
-              newWords: sprintStatistic.newWords!,
-              maxRow: sprintStatistic.maxRow!,
+              correct: this.sprintStatistic.correct!,
+              wrong: this.sprintStatistic.wrong!,
+              newWords: this.sprintStatistic.newWords!,
+              maxRow: this.sprintStatistic.maxRow!,
             },
           });
         }
@@ -462,10 +465,10 @@ export class Sprint {
         Object.defineProperty(response, 'optional', {
           value: {
             sprint: {
-              correct: sprintStatistic.correct!,
-              wrong: sprintStatistic.wrong!,
-              newWords: sprintStatistic.newWords!,
-              maxRow: sprintStatistic.maxRow!,
+              correct: this.sprintStatistic.correct!,
+              wrong: this.sprintStatistic.wrong!,
+              newWords: this.sprintStatistic.newWords!,
+              maxRow: this.sprintStatistic.maxRow!,
             },
           },
         });
@@ -476,10 +479,10 @@ export class Sprint {
         learnedWords: 0,
         optional: {
           sprint: {
-            newWords: sprintStatistic.newWords!,
-            correct: sprintStatistic.correct!,
-            wrong: sprintStatistic.wrong!,
-            maxRow: sprintStatistic.maxRow!,
+            newWords: this.sprintStatistic.newWords!,
+            correct: this.sprintStatistic.correct!,
+            wrong: this.sprintStatistic.wrong!,
+            maxRow: this.sprintStatistic.maxRow!,
           },
         },
       };
@@ -515,9 +518,9 @@ export class Sprint {
           await fetch.CREATE_USER_WORDS(wordId, wordInfo.userWord!);
         }
       });
-      sprintStatistic.correct = this.rightAnswers;
-      sprintStatistic.wrong = this.mistakes;
-      sprintStatistic.maxRow = this.maxrow;
+      this.sprintStatistic.correct = this.rightAnswers;
+      this.sprintStatistic.wrong = this.mistakes;
+      this.sprintStatistic.maxRow = this.maxrow;
       this.updateStatistics();
     }
 
