@@ -21,7 +21,6 @@
 
   &__wrapper {
     width: 50%;
-    // min-height: 500px;
     padding: 5px;
 
     display: flex;
@@ -58,10 +57,10 @@
     }
 
     &.words {
-      padding: 0;
+      // padding: 0;
 
       justify-content: center;
-      gap: 0;
+      gap: 20px;
     }
 
     &.accuracy {
@@ -113,7 +112,7 @@
   }
 
   p {
-    font-size: 24px;
+    font-size: 22px;
     display: flex;
     align-items: center;
   }
