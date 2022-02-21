@@ -65,7 +65,7 @@ export class Sprint {
       this.fromBook = false;
     }
 
-    this.TIMER_COUNT = 30;
+    this.TIMER_COUNT = 60;
 
     this.words = [];
     this.points = 0;
@@ -424,6 +424,16 @@ export class Sprint {
 
     rightBtn.addEventListener('click', this.right);
     wrongBtn.addEventListener('click', this.wrong);
+
+    const nav = document.querySelector('.navigation') as HTMLElement;
+    nav.addEventListener('click', (e) => {
+      const target = e.target as HTMLLIElement;
+      if (target.dataset.navigation) {
+        if (target.dataset.navigation !== 'games') {
+          this.TIMER_COUNT = 1;
+        }
+      }
+    });
   }
 
   async updateStatistics() {
@@ -478,8 +488,9 @@ export class Sprint {
   }
 
   async stopGame() {
+    const wrapper = document.querySelector('.sprint-wrapper') as HTMLElement;
     const gameArea = document.querySelector('.game-area') as HTMLElement;
-    gameArea.innerHTML = '';
+    if (gameArea) gameArea.innerHTML = '';
 
     const result: IResult = {
       group: this.group,
@@ -511,6 +522,8 @@ export class Sprint {
     }
 
     this.remove();
-    new GameResult(result).render(this.MAIN_WRAPPER);
+    if (wrapper) {
+      new GameResult(result).render(this.MAIN_WRAPPER);
+    }
   }
 }
