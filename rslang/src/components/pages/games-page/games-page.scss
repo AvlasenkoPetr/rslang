@@ -1,3 +1,20 @@
+@mixin ipad {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin HD_Resolution {
+  @media (max-width: 1440px) {
+    @content;
+  }
+}
+
+:root {
+  --width: calc(1vw / 19.2);
+  --height: calc(1vh / 10.8);
+}
+
 .games {
   &-page {
     display: flex;
@@ -18,12 +35,20 @@
 
       display: flex;
       justify-content: space-between;
+      @include ipad{
+        width: 80%;
+      }
     }
   }
 
   &-card {
     min-height: 400px;
     width: 35%;
+    @include HD_Resolution{
+      width: 49%;
+    }
+
+    
 
     display: flex;
     flex-direction: column;
