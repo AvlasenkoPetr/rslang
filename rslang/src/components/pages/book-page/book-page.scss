@@ -44,6 +44,7 @@
     font-size: 42px;
     font-family: 'Source Sans Pro';
     font-weight: lighter;
+    display: none;
   }
 
   &__games-menu {
@@ -61,7 +62,7 @@
     &_button {
       height: 60px;
       width: 43%;
-      min-width: 300px;
+      // min-width: 300px;
 
       border: 1px solid var(--font-color-main);
       border-radius: 15px;

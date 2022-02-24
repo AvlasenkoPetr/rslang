@@ -3,10 +3,13 @@
   --alt-yellow: #ffec61;
   --alt-red: #ff4569;
   --alt-purple: #8066ff;
+  --alt-purple-hover: #6647ff;
   --alt-black: #000000;
   --alt-white: #ffffff;
   --alt-border-2px: 2px solid var(--alt-black);
-  --alt-box-shadow: 5px 5px 0 var(--alt-black);
+  --box-shadow-5px: 5px 5px 0 var(--alt-black);
+  --box-shadow-3px: 3px 3px 0 var(--alt-black);
+  --box-shadow-1-5px: 1.5px 1.5px 0 var(--alt-black);
   --text-border-2px: 2px 2px 1px var(--alt-black),
     -2px -2px 1px var(--alt-black), -2px 2px 1px var(--alt-black),
     2px -2px 1px var(--alt-black);
@@ -16,6 +19,15 @@
 }
 
 .alter {
+  --a1: #1cfdc3;
+  --a2: #90f69b;
+  --b1: #c8f17b;
+  --b2: #ffec61;
+  --c1: #f9b35c;
+  --c2: #ff4569;
+  --red: #f50031;
+  --easy: #1fea26;
+
   * {
     font-weight: 500;
   }
@@ -27,13 +39,14 @@
 
     li {
       &:hover {
-        background-color: #6647ff;
+        background-color: var(--alt-purple-hover);
       }
     }
   }
 
   .main-page {
-    background: var(--alt-white);
+    background: url(../images-alter/main-page/main-page-bg.svg) bottom -7vh right
+      no-repeat;
     &__title {
       h1 {
         font-weight: bold;
@@ -62,8 +75,8 @@
       padding: 0 5px;
       position: relative;
       border: var(--alt-border-2px);
-      border-radius: 0px;
-      box-shadow: var(--alt-box-shadow);
+      border-radius: unset;
+      box-shadow: var(--box-shadow-5px);
       transition: 0s;
       &:hover {
         top: 5px;
@@ -123,6 +136,120 @@
     }
     .card-img__wrapper {
       margin-top: 10px;
+    }
+  }
+
+  .level-page {
+    background: url(../images-alter/level-page/level-page-bg-2.svg) right bottom -7vh
+      no-repeat;
+    .levels {
+      padding-right: 5px;
+      .level-item {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-5px);
+        background-color: var(--alt-white);
+        .label {
+          padding-right: unset;
+
+          border-top-right-radius: unset;
+          border-bottom-right-radius: unset;
+          border-right: var(--alt-border-2px);
+        }
+      }
+    }
+    .level-page__description_wrapper {
+      padding-right: 5px;
+    }
+    .level-page__description {
+      height: 100%;
+      margin-bottom: 30px;
+
+      border-radius: unset;
+      border: var(--alt-border-2px);
+      box-shadow: var(--box-shadow-5px);
+      background: url(../images-alter/level-page/level-page-girl.svg) bottom
+        no-repeat;
+      background-size: 70%;
+      background-color: var(--alt-white);
+    }
+    .level-img {
+      display: none;
+    }
+  }
+
+  .main__wrapper .book-page {
+    background: none;
+  }
+
+  .book-page {
+    h2 {
+      display: none;
+    }
+    &__games-menu {
+      border-radius: unset;
+      border: var(--alt-border-2px);
+      box-shadow: var(--box-shadow-3px);
+      &_button {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-3px);
+        background-color: var(--alt-purple);
+        color: var(--alt-white);
+        font-weight: normal;
+        &:hover {
+          background-color: var(--alt-purple-hover);
+        }
+      }
+    }
+    &__pagination-container {
+      padding-right: 3px;
+      &_button {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-3px);
+      }
+      &_counter {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-3px);
+      }
+    }
+    &__level-container {
+      margin-right: 3px;
+      border-radius: unset;
+      border: var(--alt-border-2px);
+      box-shadow: var(--box-shadow-3px);
+      &_button {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: unset;
+      }
+    }
+    .words-container {
+      padding-right: 5px;
+      &__item {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-5px);
+        &_image-block {
+          border-radius: unset;
+          border-right: var(--alt-border-2px);
+          img {
+            border-radius: unset;
+            border: var(--alt-border-2px);
+          }
+        }
+        &_controlls-block {
+          .answers-counter__block {
+            input[type='number'] {
+              border-radius: unset;
+              box-shadow: unset;
+              border: var(--alt-border-2px);
+            }
+          }
+        }
+      }
     }
   }
 
