@@ -47,13 +47,19 @@ export class MainPage {
     return `
         <div class="main-page__title">
           <p>Добро пожаловать в</p>
-          <h1><span>RS</span>Lang</h1>
+          <h1>
+          <span class="r purple">R</span>
+          <span class="s red">S</span>
+          <span class="green">L</span>
+          <span class="yellow">a</span>
+          <span class="purple">n</span>
+          <span class="red">g</span></h1>
           <p>лучшее место для изучения английского языка!</p>
         </div>
         <div class="main-page__cards">
           <div class="main-page__card" data-main="book">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/0.png" alt="" />
+              
             </div>
             <h3 class="card__title">Изучай</h3>
             <p class="card__text">
@@ -63,7 +69,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="book-hard">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/1.png" alt="" />
+              
             </div>
             <h3 class="card__title">Запоминай</h3>
             <p class="card__text">
@@ -73,7 +79,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="games">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/2.png" alt="" />
+              
             </div>
             <h3 class="card__title">Играй</h3>
             <p class="card__text">
@@ -82,7 +88,7 @@ export class MainPage {
           </div>
           <div class="main-page__card" data-main="stats">
             <div class="card-img__wrapper">
-              <img src="./assets/images/mainPage/3.png" alt="" />
+              
             </div>
             <h3 class="card__title">Анализируй</h3>
             <p class="card__text">

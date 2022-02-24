@@ -4,16 +4,125 @@
   --alt-red: #ff4569;
   --alt-purple: #8066ff;
   --alt-black: #000000;
+  --alt-white: #ffffff;
   --alt-border-2px: 2px solid var(--alt-black);
+  --alt-box-shadow: 5px 5px 0 var(--alt-black);
+  --text-border-2px: 2px 2px 1px var(--alt-black),
+    -2px -2px 1px var(--alt-black), -2px 2px 1px var(--alt-black),
+    2px -2px 1px var(--alt-black);
+  --text-border-05px: 0.5px 0.5px 0.5px var(--alt-black),
+    -0.5px -0.5px 0.5px var(--alt-black), -0.5px 0.5px 0.5px var(--alt-black),
+    0.5px -0.5px 0.5px var(--alt-black);
 }
 
 .alter {
+  * {
+    font-weight: 500;
+  }
+
   .aside {
     background-color: var(--alt-purple);
     border: 2px solid var(--alt-black);
+    border-left: none;
 
-    li:hover {
-      background-color: #6647ff;
+    li {
+      &:hover {
+        background-color: #6647ff;
+      }
+    }
+  }
+
+  .main-page {
+    background: var(--alt-white);
+    &__title {
+      h1 {
+        font-weight: bold;
+        color: unset;
+        text-shadow: var(--text-border-2px);
+
+        span {
+          color: inherit;
+          font-weight: inherit;
+        }
+        .purple {
+          color: var(--alt-purple);
+        }
+        .red {
+          color: var(--alt-red);
+        }
+        .yellow {
+          color: var(--alt-yellow);
+        }
+        .green {
+          color: var(--alt-green);
+        }
+      }
+    }
+    &__card {
+      padding: 0 5px;
+      position: relative;
+      border: var(--alt-border-2px);
+      border-radius: 0px;
+      box-shadow: var(--alt-box-shadow);
+      transition: 0s;
+      &:hover {
+        top: 5px;
+        left: 5px;
+        box-shadow: unset;
+        border: var(--alt-border-2px);
+      }
+    }
+    .card__title {
+      font-weight: 700;
+    }
+    &__cards {
+      :nth-child(1) {
+        &:hover {
+          .card__title,
+          .card__text {
+            color: var(--alt-purple);
+          }
+        }
+        .card-img__wrapper {
+          background-image: url(../images-alter/main-page/0.svg);
+        }
+      }
+      :nth-child(2) {
+        &:hover {
+          .card__title,
+          .card__text {
+            color: var(--alt-red);
+          }
+        }
+        .card-img__wrapper {
+          background-image: url(../images-alter/main-page/1.svg);
+        }
+      }
+      :nth-child(3) {
+        &:hover {
+          .card__title,
+          .card__text {
+            color: var(--alt-green);
+          }
+        }
+        .card-img__wrapper {
+          background-image: url(../images-alter/main-page/2.svg);
+        }
+      }
+      :nth-child(4) {
+        &:hover {
+          .card__title,
+          .card__text {
+            color: var(--alt-yellow);
+          }
+        }
+        .card-img__wrapper {
+          background-image: url(../images-alter/main-page/3.svg);
+        }
+      }
+    }
+    .card-img__wrapper {
+      margin-top: 10px;
     }
   }
 
@@ -24,6 +133,9 @@
     color: var(--alt-black);
     .team a {
       color: var(--alt-black);
+    }
+    .rsschool {
+      background-image: url(../images-alter/rsschool.svg);
     }
   }
 }

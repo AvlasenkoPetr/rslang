@@ -7,7 +7,7 @@
   background: url(../../../assets/images/background-waves/main-page-wave.svg)
     bottom no-repeat;
 
-  .main-page__title {
+  &__title {
     margin-bottom: 70px;
     display: flex;
     flex-direction: column;
@@ -16,52 +16,77 @@
       font-size: 28px;
     }
     h1 {
+      display: flex;
       color: var(--purple-dark);
       font-size: 140px;
-      span {
+      .r,
+      .s {
         color: var(--blue-interactive);
       }
     }
   }
-  .main-page__cards {
+  &__cards {
     width: 70vw;
     padding: 5px;
 
     display: flex;
     justify-content: space-between;
-
-    .main-page__card {
-      max-width: 250px;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      border: 1px solid var(--font-color-main);
-      border-radius: 10px;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      background-color: #fff;
-
-      cursor: pointer;
-      transition: 0.2s linear;
-
-      &:hover {
-        border: 1px solid var(--purple-main);
-        // background-color: var(--purple-light);
-        color: var(--blue-interactive);
+    :nth-child(1) {
+      .card-img__wrapper {
+        background-image: url(../../../assets/images/mainPage/0.png);
       }
     }
-    .card-img__wrapper {
-      margin-top: 20px;
+    :nth-child(2) {
+      .card-img__wrapper {
+        background-image: url(../../../assets/images/mainPage/1.png);
+      }
     }
-    .card__title {
-      font-weight: 500;
-      margin-bottom: 10px;
+    :nth-child(3) {
+      .card-img__wrapper {
+        background-image: url(../../../assets/images/mainPage/2.png);
+      }
     }
-    .card__text {
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 20px;
+    :nth-child(4) {
+      .card-img__wrapper {
+        background-image: url(../../../assets/images/mainPage/3.png);
+      }
     }
+  }
+  &__card {
+    max-width: 250px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: 1px solid var(--font-color-main);
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+
+    cursor: pointer;
+    transition: 0.2s linear;
+
+    &:hover {
+      border: 1px solid var(--purple-main);
+      color: var(--blue-interactive);
+    }
+  }
+  .card-img__wrapper {
+    margin-top: 20px;
+    width: 175px;
+    height: 175px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .card__title {
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .card__text {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
   }
 }

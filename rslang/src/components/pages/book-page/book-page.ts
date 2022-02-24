@@ -1,8 +1,9 @@
 import { Fetch } from '../../Fetch/fetch';
-import { getTodayDate, isUserExists } from '../../Helpers/helpers';
+import { getTodayDate, getUserInfo, isUserExists } from '../../Helpers/helpers';
 import {
   IAggregatedWord,
   IAggregatedWords,
+  ICREATE_USER_WORD,
   IOptionalBlock,
   IStatisticResponse,
   IUserWord,
@@ -144,76 +145,81 @@ export class BookPage {
 
         wordItem.setAttribute('disabled', 'true')
         
-        const wordId: string = word._id ? word._id : word.id;
+        const wordId: string = word._id || word.id;
 
-        const userStats: IStatisticResponse = await this.FETCH.GET_STATISTICS()
-        delete(userStats.id)
-        
-        const isDeleteEasy = wordItem.classList.contains('easy') && clickedButtonDataset === 'easy'
-        const isToggleToHard = wordItem.classList.contains('easy') && clickedButtonDataset === 'hard'
-        const isAddEasy = (wordItem.classList.length < 3) && clickedButtonDataset === 'easy'
-        const isToggleToEasy = wordItem.classList.contains('hard') && clickedButtonDataset === 'easy'
+        try {
+          const userWord: IUserWord = await this.FETCH.GET_USER_WORDS_BY_ID(wordId)
 
-        if (isDeleteEasy || isToggleToHard) {
-          userStats.learnedWords -= 1
-        } else if (isAddEasy || isToggleToEasy) {
-          userStats.learnedWords += 1
-        }
-        await this.FETCH.UPDATE_STATISTICS(userStats)
+          if (wordItem.classList.contains(`${clickedButtonDataset}`)) {
+            await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {
+              difficulty: 'string'
+            });
 
-        if (wordItem.classList.contains(`${clickedButtonDataset}`)) {
-          await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {
-            difficulty: 'string',
-          });
+            if (this.LEVEL === '6') {
+              wordItem.remove();
+              wordItem.removeAttribute('disabled')
+              return;
+            }
 
-          if (this.LEVEL === '6') {
-            wordItem.remove();
+            wordItem.classList.remove(`${clickedButtonDataset}`);
+            this.isPageLearned()
             wordItem.removeAttribute('disabled')
             return;
           }
-          wordItem.classList.remove(`${clickedButtonDataset}`);
-          this.isPageLearned()
-          wordItem.removeAttribute('disabled')
-          return;
-        }
 
-        if (
-          wordItem.classList.contains('easy') ||
-          wordItem.classList.contains('hard')
-        ) {
-          await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, {
-            difficulty: `${clickedButtonDataset}`,
-          });
+          const newUserInfo: ICREATE_USER_WORD = {
+            difficulty: clickedButtonDataset,
+            optional: {
+              correct: userWord.optional?.correct || 0,
+              wrong: userWord.optional?.wrong || 0,
+              inRow: userWord.optional?.wrong || 0,
+              learnDate: getTodayDate()
+            }
+          }
+          if (userWord.optional?.notNew) newUserInfo.optional!.notNew = true
 
-          if (this.LEVEL === '6') {
-            wordItem.remove();
+          if (
+            wordItem.classList.contains('easy') ||
+            wordItem.classList.contains('hard')
+          ) {
+            await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, newUserInfo);
+  
+            if (this.LEVEL === '6') {
+              wordItem.remove();
+              wordItem.removeAttribute('disabled')
+              return;
+            }
+            wordItem.classList.remove(
+              `${wordItem.classList[wordItem.classList.length - 1]}`
+            );
+            wordItem.classList.add(`${clickedButtonDataset}`);
+            this.isPageLearned()
             wordItem.removeAttribute('disabled')
             return;
           }
-          wordItem.classList.remove(
-            `${wordItem.classList[wordItem.classList.length - 1]}`
-          );
+          
+          await this.FETCH.UPDATE_USER_WORDS_BY_ID(wordId, newUserInfo)
           wordItem.classList.add(`${clickedButtonDataset}`);
           this.isPageLearned()
           wordItem.removeAttribute('disabled')
           return;
-        }
 
-        try {
-          await this.FETCH.GET_USER_WORDS_BY_ID(word.id)
-          await this.FETCH.UPDATE_USER_WORDS_BY_ID(word.id, {
-            difficulty: `${clickedButtonDataset}`,
-          })
         } catch {
-          this.FETCH.CREATE_USER_WORDS(word.id, {
-            difficulty: `${clickedButtonDataset}`,
-          })
-        }
-
-        wordItem.classList.add(`${clickedButtonDataset}`);
-        this.isPageLearned()
-        wordItem.removeAttribute('disabled')
-        return;
+          const newUserWord: ICREATE_USER_WORD = {
+            difficulty: clickedButtonDataset,
+            optional: {
+              correct: 0,
+              wrong: 0,
+              inRow: 0,
+              learnDate: getTodayDate(),
+            }
+          }
+          this.FETCH.CREATE_USER_WORDS(wordId, newUserWord)
+          wordItem.classList.add(`${clickedButtonDataset}`);
+          this.isPageLearned()
+          wordItem.removeAttribute('disabled')
+          return
+        } 
     }
   };
 
@@ -244,6 +250,7 @@ export class BookPage {
       await this.getWordsToRender(pageNum);
     const userWordsData: Array<IUserWord> | undefined =
       await this.getUserWords();
+    
 
     for (let word of wordsData) {
       const wordItem: HTMLElement = document.createElement('div');
