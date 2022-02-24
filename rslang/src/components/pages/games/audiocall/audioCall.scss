@@ -1,3 +1,20 @@
+@mixin ipad {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin iphone {
+  @media (max-width: 550px) {
+    @content;
+  }
+}
+
+:root {
+  --width: calc(1vw / 19.2);
+  --height: calc(1vh / 10.8);
+}
+
 .hide {
   display: none;
 }
@@ -7,12 +24,18 @@
 }
 
 .btn {
-  height: 50px;
+  // height: calc(50 * var(--height));
   border-radius: 10px;
-  font-size: 25px;
-  padding: 0 40px;
+  font-size: calc(30 * var(--width));
+  padding: calc(10 * var(--height)) calc(40 * var(--width));
   background: rgb(255, 255, 255, 1);
   box-shadow: 0px 3px 5px black;
+  @include ipad {
+    font-size: calc(50 * var(--width));
+    @include iphone {
+      font-size: calc(80 * var(--width));
+    }
+  }
 }
 
 .fullScreen {
@@ -29,6 +52,10 @@
 
 .bad-answer {
   background-color: #eb4f4f;
+}
+
+.main__wrapper {
+  grid-area: main__wrapper;
 }
 
 .audioCall-page {
@@ -116,6 +143,7 @@
       }
     }
     .answers__wrapper {
+      width: fit-content;
       margin-bottom: 5vh;
       display: flex;
       justify-content: center;
@@ -124,8 +152,18 @@
       border-radius: 10px;
       .answer {
         margin-right: 40px;
+        // font-size: 1vw;
         &:last-child {
           margin: 0;
+        }
+      }
+      @include iphone {
+        flex-direction: column;
+        align-items: center;
+        .answer {
+          margin: 0;
+          margin-bottom: 10px;
+          width: 100%;
         }
       }
     }

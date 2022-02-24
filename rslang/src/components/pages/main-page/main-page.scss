@@ -1,3 +1,20 @@
+@mixin HD_Resolution {
+  @media (max-width: 1440px) {
+    @content;
+  }
+}
+
+@mixin ipad {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+:root {
+  --width: calc(1vw / 19.2);
+  --height: calc(1vh / 10.8);
+}
+
 .main-page {
   display: flex;
   flex-direction: column;
@@ -29,6 +46,17 @@
 
     display: flex;
     justify-content: space-between;
+    @include HD_Resolution {
+      width: 90vw;
+    }
+
+    @include ipad {
+      display: grid;
+      width: 70vw;
+      grid-template-areas:
+        'div div'
+        'div div';
+    }
 
     .main-page__card {
       max-width: 250px;
@@ -50,9 +78,17 @@
         // background-color: var(--purple-light);
         color: var(--blue-interactive);
       }
+
+      @include HD_Resolution {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
     }
     .card-img__wrapper {
       margin-top: 20px;
+      img {
+        height: calc(175 * var(--width));
+      }
     }
     .card__title {
       font-weight: 500;
