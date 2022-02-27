@@ -27,6 +27,7 @@
   --c2: #ff4569;
   --red: #f50031;
   --easy: #1fea26;
+  --c: #1cfdc3;
 
   * {
     font-weight: 500;
@@ -79,6 +80,9 @@
       box-shadow: var(--box-shadow-5px);
       transition: 0s;
       &:hover {
+        border: var(--alt-border-2px);
+      }
+      &:active {
         top: 5px;
         left: 5px;
         box-shadow: unset;
@@ -179,26 +183,41 @@
   }
 
   .main__wrapper .book-page {
-    background: none;
+    background: url(../images-alter/book-page/book-bottom-bg.svg) bottom left -2px
+        no-repeat,
+      url(../images-alter/book-page/book-top-bg.svg) top right no-repeat;
+  }
+
+  .main__wrapper .book-page.learned {
+    background: url(../images-alter/book-page/book-bottom-learned-bg.svg) bottom
+        left -2px no-repeat,
+      url(../images-alter/book-page/book-top-learned-bg.svg) top right no-repeat;
   }
 
   .book-page {
     h2 {
-      display: none;
+      font-weight: 500;
     }
     &__games-menu {
       border-radius: unset;
       border: var(--alt-border-2px);
       box-shadow: var(--box-shadow-3px);
       &_button {
+        position: relative;
         border-radius: unset;
         border: var(--alt-border-2px);
         box-shadow: var(--box-shadow-3px);
         background-color: var(--alt-purple);
         color: var(--alt-white);
         font-weight: normal;
+        transition: 0s;
         &:hover {
-          background-color: var(--alt-purple-hover);
+          background-color: var(--alt-yellow);
+        }
+        &:active {
+          top: 3px;
+          left: 3px;
+          box-shadow: unset;
         }
       }
     }
@@ -232,6 +251,15 @@
         border-radius: unset;
         border: var(--alt-border-2px);
         box-shadow: var(--box-shadow-5px);
+
+        &.easy [data-word='easy'] {
+          background-image: url(../images-alter/book-page/alt-correct-active.svg);
+        }
+
+        &.hard [data-word='hard'] {
+          background-image: url(../images-alter/book-page/alt-wrong-active.svg);
+        }
+
         &_image-block {
           border-radius: unset;
           border-right: var(--alt-border-2px);
@@ -253,6 +281,324 @@
     }
   }
 
+  .games-page {
+    background: url(../images-alter/games-page/games-left.svg) left bottom
+        no-repeat,
+      url(../images-alter/games-page/games-right.svg) right bottom no-repeat;
+    .games-card {
+      position: relative;
+      padding-top: 160px;
+      border: var(--alt-border-2px);
+      border-radius: unset;
+      box-shadow: var(--box-shadow-5px);
+      background-color: var(--alt-white);
+      background-position: top 10px center;
+
+      background-size: 220px;
+      background-repeat: no-repeat;
+      transition: 0s;
+      &:hover {
+        filter: unset;
+      }
+      &:active {
+        top: 5px;
+        left: 5px;
+        box-shadow: unset;
+        border: var(--alt-border-2px);
+      }
+      &[data-games='sprint'] {
+        background-image: url(../images-alter/games-page/sprint.svg);
+        &:hover {
+          color: var(--alt-red);
+        }
+      }
+      &[data-games='audiocall'] {
+        background-image: url(../images-alter/games-page/audiocall.svg);
+        &:hover {
+          color: var(--alt-purple);
+        }
+      }
+      h2 {
+        font-weight: 500;
+      }
+      img {
+        display: none;
+      }
+    }
+  }
+
+  .audioCall-page {
+    background: url(../images-alter/book-page/book-bottom-bg.svg) bottom left -2px
+        no-repeat,
+      url(../images-alter/book-page/book-top-bg.svg) top right no-repeat;
+    background-color: var(--alt-green);
+    .container {
+      .answers__wrapper {
+        border: var(--alt-border-2px);
+        box-shadow: var(--box-shadow-3px);
+        border-radius: unset;
+        background-color: var(--alt-white);
+      }
+      .audio__wrapper {
+        .audioButton__wrapper {
+          width: 25vh;
+          height: 25vh;
+          padding-right: 3px;
+          border: var(--alt-border-2px);
+          border-width: 3px;
+          border-radius: unset;
+          box-shadow: var(--box-shadow-3px);
+          background-color: var(--alt-black);
+          .audioCall__audio-button {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: unset;
+            background-color: var(--alt-purple);
+            transition: 0s;
+            :active {
+              top: 3px;
+              left: 3px;
+            }
+          }
+        }
+      }
+    }
+    .btn {
+      position: relative;
+      border: var(--alt-border-2px);
+      box-shadow: var(--box-shadow-3px);
+      background-color: var(--alt-yellow);
+      border-radius: unset;
+      transition: 0s;
+      &:active {
+        top: 3px;
+        left: 3px;
+        box-shadow: unset;
+      }
+    }
+    #dontKnowButton {
+      background-color: var(--alt-red);
+    }
+    .right-answer {
+      background-color: var(--easy);
+    }
+    .bad-answer {
+      background-color: var(--red);
+    }
+  }
+
+  .sprint-wrapper {
+    background: url(../images-alter/sprint/sprint-right.svg) right bottom
+        no-repeat,
+      url(../images-alter/sprint/sprint-left.svg) left bottom no-repeat;
+    background-color: var(--alt-white);
+    .game-area {
+      .timer,
+      .points,
+      .count-points {
+        font-weight: 500;
+      }
+      .progress-item {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        background-color: var(--alt-white);
+      }
+      .progress .complete {
+        background-color: var(--easy);
+      }
+    }
+    .main-window {
+      border-radius: unset;
+      border: var(--alt-border-2px);
+      box-shadow: var(--box-shadow-5px);
+      .word,
+      .translate-word {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
+      .main-buttons {
+        margin-top: 35px;
+        padding: 3px;
+        height: unset;
+        .btn {
+          height: unset;
+          position: relative;
+          border-radius: unset;
+          border: var(--alt-border-2px);
+          box-shadow: var(--box-shadow-3px);
+          transition: 0s;
+          &:hover {
+            filter: brightness(1.2);
+          }
+          &:active {
+            top: 3px;
+            left: 3px;
+          }
+        }
+        .right {
+          background-color: var(--alt-green);
+        }
+        .wrong {
+          background-color: var(--alt-red);
+        }
+      }
+    }
+  }
+
+  .gameResult-modalWindow .modal__content {
+    border-radius: unset;
+    border: var(--alt-border-2px);
+    .modal__results {
+      .total-result {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        border-width: 1px;
+        background-color: var(--a1);
+      }
+      .guessed-in-row {
+        border-radius: unset;
+        border: var(--alt-border-2px);
+        border-width: 1px;
+        background-color: var(--a2);
+      }
+      .answers__wrapper {
+        .correct-answers {
+          border-radius: unset;
+          border: var(--alt-border-2px);
+          border-width: 1px;
+          background-color: var(--easy);
+        }
+        .wrong-answers {
+          border-radius: unset;
+          border: var(--alt-border-2px);
+          border-width: 1px;
+          background-color: var(--red);
+        }
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--alt-purple);
+        border: 1px solid var(--alt-black);
+        border-radius: unset;
+      }
+      &::-webkit-scrollbar-track {
+        border: 1px solid var(--alt-black);
+        border-radius: unset;
+      }
+    }
+    .restart-game-btn__wrapper {
+      padding-bottom: 3px;
+      .restart-game {
+        position: relative;
+        background-color: var(--alt-purple);
+        border: var(--alt-border-2px);
+        border-radius: unset;
+        box-shadow: var(--box-shadow-3px);
+        &:hover {
+          background-color: var(--alt-yellow);
+        }
+        &:active {
+          top: 3px;
+          right: 3px;
+        }
+      }
+    }
+  }
+
+  .main__wrapper .stats-page {
+    background: url(../images-alter/stats-page/stats-page-bottom.svg) right 2px
+      bottom -3vh no-repeat;
+  }
+
+  .stats-page {
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: 500;
+    }
+    &__card {
+      border: var(--alt-border-2px);
+      border-radius: unset;
+      box-shadow: var(--box-shadow-5px);
+    }
+    span {
+      border-radius: unset;
+      border: var(--alt-border-2px);
+      &.words {
+        background-color: var(--a1);
+      }
+      &.accuracy {
+        background-color: var(--a2);
+      }
+      &.row {
+        background-color: var(--b1);
+      }
+    }
+  }
+
+  .team-page {
+    background: url(../images-alter/book-page/book-bottom-bg.svg) bottom -2px left -2px
+        no-repeat,
+      url(../images-alter/book-page/book-top-bg.svg) top right no-repeat;
+    .team__card {
+      border: var(--alt-border-2px);
+      border-radius: unset;
+      box-shadow: var(--box-shadow-5px);
+      .img-border {
+        border-radius: unset;
+        border-right: var(--alt-border-2px);
+        background-color: var(--alt-green);
+        .img {
+          border-radius: unset;
+          border: var(--alt-border-2px);
+        }
+      }
+      .info__name {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .login-page {
+    background: url(../images-alter/main-page/main-page-bg.svg) bottom -7vh right
+        no-repeat,
+      url(../images-alter/login-page/login-page.svg) top 50px right 50px / 350px
+        no-repeat;
+    h2 {
+      color: var(--alt-red);
+    }
+    &__input {
+      border: var(--alt-border-2px);
+      border-color: var(--alt-purple);
+      border-width: 3px;
+      border-radius: unset;
+      box-shadow: var(--box-shadow-3px);
+      &:focus {
+        border-color: var(--alt-yellow);
+      }
+    }
+    &__button {
+      position: relative;
+      border: var(--alt-border-2px);
+      border-radius: unset;
+      box-shadow: var(--box-shadow-3px);
+      color: var(--alt-white);
+      background-color: var(--alt-purple);
+      transition: 0s;
+      &:hover {
+        color: var(--alt-black);
+        background-color: var(--alt-yellow);
+      }
+      &:active {
+        top: 5px;
+        left: 5px;
+        box-shadow: unset;
+      }
+    }
+  }
+
   .footer {
     background-color: var(--alt-yellow);
     border: var(--alt-border-2px);
@@ -264,5 +610,28 @@
     .rsschool {
       background-image: url(../images-alter/rsschool.svg);
     }
+  }
+
+  .error-page {
+    background: url(../images-alter/error.svg) center bottom 100px no-repeat;
+    background-size: 450px;
+    h2,
+    h3,
+    h4 {
+      font-weight: 500;
+    }
+    [data-error='login'] {
+      color: var(--alt-purple);
+      transition: 0s;
+      &:hover {
+        color: var(--alt-yellow);
+      }
+    }
+  }
+  .wrapper-spinner {
+    background: var(--alt-yellow);
+  }
+  .base-timer__path-remaining.purple {
+    color: var(--alt-red);
   }
 }
