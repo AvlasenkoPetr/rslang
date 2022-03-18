@@ -1,2 +1,2 @@
 # rs-lang
-# HTML, SCSS, Typescript
+HTML, SCSS, Typescript
